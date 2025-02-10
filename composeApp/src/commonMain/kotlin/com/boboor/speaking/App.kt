@@ -26,6 +26,7 @@ fun App( ) {
                 SlideTransition(navigator)
             }
 
+
         }
     }
 }
