@@ -32,6 +32,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
+import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.koin.getScreenModel
@@ -44,6 +46,7 @@ import ieltsspeakingassistant.composeapp.generated.resources.ic_ielts_envelope
 import ieltsspeakingassistant.composeapp.generated.resources.ic_part_one
 import ieltsspeakingassistant.composeapp.generated.resources.ic_part_three
 import ieltsspeakingassistant.composeapp.generated.resources.ic_part_two
+import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.getKoin
@@ -57,13 +60,13 @@ import org.koin.compose.koinInject
 class MainScreen : Screen {
     override val key: ScreenKey get() = this.hashCode().toString()
 
+    @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
-        getKoin()
         val viewModel =  koinScreenModel<MainScreenContracts.ViewModel>()
 
-        viewModel.init()
         val state = viewModel.container.stateFlow.collectAsState()
+
 
         MainScreenContent(state, viewModel::onEventDispatcher)
     }
@@ -114,6 +117,7 @@ private fun MainScreenContent(
                         .height(150.dp)
                         .clip(RoundedCornerShape(24.dp))
                         .background(Color.White)
+                        .clickable { showToast("Coming Soon...") }
                         .padding(24.dp)
                 ) {
                     Icon(
@@ -198,6 +202,7 @@ private fun MainScreenContent(
 }
 
 
+
 @Composable
 fun AppCard(
     title: String,
@@ -210,11 +215,6 @@ fun AppCard(
 
     Column(
         modifier = Modifier
-//            .shadow(
-//                elevation = 40.dp, shape = RoundedCornerShape(24.dp),
-//                spotColor = Color(0xff3ea8d0).copy(alpha = 0.4f)
-//            )
-//
             .appShadow()
             .width(if (takeFull) screenWidth + 24.dp else screenWidth / 2)
             .clip(RoundedCornerShape(24.dp))

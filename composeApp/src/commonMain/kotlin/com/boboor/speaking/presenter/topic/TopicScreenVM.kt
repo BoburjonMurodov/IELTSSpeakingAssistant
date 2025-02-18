@@ -1,13 +1,10 @@
 package com.boboor.speaking.presenter.topic
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import com.boboor.speaking.data.models.CommonData
 import com.boboor.speaking.data.remote.ApiService
 import kotlinx.coroutines.Job
-import org.orbitmvi.orbit.Container
 
 
 /*
@@ -21,17 +18,24 @@ class TopicScreenVM(
     override val searchQuery: MutableState<String> = mutableStateOf("")
     private val questions = ArrayList<CommonData.Topic>()
 
-    override fun onEventDispatcher(intent: TopicScreenContracts.Intent): Job = intent{
-        when(intent){
+    override fun onEventDispatcher(intent: TopicScreenContracts.Intent): Job = intent {
+        when (intent) {
             TopicScreenContracts.Intent.OnClickBack -> directions.goBack()
-            TopicScreenContracts.Intent.SearchQuery -> reduce { state.copy(questions = questions.filter { it.name.contains(searchQuery.value, ignoreCase = true) }) }
+            TopicScreenContracts.Intent.SearchQuery -> reduce {
+                state.copy(questions = questions.filter {
+                    it.name.contains(
+                        searchQuery.value,
+                        ignoreCase = true
+                    )
+                })
+            }
         }
     }
 
-    override fun init(): Job = intent{
+    override fun init(): Job = intent {
         reduce { state.copy(isLoading = true) }
 
-
+        println("---init called")
 
         apiService.getPartOneQuestions().onSuccess { it ->
 

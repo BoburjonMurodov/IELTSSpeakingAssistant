@@ -17,7 +17,3 @@ val appNavigatorModule = module {
     single<AppNavigator> { get<AppNavigatorDispatcher>() }
     single<NavigationHandler> { get<AppNavigatorDispatcher>() }
 }
-
-
-
-

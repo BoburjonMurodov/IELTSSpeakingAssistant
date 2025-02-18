@@ -17,5 +17,3 @@ val directionModule = module {
     factory<MainScreenContracts.Directions> { MainScreenDirections(get()) }
     factory<TopicScreenContracts.Directions> { TopicScreenDirections(get()) }
 }
-
-

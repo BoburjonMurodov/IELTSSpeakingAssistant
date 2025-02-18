@@ -32,17 +32,20 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -61,6 +64,7 @@ import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.boboor.speaking.data.models.CommonData
 import com.boboor.speaking.presenter.topic.TopicScreenContracts
@@ -75,14 +79,15 @@ import org.jetbrains.compose.resources.painterResource
 */
 
 class TopicScreen : Screen {
-    override val key: ScreenKey get() = this.hashCode().toString()
+    override val key: ScreenKey get() =  this.hashCode().toString()
+
 
     @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
         val viewModel = koinScreenModel<TopicScreenContracts.ViewModel>()
 
-        LifecycleEffectOnce { viewModel.init() }
+        LifecycleEffectOnce{ viewModel.init() }
 
         val state = viewModel.container.stateFlow.collectAsState()
 
@@ -100,6 +105,7 @@ private fun TopicScreenContent(
     onEventDispatcher: (TopicScreenContracts.Intent) -> Unit
 ) {
     val isSearchVisible = remember { mutableStateOf(false) }
+
     Scaffold(
         backgroundColor = Color(0xfff7fcfe),
         topBar = @Composable {
@@ -209,18 +215,10 @@ private fun TopicScreenContent(
                 }
 
                 items(state.value.questions.size) {
-                    val isExpanded = remember { mutableStateOf(false) }
-                    val hasOverFlow = remember { mutableStateOf(false) }
+                    val isExpanded = rememberSaveable { mutableStateOf(false) }
+                    val hasOverFlow = rememberSaveable { mutableStateOf(false) }
                     TopicItem(state.value.questions[it], it + 1, isExpanded, hasOverFlow)
                 }
-
-//                items(40, key = { it }) {
-//                    val isExpanded = remember { mutableStateOf(false) }
-//                    val hasOverFlow = remember { mutableStateOf(false) }
-//
-//                    TopicItem("Test Title", it + 1, isExpanded, hasOverFlow)
-//                }
-
 
             }
         }
@@ -234,6 +232,10 @@ fun SearchInput(
     onValueChange: () -> Unit
 ) {
     val focusRequest = FocusRequester()
+
+    LaunchedEffect(Unit){
+        focusRequest.requestFocus()
+    }
 
     Row(
         modifier = Modifier
@@ -306,6 +308,8 @@ fun SearchInput(
     }
 }
 
+
+
 @Composable
 fun TopicItem(
     item: CommonData.Topic,
@@ -338,19 +342,17 @@ fun TopicItem(
     ) {
 
         Row(Modifier.padding(12.dp)) {
-            AnimatedVisibility(
-                visible = !isExpanded.value,
-            ) {
+            AnimatedVisibility(visible = !isExpanded.value) {
                 Box(
                     modifier = Modifier
                         .aspectRatio(1f)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color(0xff3fa9d0).copy(alpha = 0.2f)),
+                        .background(MaterialTheme.colors.primary.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         "$index",
-                        color = Color(0xff3fa9d0),
+                        color = MaterialTheme.colors.primary,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -373,19 +375,12 @@ fun TopicItem(
                 )
 
                 if (!hasOverFlow.value && lineCount.value == 1) {
-                    Text(
-                        "10 questions",
-                        fontSize = 12.sp
-                    )
+                    Text("10 questions", fontSize = 12.sp)
                 }
             }
 
-
-
-            if (hasOverFlow.value || isExpanded.value)
-                IconButton(onClick = {
-                    isExpanded.value = !isExpanded.value
-                }) {
+            if (hasOverFlow.value || isExpanded.value) {
+                IconButton(onClick = { isExpanded.value = !isExpanded.value }) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_back),
                         contentDescription = null,
@@ -395,11 +390,10 @@ fun TopicItem(
                         tint = Color.Gray
                     )
                 }
+            }
         }
 
-
-
-        if (item.new == "new")
+        if (item.new == "new") {
             Box(
                 Modifier
                     .align(Alignment.TopEnd)
@@ -407,18 +401,16 @@ fun TopicItem(
                     .background(Color.Red)
             ) {
                 Text(
-                    modifier = Modifier.padding(start = 4.dp, bottom = 4.dp, end = 4.dp),
+                    modifier = Modifier.padding(4.dp),
                     text = "NEW",
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     fontSize = 8.sp
                 )
             }
-
+        }
     }
-
 }
-
 
 const val mock =
     "Parks, tourist attractions (September - December 2024, January - April 2025),  December 2024, January - April 2025),  "

@@ -16,13 +16,15 @@ class MainScreenVM(
 
 
     override fun onEventDispatcher(intent: MainScreenContracts.Intent): Job = intent{
+        println("****onEventDispatcher")
+
         when(intent){
             MainScreenContracts.Intent.OnClickPart -> directions.goTopicScreen()
         }
     }
 
     override fun init(): Job = intent{
-//        apiService.getPartOneQuestions()
+
     }
 
     override val container = container<MainScreenContracts.UIState, Nothing>(MainScreenContracts.UIState())
