@@ -1,7 +1,7 @@
 package com.boboor.speaking.presenter.topic
 
 import androidx.compose.runtime.MutableState
-import com.boboor.speaking.data.models.CommonData
+import com.boboor.speaking.data.models.PartOneResponse
 import com.boboor.speaking.utils.AppViewModel
 import kotlinx.coroutines.Job
 
@@ -19,7 +19,7 @@ class TopicScreenContracts {
     }
     data class UIState(
         val isLoading: Boolean = false,
-        val questions: List<CommonData.Topic> = emptyList(),
+        val questions: List<PartOneResponse.Topic> = emptyList(),
     )
 
     sealed interface Intent {

@@ -9,12 +9,11 @@ import kotlinx.serialization.Serializable
 
 
 
-sealed interface PartTwoData {
+sealed interface PartTwoResponse {
     @Serializable
     data class Response(
         val content: Map<String, PartTwoQuestion>
-    ) : PartTwoData
-
+    ) : PartTwoResponse
 
     @Serializable
     data class PartTwoQuestion(
@@ -27,35 +26,35 @@ sealed interface PartTwoData {
         val order: Int,
         val questions: List<Question>,
         val vocabulary: List<Vocabulary>
-    ) : PartTwoData
+    ) : PartTwoResponse
 
     @Serializable
     data class Answer(
         val text: String
-    ) : PartTwoData
+    ) : PartTwoResponse
 
     @Serializable
     data class Question(
         val text: String
-    ) : PartTwoData
+    ) : PartTwoResponse
 
     @Serializable
     data class Vocabulary(
         val text: String
-    ) : PartTwoData
+    ) : PartTwoResponse
 
 
     @Serializable
     data class PartTwoBody(
         val text: String
-    ) : PartTwoData
+    ) : PartTwoResponse
 
 
     @Serializable
     data class Idea(
         val body: List<PartTwoBody>,
         val text: String
-    ) : PartTwoData
+    ) : PartTwoResponse
 }
 
 

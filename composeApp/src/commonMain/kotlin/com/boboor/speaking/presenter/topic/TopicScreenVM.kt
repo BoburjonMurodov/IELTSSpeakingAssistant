@@ -2,7 +2,7 @@ package com.boboor.speaking.presenter.topic
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.boboor.speaking.data.models.CommonData
+import com.boboor.speaking.data.models.PartOneResponse
 import com.boboor.speaking.data.remote.ApiService
 import kotlinx.coroutines.Job
 
@@ -16,7 +16,7 @@ class TopicScreenVM(
     private val apiService: ApiService
 ) : TopicScreenContracts.ViewModel {
     override val searchQuery: MutableState<String> = mutableStateOf("")
-    private val questions = ArrayList<CommonData.Topic>()
+    private val questions = ArrayList<PartOneResponse.Topic>()
 
     override fun onEventDispatcher(intent: TopicScreenContracts.Intent): Job = intent {
         when (intent) {
@@ -34,16 +34,10 @@ class TopicScreenVM(
 
     override fun init(): Job = intent {
         reduce { state.copy(isLoading = true) }
-
-        println("---init called")
-
-        apiService.getPartOneQuestions().onSuccess { it ->
-
-            it.content.forEach {
-                if (it.value.active)
-                    questions.add(it.value)
+        apiService.getPartOneQuestions().onSuccess { result ->
+            result.content.forEach {
+                if (it.value.active) questions.add(it.value)
             }
-
             reduce { state.copy(isLoading = false, questions = questions) }
         }.onFailure {
             reduce { state.copy(isLoading = false) }

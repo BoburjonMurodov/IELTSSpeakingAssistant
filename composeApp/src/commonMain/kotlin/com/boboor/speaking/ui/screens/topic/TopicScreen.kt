@@ -64,9 +64,8 @@ import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
-import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
-import com.boboor.speaking.data.models.CommonData
+import com.boboor.speaking.data.models.PartOneResponse
 import com.boboor.speaking.presenter.topic.TopicScreenContracts
 import com.boboor.speaking.ui.screens.main.appShadow
 import ieltsspeakingassistant.composeapp.generated.resources.Res
@@ -312,7 +311,7 @@ fun SearchInput(
 
 @Composable
 fun TopicItem(
-    item: CommonData.Topic,
+    item: PartOneResponse.Topic,
     index: Int,
     isExpanded: MutableState<Boolean>,
     hasOverFlow: MutableState<Boolean>

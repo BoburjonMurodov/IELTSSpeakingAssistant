@@ -3,11 +3,11 @@ package com.boboor.speaking.data.models
 import kotlinx.serialization.Serializable
 
 
-sealed interface CommonData{
+sealed interface PartOneResponse{
     @Serializable
     data class Response(
         val content: Map<String, Topic>
-    ) : CommonData
+    ) : PartOneResponse
 
 
     @Serializable
@@ -19,29 +19,29 @@ sealed interface CommonData{
         val order: Int,
         val questions: List<Question>,
         val vocabulary: List<Vocabulary>
-    ) : CommonData
+    ) : PartOneResponse
 
 
     @Serializable
     data class Answer(
         val text: String
-    ) : CommonData
+    ) : PartOneResponse
 
     @Serializable
     data class Idea(
         val text: String
-    ) : CommonData
+    ) : PartOneResponse
 
     @Serializable
     data class Question(
         val answer: List<Answer>,
         val ideas: List<Idea>,
         val text: String
-    ) : CommonData
+    ) : PartOneResponse
 
     @Serializable
     data class Vocabulary(
         val text: String
-    ) : CommonData
+    ) : PartOneResponse
 }
 
