@@ -43,5 +43,6 @@ sealed interface PartOneResponse{
     data class Vocabulary(
         val text: String
     ) : PartOneResponse
+
 }
 
