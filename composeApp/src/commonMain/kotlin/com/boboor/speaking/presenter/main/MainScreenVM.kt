@@ -1,7 +1,9 @@
 package com.boboor.speaking.presenter.main
 
 import com.boboor.speaking.data.remote.ApiService
+import com.boboor.speaking.presenter.main.MainScreenContracts.Intent.OnClickPart
 import kotlinx.coroutines.Job
+import kotlin.text.Typography.section
 
 /*
     Created by Boburjon Murodov 20/12/24 at 18:18
@@ -11,15 +13,17 @@ import kotlinx.coroutines.Job
 
 class MainScreenVM(
     private val directions: MainScreenContracts.Directions,
-//    private val apiService: ApiService
 ) : MainScreenContracts.ViewModel{
 
+    init {
+        println("MainScreenVM init")
+    }
 
     override fun onEventDispatcher(intent: MainScreenContracts.Intent): Job = intent{
         println("****onEventDispatcher")
 
         when(intent){
-            MainScreenContracts.Intent.OnClickPart -> directions.goTopicScreen()
+            is OnClickPart -> directions.goTopicScreen(intent.section)
         }
     }
 

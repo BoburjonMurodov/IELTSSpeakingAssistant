@@ -8,7 +8,6 @@ import androidx.compose.ui.unit.dp
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import platform.UIKit.UIDevice
@@ -34,9 +33,6 @@ fun Int.pxToPoint(): Double = this.toDouble() / UIScreen.mainScreen.scale
 
 actual fun createHttpClient(): HttpClient = HttpClient(Darwin) {
     install(ContentNegotiation) {
-//        json(Json { ignoreUnknownKeys = true })
         json(Json { ignoreUnknownKeys = true })
     }
 }
-
-

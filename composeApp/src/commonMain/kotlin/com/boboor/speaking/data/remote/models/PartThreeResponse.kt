@@ -1,4 +1,4 @@
-package com.boboor.speaking.data.models
+package com.boboor.speaking.data.remote.models
 
 import kotlinx.serialization.Serializable
 

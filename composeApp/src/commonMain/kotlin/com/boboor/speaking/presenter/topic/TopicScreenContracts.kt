@@ -1,8 +1,11 @@
 package com.boboor.speaking.presenter.topic
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
-import com.boboor.speaking.data.models.PartOneResponse
+import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.boboor.speaking.data.remote.models.PartOneResponse
 import com.boboor.speaking.utils.AppViewModel
+import com.boboor.speaking.utils.Section
 import kotlinx.coroutines.Job
 
 
@@ -15,11 +18,14 @@ class TopicScreenContracts {
         val searchQuery: MutableState<String>
 
         fun onEventDispatcher(intent: Intent): Job
-        fun init(): Job
+        fun init(section: Section): Job
     }
+
+    @Immutable
     data class UIState(
+        val section: Section = Section.PART_ONE,
         val isLoading: Boolean = false,
-        val questions: List<PartOneResponse.Topic> = emptyList(),
+        val questions: List<CommonTopicResponse.Topic> = emptyList(),
     )
 
     sealed interface Intent {

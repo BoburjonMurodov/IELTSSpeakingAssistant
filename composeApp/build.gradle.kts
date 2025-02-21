@@ -11,7 +11,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
 
-//    alias(libs.plugins.ksp)
+    //ROOM and KSP
+//    alias(libs.plugins.kspCompose)
 //    alias(libs.plugins.room)
 
 }
@@ -49,12 +50,13 @@ kotlin {
 
             //KTOR
             implementation(libs.ktor.client.okhttp)
+
         }
 
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+//            implementation(compose.material)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -85,10 +87,17 @@ kotlin {
             //KTOR
             implementation(libs.bundles.ktor)
 
-            //ROOM
-//            implementation(libs.room.runtime)
-//            implementation(libs.sqlite.bundled)
+            implementation("com.russhwolf:multiplatform-settings-no-arg:1.3.0")
 
+            //MATERIAL COLOR GENERATOR
+            implementation("com.materialkolor:material-kolor:2.0.2")
+
+            //MATERIAL 3
+            implementation("org.jetbrains.compose.material3:material3")
+
+
+            //SHIMMER
+            implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
         }
 
         nativeMain.dependencies {
@@ -132,15 +141,24 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
+dependencies {
+    implementation(libs.androidx.ui.text.google.fonts)
+}
 
-//room{
+
+//room {
 //    schemaDirectory("$projectDir/schemas")
 //}
 //
-//
-//
 //dependencies {
-//    ksp(libs.room.compiler)
+//    implementation(libs.androidx.sqlite.bundled.android)
+//    add("kspCommonMainMetadata", libs.room.compiler)
+//}
+//
+//tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
+//    if (name != "kspCommonMainKotlinMetadata" ) {
+//        dependsOn("kspCommonMainKotlinMetadata")
+//    }
 //}
 
 

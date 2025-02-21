@@ -1,8 +1,8 @@
 package com.boboor.speaking.data.remote
 
-import com.boboor.speaking.data.models.PartOneResponse
-import com.boboor.speaking.data.models.PartThreeResponse
-import com.boboor.speaking.data.models.PartTwoResponse
+import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.boboor.speaking.data.remote.models.PartThreeResponse
+import com.boboor.speaking.data.remote.models.PartTwoResponse
 import com.boboor.speaking.utils.resultOf
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -22,7 +22,7 @@ class ApiService(private val httpClient: HttpClient) {
         const val SECTION_THREE = "section3"
     }
 
-    suspend fun getPartOneQuestions(): Result<PartOneResponse.Response> {
+    suspend fun getPartOneQuestions(): Result<CommonTopicResponse.Response> {
         resultOf { httpClient.get("$BASE_URL$SECTION_ONE") }
             .onSuccess { return Result.success(it.body()) }
             .onFailure { return Result.failure(it) }
@@ -37,7 +37,7 @@ class ApiService(private val httpClient: HttpClient) {
         return Result.failure(Exception("Unknown error"))
     }
 
-    suspend fun getPartThreeQuestions(): Result<PartThreeResponse.Response> {
+    suspend fun getPartThreeQuestions(): Result<CommonTopicResponse.Response> {
         resultOf { httpClient.get("$BASE_URL$SECTION_THREE") }
             .onSuccess { return Result.success(it.body()) }
             .onFailure { return Result.failure(it) }

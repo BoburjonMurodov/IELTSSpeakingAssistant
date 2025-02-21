@@ -17,3 +17,8 @@ expect fun getScreenWidth(): Dp
 expect fun getScreenHeight(): Dp
 
 expect fun createHttpClient(): HttpClient
+
+
+expect object TimeUtil {
+    fun systemTimeMs(): Long
+}

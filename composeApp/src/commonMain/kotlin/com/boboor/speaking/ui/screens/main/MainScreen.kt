@@ -15,8 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -33,14 +34,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
-import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.boboor.speaking.getScreenWidth
 import com.boboor.speaking.presenter.main.MainScreenContracts
-import com.boboor.speaking.presenter.main.MainScreenVM
+import com.boboor.speaking.utils.Section
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.ic_ielts_envelope
 import ieltsspeakingassistant.composeapp.generated.resources.ic_part_one
@@ -49,8 +48,6 @@ import ieltsspeakingassistant.composeapp.generated.resources.ic_part_two
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.getKoin
-import org.koin.compose.koinInject
 
 
 /*
@@ -63,7 +60,7 @@ class MainScreen : Screen {
     @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
-        val viewModel =  koinScreenModel<MainScreenContracts.ViewModel>()
+        val viewModel = koinScreenModel<MainScreenContracts.ViewModel>()
 
         val state = viewModel.container.stateFlow.collectAsState()
 
@@ -72,7 +69,14 @@ class MainScreen : Screen {
     }
 }
 
-
+fun Color.darken(factor: Float = 0.8f): Color {
+    return Color(
+        red = (red * factor).coerceIn(0f, 1f),
+        green = (green * factor).coerceIn(0f, 1f),
+        blue = (blue * factor).coerceIn(0f, 1f),
+        alpha = alpha
+    )
+}
 
 @Composable
 private fun MainScreenContent(
@@ -81,7 +85,7 @@ private fun MainScreenContent(
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
-            .background(Color(0xfff1f6f8))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Box(
             modifier = Modifier
@@ -92,7 +96,14 @@ private fun MainScreenContent(
                 modifier = Modifier.fillMaxWidth()
                     .height(225.dp)
                     .clip(RoundedCornerShape(bottomEnd = 36.dp, bottomStart = 36.dp))
-                    .background(Brush.linearGradient(colors = listOf(Color(0xffc61531), Color(0xff931125))))
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.primary.darken(0.5f)
+                            )
+                        )
+                    )
             )
 
             Column(
@@ -111,12 +122,12 @@ private fun MainScreenContent(
                         .shadow(
                             elevation = 40.dp, shape = RoundedCornerShape(24.dp),
                             ambientColor = Color(0xffc61531),
-                            spotColor = Color(0xffc61531).copy(alpha = 0.4f)
+                            spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
                         )
                         .fillMaxWidth()
                         .height(150.dp)
                         .clip(RoundedCornerShape(24.dp))
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.surface)
                         .clickable { showToast("Coming Soon...") }
                         .padding(24.dp)
                 ) {
@@ -151,7 +162,11 @@ private fun MainScreenContent(
 
                         Spacer(Modifier.height(8.dp))
 
-                        Text(text = "If you have taken IELTS, check your IELTS results")
+                        Text(
+                            text = "If you have taken IELTS, check your IELTS results",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.bodyMedium
+                            )
                     }
 
                 }
@@ -170,37 +185,32 @@ private fun MainScreenContent(
 
             Text(
                 "Speaking",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.W600,
-                color = Color.Black
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Spacer(Modifier.height(16.dp))
 
             Row(horizontalArrangement = Arrangement.SpaceBetween) {
                 AppCard("Part 1", Res.drawable.ic_part_one) {
-                    onEventDispatcher(MainScreenContracts.Intent.OnClickPart)
+                    onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_ONE))
                 }
                 Spacer(Modifier.weight(1f))
                 AppCard("Part 2", Res.drawable.ic_part_two) {
-                    onEventDispatcher(MainScreenContracts.Intent.OnClickPart)
+                    onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_TWO))
                 }
             }
 
             Spacer(Modifier.height(16.dp))
 
             AppCard("Part 3", Res.drawable.ic_part_three, true) {
-                onEventDispatcher(MainScreenContracts.Intent.OnClickPart)
+                onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_THREE))
             }
 
             Spacer(Modifier.weight(5f))
-
-
-
         }
     }
 }
-
 
 
 @Composable
@@ -215,10 +225,10 @@ fun AppCard(
 
     Column(
         modifier = Modifier
-            .appShadow()
+            .appShadow(alpha = 0.5f)
             .width(if (takeFull) screenWidth + 24.dp else screenWidth / 2)
             .clip(RoundedCornerShape(24.dp))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .clickable { onClick.invoke() }
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -234,19 +244,18 @@ fun AppCard(
 
         Text(
             title,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.W600,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
 
 
-fun Modifier.appShadow() : Modifier{
+@Composable
+fun Modifier.appShadow(alpha: Float = 0.4f): Modifier {
     return shadow(
         elevation = 40.dp, shape = RoundedCornerShape(24.dp),
-        spotColor = Color(0xff3ea8d0).copy(alpha = 0.4f)
+        spotColor = MaterialTheme.colorScheme.primary.copy(alpha = alpha)
     )
 }
-
-
 

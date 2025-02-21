@@ -4,7 +4,6 @@ import com.boboor.speaking.presenter.main.MainScreenContracts
 import com.boboor.speaking.presenter.main.MainScreenVM
 import com.boboor.speaking.presenter.topic.TopicScreenContracts
 import com.boboor.speaking.presenter.topic.TopicScreenVM
-import com.boboor.speaking.ui.screens.topic.TopicScreenDirections
 import org.koin.dsl.module
 
 
@@ -14,7 +13,6 @@ import org.koin.dsl.module
 
 
 val mainScreenModule = module {
-    factory<MainScreenContracts.ViewModel> { MainScreenVM(get())  }
-    factory<TopicScreenContracts.ViewModel> { TopicScreenVM(get(), get()) }
+    factory<MainScreenContracts.ViewModel> { MainScreenVM(get()) }
+    factory<TopicScreenContracts.ViewModel> { TopicScreenVM(get(), get(), get()) }
 }
-

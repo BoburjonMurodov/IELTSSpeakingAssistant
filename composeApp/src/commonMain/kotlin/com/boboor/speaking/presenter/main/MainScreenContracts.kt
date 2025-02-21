@@ -1,6 +1,7 @@
 package com.boboor.speaking.presenter.main
 
 import com.boboor.speaking.utils.AppViewModel
+import com.boboor.speaking.utils.Section
 import kotlinx.coroutines.Job
 
 
@@ -20,10 +21,10 @@ interface MainScreenContracts {
     )
 
     sealed interface Intent {
-        data object OnClickPart : Intent
+        data class OnClickPart(val section: Section) : Intent
     }
 
     interface Directions{
-        suspend fun goTopicScreen()
+        suspend fun goTopicScreen(section: Section)
     }
 }
