@@ -10,6 +10,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import java.awt.Toolkit
+import kotlin.system.exitProcess
 
 //@Composable
 //actual fun getScreenWidth(): Dp {
@@ -45,4 +46,8 @@ actual fun createHttpClient(): HttpClient = HttpClient(OkHttp) {
 
 actual object TimeUtil {
     actual fun systemTimeMs(): Long = System.currentTimeMillis()
+}
+
+actual fun closeApp() {
+    exitProcess(0)
 }

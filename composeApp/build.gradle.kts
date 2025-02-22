@@ -95,7 +95,6 @@ kotlin {
             //MATERIAL 3
             implementation("org.jetbrains.compose.material3:material3")
 
-
             //SHIMMER
             implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
         }
@@ -134,6 +133,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {

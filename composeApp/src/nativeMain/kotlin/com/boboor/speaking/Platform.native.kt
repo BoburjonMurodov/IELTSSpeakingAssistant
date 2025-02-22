@@ -3,6 +3,8 @@ package com.boboor.speaking
 import kotlinx.datetime.Clock
 import platform.Foundation.NSDate
 import platform.Foundation.timeIntervalSince1970
+import platform.posix.exit
+import kotlin.system.exitProcess
 
 
 //actual fun createHttpClient(): HttpClient = HttpClient(Darwin) {
@@ -15,4 +17,8 @@ import platform.Foundation.timeIntervalSince1970
 
 actual object TimeUtil {
     actual fun systemTimeMs(): Long = NSDate().timeIntervalSince1970.toLong() * 1000
+}
+
+actual fun closeApp() {
+    exit(0)
 }

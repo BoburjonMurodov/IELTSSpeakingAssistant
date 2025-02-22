@@ -10,6 +10,7 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import kotlin.system.exitProcess
 
 class AndroidPlatform : Platform {
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
@@ -36,3 +37,6 @@ actual object TimeUtil {
     actual fun systemTimeMs(): Long = System.currentTimeMillis()
 }
 
+actual fun closeApp() {
+    exitProcess(0)
+}

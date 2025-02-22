@@ -39,7 +39,7 @@ class TopicScreenVM(
 
     override fun init(section: Section): Job = intent {
         reduce { state.copy(isLoading = true, section = section) }
-        delay(1_000)
+//        delay(1_000)
 
         when (section) {
             Section.PART_ONE -> getPartOneQuestions()
@@ -49,9 +49,9 @@ class TopicScreenVM(
     }
 
     private fun getPartOneQuestions() = intent {
-
         val partOneQuestions = localStorage.getPartOne()
         if (partOneQuestions == null) {
+            println("getPartOneQuestions from net")
             apiService.getPartOneQuestions().onSuccess { result ->
                 result.content.forEach { if (it.value.active) questions.add(it.value) }
                 localStorage.addPartOne(result)
@@ -60,6 +60,8 @@ class TopicScreenVM(
                 reduce { state.copy(isLoading = false) }
             }
         } else {
+            println("getPartOneQuestions from local")
+
             partOneQuestions.content.forEach { if (it.value.active) questions.add(it.value) }
             reduce { state.copy(isLoading = false, questions = questions) }
         }

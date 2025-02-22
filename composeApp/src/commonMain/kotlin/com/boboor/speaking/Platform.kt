@@ -22,3 +22,5 @@ expect fun createHttpClient(): HttpClient
 expect object TimeUtil {
     fun systemTimeMs(): Long
 }
+
+expect fun closeApp()
