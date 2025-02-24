@@ -4,7 +4,6 @@ package com.boboor.speaking.ui.screens.topic
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,14 +12,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,25 +23,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
@@ -59,8 +42,6 @@ import com.boboor.speaking.ui.components.SearchInput
 import com.boboor.speaking.ui.components.TopicItem
 import com.boboor.speaking.ui.components.TopicItemShimmer
 import com.boboor.speaking.utils.Section
-import kotlin.math.max
-import kotlin.math.min
 
 
 /*
@@ -93,11 +74,10 @@ private fun TopicScreenContent(
 ) {
     val isSearchVisible = remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
-    val scrollState = remember { mutableStateOf(0f) }
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(listState.isScrollInProgress) {
-        snapshotFlow { listState.firstVisibleItemScrollOffset }
-            .collect { scrollState.value = it.toFloat() }
+    LaunchedEffect(Unit) {
+
     }
 
     Scaffold(
@@ -111,10 +91,12 @@ private fun TopicScreenContent(
                     isSearchVisible.value = !isSearchVisible.value
                 }
             )
+
         },
     ) {
         LazyColumn(
             userScrollEnabled = !state.value.isLoading,
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
@@ -150,7 +132,14 @@ private fun TopicScreenContent(
             items(state.value.questions.size, key = { state.value.questions[it].name }) {
                 val isExpanded = rememberSaveable { mutableStateOf(false) }
                 val hasOverFlow = rememberSaveable { mutableStateOf(false) }
-                TopicItem(state.value.questions[it], it + 1, isExpanded, hasOverFlow, searchQuery.value)
+                TopicItem(state.value.questions[it], it + 1, isExpanded, hasOverFlow, searchQuery.value) {
+                    onEventDispatcher.invoke(
+                        TopicScreenContracts.Intent.OnClickTopic(
+                            title = state.value.questions[it].name,
+                            list = state.value.questions[it].questions
+                        )
+                    )
+                }
             }
 
             if (state.value.isLoading) {
@@ -173,5 +162,4 @@ private fun TopicScreenContent(
         }
     }
 }
-
 

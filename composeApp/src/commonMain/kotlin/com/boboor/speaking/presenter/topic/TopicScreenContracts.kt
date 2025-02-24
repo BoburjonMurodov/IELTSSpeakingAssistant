@@ -3,7 +3,6 @@ package com.boboor.speaking.presenter.topic
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
-import com.boboor.speaking.data.remote.models.PartOneResponse
 import com.boboor.speaking.utils.AppViewModel
 import com.boboor.speaking.utils.Section
 import kotlinx.coroutines.Job
@@ -31,10 +30,11 @@ class TopicScreenContracts {
     sealed interface Intent {
         data object OnClickBack : Intent
         data object SearchQuery : Intent
+        data class OnClickTopic(val title: String, val list: List<CommonTopicResponse.Question>) : Intent
     }
 
     interface Directions {
-        suspend fun goTopicScreen()
+        suspend fun goQuestionsScreen(title: String, list: List<CommonTopicResponse.Question>)
         suspend fun goBack()
     }
 }

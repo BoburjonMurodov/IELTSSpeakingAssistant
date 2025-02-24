@@ -7,7 +7,6 @@ import com.boboor.speaking.data.remote.ApiService
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.utils.Section
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 
 
 /*
@@ -34,6 +33,8 @@ class TopicScreenVM(
                 })
 
             }
+
+            is TopicScreenContracts.Intent.OnClickTopic -> directions.goQuestionsScreen(intent.title, intent.list)
         }
     }
 

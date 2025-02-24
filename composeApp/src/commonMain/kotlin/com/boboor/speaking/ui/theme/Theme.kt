@@ -7,12 +7,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import com.materialkolor.DynamicMaterialTheme
-import ieltsspeakingassistant.composeapp.generated.resources.Lato_Black
-import ieltsspeakingassistant.composeapp.generated.resources.Lato_Bold
-import ieltsspeakingassistant.composeapp.generated.resources.Lato_Light
-import ieltsspeakingassistant.composeapp.generated.resources.Lato_Regular
-import ieltsspeakingassistant.composeapp.generated.resources.Lato_Thin
 import ieltsspeakingassistant.composeapp.generated.resources.Res
+import ieltsspeakingassistant.composeapp.generated.resources.mont_bold
+import ieltsspeakingassistant.composeapp.generated.resources.mont_medium
+import ieltsspeakingassistant.composeapp.generated.resources.mont_regular
+import ieltsspeakingassistant.composeapp.generated.resources.mont_semibold
 
 import org.jetbrains.compose.resources.Font
 
@@ -37,11 +36,11 @@ import org.jetbrains.compose.resources.Font
 //)
 
 @Composable
-fun LatoFontFamily() = FontFamily(
-    Font(resource = Res.font.Lato_Bold, weight = FontWeight.Bold),
-    Font(Res.font.Lato_Black, FontWeight.Black),
-    Font(Res.font.Lato_Light, FontWeight.Light),
-    Font(Res.font.Lato_Thin, FontWeight.Thin),
+fun MontFontFamily() = FontFamily(
+    Font(Res.font.mont_semibold, FontWeight.SemiBold),
+    Font(Res.font.mont_bold, FontWeight.Bold),
+    Font(Res.font.mont_medium, FontWeight.Medium),
+    Font(Res.font.mont_regular, FontWeight.Normal),
 )
 
 
@@ -51,25 +50,25 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val typography = MaterialTheme.typography.copy(
-        displayLarge = MaterialTheme.typography.displayLarge.copy(fontFamily = LatoFontFamily()),
-        displayMedium = MaterialTheme.typography.displayMedium.copy(fontFamily = LatoFontFamily()),
-        displaySmall = MaterialTheme.typography.displaySmall.copy(fontFamily = LatoFontFamily()),
-        bodyLarge = MaterialTheme.typography.bodyLarge.copy(fontFamily = LatoFontFamily()),
-        bodyMedium = MaterialTheme.typography.bodyMedium.copy(fontFamily = LatoFontFamily()),
-        bodySmall = MaterialTheme.typography.bodySmall.copy(fontFamily = LatoFontFamily()),
-        headlineLarge = MaterialTheme.typography.headlineLarge.copy(fontFamily = LatoFontFamily()),
-        headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontFamily = LatoFontFamily()),
-        headlineSmall = MaterialTheme.typography.headlineSmall.copy(fontFamily = LatoFontFamily()),
-        titleLarge = MaterialTheme.typography.titleLarge.copy(fontFamily = LatoFontFamily()),
-        titleMedium = MaterialTheme.typography.titleMedium.copy(fontFamily = LatoFontFamily()),
-        titleSmall = MaterialTheme.typography.titleSmall.copy(fontFamily = LatoFontFamily()),
-        labelLarge = MaterialTheme.typography.labelLarge.copy(fontFamily = LatoFontFamily()),
-        labelMedium = MaterialTheme.typography.labelMedium.copy(fontFamily = LatoFontFamily()),
-        labelSmall = MaterialTheme.typography.labelSmall.copy(fontFamily = LatoFontFamily()),
+        displayLarge = MaterialTheme.typography.displayLarge.copy(fontFamily = MontFontFamily()),
+        displayMedium = MaterialTheme.typography.displayMedium.copy(fontFamily = MontFontFamily()),
+        displaySmall = MaterialTheme.typography.displaySmall.copy(fontFamily = MontFontFamily()),
+        bodyLarge = MaterialTheme.typography.bodyLarge.copy(fontFamily = MontFontFamily()),
+        bodyMedium = MaterialTheme.typography.bodyMedium.copy(fontFamily = MontFontFamily()),
+        bodySmall = MaterialTheme.typography.bodySmall.copy(fontFamily = MontFontFamily()),
+        headlineLarge = MaterialTheme.typography.headlineLarge.copy(fontFamily = MontFontFamily()),
+        headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontFamily = MontFontFamily()),
+        headlineSmall = MaterialTheme.typography.headlineSmall.copy(fontFamily = MontFontFamily()),
+        titleLarge = MaterialTheme.typography.titleLarge.copy(fontFamily = MontFontFamily()),
+        titleMedium = MaterialTheme.typography.titleMedium.copy(fontFamily = MontFontFamily()),
+        titleSmall = MaterialTheme.typography.titleSmall.copy(fontFamily = MontFontFamily()),
+        labelLarge = MaterialTheme.typography.labelLarge.copy(fontFamily = MontFontFamily()),
+        labelMedium = MaterialTheme.typography.labelMedium.copy(fontFamily = MontFontFamily()),
+        labelSmall = MaterialTheme.typography.labelSmall.copy(fontFamily = MontFontFamily()),
     )
 
     DynamicMaterialTheme(
-        seedColor = Color.Green,
+        seedColor = Color.Yellow,
         animate = true,
         content = content,
         shapes = MaterialTheme.shapes,

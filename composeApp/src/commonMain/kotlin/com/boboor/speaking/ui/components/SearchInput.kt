@@ -31,10 +31,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 
 /*
@@ -48,9 +46,7 @@ fun SearchInput(
 ) {
     val focusRequest = FocusRequester()
 
-    LaunchedEffect(Unit) {
-        focusRequest.requestFocus()
-    }
+    LaunchedEffect(Unit) { focusRequest.requestFocus() }
 
     Row(
         modifier = Modifier
@@ -89,16 +85,14 @@ fun SearchInput(
             maxLines = 1,
             textStyle = TextStyle(
                 color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.W500
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize
             )
         ) {
             if (query.value.isEmpty()) {
                 Text(
                     text = "Search...",
                     color = Color.Gray,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.W500
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
             it.invoke()

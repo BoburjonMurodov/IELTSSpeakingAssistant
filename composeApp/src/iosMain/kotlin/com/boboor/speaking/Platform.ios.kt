@@ -10,10 +10,12 @@ import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import platform.Foundation.NSNotificationCenter
 import platform.UIKit.UIDevice
 import platform.UIKit.UIScreen
+import kotlin.experimental.ExperimentalObjCName
 
-class IOSPlatform: Platform {
+class IOSPlatform : Platform {
     override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
 }
 
@@ -36,3 +38,28 @@ actual fun createHttpClient(): HttpClient = HttpClient(Darwin) {
         json(Json { ignoreUnknownKeys = true })
     }
 }
+
+
+actual fun onTapStatusBar(onTapped: () -> Unit): () -> Unit {
+    val observer = NSNotificationCenter.defaultCenter.addObserverForName(
+        name = "StatusBarTapped",
+        `object` = null,
+        queue = null
+    ) {
+        onTapped.invoke()
+    }
+
+    return {
+        NSNotificationCenter.defaultCenter.removeObserver(observer)
+    }
+}
+
+
+//
+//actual class StatusBarTapListener {
+//    private val bridge = StatusBarTapListener()
+//
+//    actual fun onStatusBarTapped(callback: () -> Unit) {
+//        bridge.listenForStatusBarTaps(callback = callback)
+//    }
+//}

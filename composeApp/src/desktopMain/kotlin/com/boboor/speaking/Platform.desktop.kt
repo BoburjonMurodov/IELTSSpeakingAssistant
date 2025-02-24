@@ -51,3 +51,13 @@ actual object TimeUtil {
 actual fun closeApp() {
     exitProcess(0)
 }
+
+actual fun onTapStatusBar(onTapped: () -> Unit): () -> Unit {
+    return {}
+}
+
+//actual class StatusBarTapListener {
+//    actual fun onStatusBarTapped(callback: () -> Unit) {
+//
+//    }
+//}

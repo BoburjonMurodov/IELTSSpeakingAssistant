@@ -24,3 +24,8 @@ expect object TimeUtil {
 }
 
 expect fun closeApp()
+expect fun onTapStatusBar(onTapped: () -> Unit): () -> Unit
+
+//expect class StatusBarTapListener {
+//    fun onStatusBarTapped(callback: () -> Unit)
+//}

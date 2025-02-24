@@ -15,13 +15,8 @@ class MainScreenVM(
     private val directions: MainScreenContracts.Directions,
 ) : MainScreenContracts.ViewModel{
 
-    init {
-        println("MainScreenVM init")
-    }
-
     override fun onEventDispatcher(intent: MainScreenContracts.Intent): Job = intent{
-        println("****onEventDispatcher")
-
+        println("onEventDispatcher on tap")
         when(intent){
             is OnClickPart -> directions.goTopicScreen(intent.section)
         }

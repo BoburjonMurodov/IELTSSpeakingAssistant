@@ -6,14 +6,16 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -58,7 +60,8 @@ fun TopicItem(
     index: Int,
     isExpanded: MutableState<Boolean>,
     hasOverFlow: MutableState<Boolean>,
-    searchQuery: String = ""
+    searchQuery: String = "",
+    onClick: () -> Unit = {}
 ) {
     val degree = animateFloatAsState(
         targetValue = if (!isExpanded.value) -90f else -270f,
@@ -66,7 +69,6 @@ fun TopicItem(
     )
 
     val maxLines = animateIntAsState(if (isExpanded.value) 10 else 2)
-
     val lineCount = remember { mutableStateOf(0) }
 
     Row {
@@ -88,17 +90,17 @@ fun TopicItem(
         Box(
             Modifier.fillMaxWidth()
                 .appShadow()
-                .heightIn(min = 80.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .clickable { onClick() }
                 .animateContentSize(spring(stiffness = Spring.StiffnessLow))
         ) {
 
-            Row(Modifier.padding(12.dp)) {
+            Row(Modifier.padding(16.dp).height(IntrinsicSize.Min)) {
                 Column(
                     Modifier
-                        .fillMaxSize(0.8f)
-                        .padding(horizontal = 12.dp)
+                        .fillMaxHeight()
+                        .fillMaxSize(0.9f)
                 ) {
                     Text(
                         text = getHighLightedText(item.name, searchQuery),
@@ -106,11 +108,14 @@ fun TopicItem(
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = maxLines.value,
                         overflow = TextOverflow.Ellipsis,
-                        onTextLayout = { hasOverFlow.value = it.hasVisualOverflow; lineCount.value = it.lineCount }
+                        onTextLayout = {
+                            hasOverFlow.value = it.hasVisualOverflow
+                            lineCount.value = it.lineCount
+                        }
                     )
 
                     Spacer(Modifier.weight(1f))
-                    Text("10 questions", fontSize = 12.sp)
+                    Text("${item.questions.size} questions", fontSize = 12.sp)
                 }
 
                 if (hasOverFlow.value || isExpanded.value) {
@@ -120,14 +125,12 @@ fun TopicItem(
                             contentDescription = null,
                             modifier = Modifier
                                 .size(24.dp)
-                                .graphicsLayer {
-                                    rotationZ = degree.value
-                                },
+                                .graphicsLayer { rotationZ = degree.value },
                             tint = Color.Gray
                         )
                     }
                 } else
-                    Box(Modifier.size(32.dp))
+                    Spacer(Modifier.size(32.dp))
             }
 
             if (item.new == "new") {
@@ -170,17 +173,14 @@ fun TopicItemShimmer() {
 
         Box(
             Modifier.fillMaxWidth()
-//                .heightIn(min = 80.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .animateContentSize(spring(stiffness = Spring.StiffnessLow))
         ) {
 
-            Row(Modifier.padding(12.dp)) {
+            Row(Modifier.padding(16.dp)) {
                 Column(
-                    Modifier
-                        .fillMaxSize(0.8f)
-                        .padding(horizontal = 12.dp)
+                    Modifier.fillMaxSize(0.8f)
                 ) {
                     Text(
                         text = "",
@@ -235,7 +235,6 @@ fun TopicItemShimmer() {
         }
     }
 }
-
 
 
 @Composable

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import com.boboor.speaking.presenter.main.MainScreenContracts
 import com.boboor.speaking.ui.screens.topic.TopicScreen
 import com.boboor.speaking.utils.Section
+import kotlin.math.log
 
 
 /*
@@ -15,6 +16,7 @@ class MainScreenDirections(
     private val appNavigator: AppNavigator
 ) : MainScreenContracts.Directions {
     override suspend fun goTopicScreen(section: Section) {
+        println("go to topic screen action")
         appNavigator.push(TopicScreen(section))
     }
 }
