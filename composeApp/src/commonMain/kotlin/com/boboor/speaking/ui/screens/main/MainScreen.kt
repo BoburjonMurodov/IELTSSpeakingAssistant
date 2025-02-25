@@ -92,9 +92,7 @@ class MainScreen : Screen, ScreenTransition {
     override fun Content() {
         val viewModel = koinScreenModel<MainScreenContracts.ViewModel>()
 
-        val state = viewModel.container.stateFlow.collectAsState()
-
-
+        val state = viewModel.collectAsState()
         MainScreenContent(state, viewModel::onEventDispatcher)
     }
 }
@@ -124,8 +122,6 @@ private fun MainScreenContent(
         snackbarHost = {
             SnackbarHost(snackBarHostState,
                 snackbar = {
-
-
                     Box(
                         modifier = Modifier
                             .navigationBarsPadding()

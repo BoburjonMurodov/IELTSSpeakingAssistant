@@ -12,22 +12,13 @@ import kotlinx.serialization.json.Json
 import java.awt.Toolkit
 import kotlin.system.exitProcess
 
-//@Composable
-//actual fun getScreenWidth(): Dp {
-//    return 0.dp
-//}
-//
-//@Composable
-//actual fun getScreenHeight(): Dp {
-//    return 0.dp
-//}
 
 
 @Composable
 actual fun getScreenWidth(): Dp {
     val screenSize = Toolkit.getDefaultToolkit().screenSize
     val dpi = Toolkit.getDefaultToolkit().screenResolution
-    return 400.dp // Convert pixels to dp
+    return 400.dp
 }
 
 
@@ -52,9 +43,9 @@ actual fun closeApp() {
     exitProcess(0)
 }
 
-actual fun onTapStatusBar(onTapped: () -> Unit): () -> Unit {
-    return {}
-}
+//actual fun onTapStatusBar(onTapped: () -> Unit): () -> Unit {
+//    return {}
+//}
 
 //actual class StatusBarTapListener {
 //    actual fun onStatusBarTapped(callback: () -> Unit) {

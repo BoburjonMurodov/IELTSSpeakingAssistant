@@ -72,8 +72,8 @@ kotlin {
             implementation("cafe.adriel.voyager:voyager-koin:$voyagerVersion") // Koin integration
 
             //MVI ORBIT
-            implementation("org.orbit-mvi:orbit-core:9.0.0")
-            implementation("org.orbit-mvi:orbit-compose:9.0.0")
+//            implementation("org.orbit-mvi:orbit-core:9.0.0")
+//            implementation("org.orbit-mvi:orbit-compose:9.0.0")
 
             //KOIN DI
             api(libs.koin.core)
@@ -93,7 +93,9 @@ kotlin {
             implementation("com.materialkolor:material-kolor:2.0.2")
 
             //MATERIAL 3
-            implementation("org.jetbrains.compose.material3:material3")
+//            implementation("org.jetbrains.compose.material3:material3")
+            implementation("org.jetbrains.compose.material3:material3:1.7.3")
+
 
             //SHIMMER
             implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")

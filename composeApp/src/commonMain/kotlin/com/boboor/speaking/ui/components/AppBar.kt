@@ -1,6 +1,7 @@
 package com.boboor.speaking.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun AppBar(
     title: String,
+
     showSearch: Boolean = true,
     isSearchVisible: Boolean = true,
     onClickBack: () -> Unit,
@@ -79,6 +81,7 @@ fun AppBar(
         }
 
         Text(
+            modifier = Modifier.basicMarquee(),
             text = title,
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.W600),
             color = MaterialTheme.colorScheme.onSurface,

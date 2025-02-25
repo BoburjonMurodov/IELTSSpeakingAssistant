@@ -20,110 +20,89 @@ import kotlin.random.Random
 /*
     Created by Boburjon Murodov 20/02/25 at 13:59
 */
-
 class LocalStorage {
     private val settings = Settings()
-    val PART_ONE = "SPEAKING_ONE".encrypt(getKey())
-    val PART_TWO = "SECTION_TWO".encrypt(getKey())
-    val PART_THREE = "PART_THREE".encrypt(getKey())
-
-    private lateinit var partOneResponse: CommonTopicResponse.Response
-    private lateinit var partThreeResponse: CommonTopicResponse.Response
-
-
-    private companion object {
-        const val KEY = "A&Oi%s129#ANmlsd!@fg12)asmn=="
-    }
-
-    init {
-        val coroutineScope = CoroutineScope(Job() + Dispatchers.IO)
-
-        coroutineScope.launch {
-            val partOne = getPartOne()
-            partOne?.let { partOneResponse = it }
-
-            val partThree = getPartThree()
-            partThree?.let { partThreeResponse = it }
-
-            this.cancel()
-        }
-    }
+    val PART_ONE_PREFIX = "SPEAKING_ONE_PART_".encrypt(getKey())
+    val PART_THREE_PREFIX = "PART_THREE_PART_".encrypt(getKey())
+    private val CHUNK_SIZE = 4000 // Adjust based on storage limits
 
     private fun getRandomString(length: Int = Random.nextInt(12, 55)): String {
-        val charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        val charset = "AAAB"
         return (1..length)
             .map { charset.random() }
             .joinToString("")
     }
 
     private fun getKey(): String {
-        val key = settings.getString(KEY, "")
+        val key = settings.getString("KEY", "")
         if (key.isEmpty()) {
-            settings.putString(KEY, getRandomString())
+            settings.putString("KEY", getRandomString())
         }
-        return settings.getString(KEY, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+        return settings.getString("KEY", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
     }
 
-    suspend fun addPartOne(value: CommonTopicResponse.Response) = withContext(Dispatchers.IO) {
+    private lateinit var partOneResponse: CommonTopicResponse.Response
+    private lateinit var partThreeResponse: CommonTopicResponse.Response
+
+    suspend fun addPartOne(value: CommonTopicResponse.Response) = storeInParts(PART_ONE_PREFIX, value)
+    suspend fun getPartOne(): CommonTopicResponse.Response? = retrieveFromParts(PART_ONE_PREFIX)
+
+    suspend fun addPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
+    suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)
+
+    private suspend fun storeInParts(prefix: String, value: CommonTopicResponse.Response) {
         val json = Json.encodeToString(value).encryptWithKey(getKey())
-        settings.putString(PART_ONE, json)
-    }
+        val parts = json.chunked(CHUNK_SIZE)
 
-    suspend fun getPartOne(): CommonTopicResponse.Response? = withContext(Dispatchers.IO) {
-        if (::partOneResponse.isInitialized) return@withContext partOneResponse
-
-        val json = settings.getString(PART_ONE, "").decryptWithKey(getKey())
-        if (json.isEmpty()) return@withContext null
-        return@withContext try {
-            Json.decodeFromString(json)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            println("getPartOne error ${e.message}")
-            null
+        settings.putInt("${prefix}_COUNT", parts.size)
+        parts.forEachIndexed { index, part ->
+            settings.putString("$prefix$index", part)
         }
     }
 
-    suspend fun addPartThree(value: CommonTopicResponse.Response) = withContext(Dispatchers.IO) {
-        val json = Json.encodeToString(value).encryptWithKey(KEY)
-        settings.putString(PART_THREE, json)
-    }
+    private suspend fun retrieveFromParts(prefix: String): CommonTopicResponse.Response? {
+        val count = settings.getInt("${prefix}_COUNT", 0)
+        if (count == 0) return null
 
-    suspend fun getPartThree(): CommonTopicResponse.Response? = withContext(Dispatchers.IO) {
-        if (::partThreeResponse.isInitialized) return@withContext partThreeResponse
+        val json = (0 until count)
+            .mapNotNull { settings.getString("$prefix$it", "") }
+            .joinToString("")
+            .decryptWithKey(getKey())
 
-
-        val json = settings.getString(PART_THREE, "").decryptWithKey(KEY)
-        if (json.isEmpty()) return@withContext null
-
-        return@withContext try {
+        return try {
             Json.decodeFromString(json)
         } catch (e: Exception) {
             e.printStackTrace()
-            println("getPartThree error ${e.message}")
-
+            println("Error retrieving data: ${e.message}")
             null
         }
     }
 }
 
+
 @OptIn(ExperimentalEncodingApi::class)
 private suspend fun String.encryptWithKey(key: String): String = withContext(Dispatchers.Default) {
-    val inputBytes = encodeToByteArray()
-    val keyBytes = key.encodeToByteArray()
-    for (i in inputBytes.indices) {
-        inputBytes[i] = inputBytes[i] xor keyBytes[i % keyBytes.size]
-    }
-    Base64.encode(inputBytes)
+
+//    val inputBytes = encodeToByteArray()
+//    val keyBytes = key.encodeToByteArray()
+//    for (i in inputBytes.indices) {
+//        inputBytes[i] = inputBytes[i] xor keyBytes[i % keyBytes.size]
+//    }
+//    Base64.encode(inputBytes)
+    return@withContext this@encryptWithKey
 }
 
 @OptIn(ExperimentalEncodingApi::class)
 private suspend fun String.decryptWithKey(key: String): String = withContext(Dispatchers.Default) {
-    val decodedBytes = Base64.decode(this@decryptWithKey)
-    val keyBytes = key.encodeToByteArray()
-    for (i in decodedBytes.indices) {
-        decodedBytes[i] = decodedBytes[i] xor keyBytes[i % keyBytes.size]
-    }
-    decodedBytes.decodeToString()
+//    val decodedBytes = Base64.decode(this@decryptWithKey)
+//    val keyBytes = key.encodeToByteArray()
+//    for (i in decodedBytes.indices) {
+//        decodedBytes[i] = decodedBytes[i] xor keyBytes[i % keyBytes.size]
+//    }
+//    decodedBytes.decodeToString()
+
+    return@withContext this@decryptWithKey
+
 }
 
 @OptIn(ExperimentalEncodingApi::class)

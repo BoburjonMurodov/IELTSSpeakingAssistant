@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.ui.components.AppBar
 
@@ -32,9 +33,12 @@ private fun CommonQuestionsScreenContent(
     title: String,
     questions: List<CommonTopicResponse.Question>
 ) {
+    val navigator = LocalNavigator.current
     Scaffold(
         topBar = {
-            AppBar(title = title, showSearch = false, onClickSearch = {}, onClickBack = {})
+            AppBar(title = title, showSearch = false, onClickSearch = {}, onClickBack = {
+                navigator?.pop()
+            })
         }
     ) {
         LazyColumn(

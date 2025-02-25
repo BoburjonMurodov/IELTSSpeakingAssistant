@@ -6,7 +6,10 @@ import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.data.remote.ApiService
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.utils.Section
+import com.boboor.speaking.utils.resultOf
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 
 /*
@@ -18,28 +21,39 @@ class TopicScreenVM(
     private val apiService: ApiService,
     private val localStorage: LocalStorage
 ) : TopicScreenContracts.ViewModel {
+    override val UIState = MutableStateFlow(TopicScreenContracts.UIState())
+
     override val searchQuery: MutableState<String> = mutableStateOf("")
     private val questions = ArrayList<CommonTopicResponse.Topic>()
+
+//    fun intent(action: suspend () -> Unit): Job =
+//        screenModelScope.launch {
+//            action.invoke();
+//        }
+
 
     override fun onEventDispatcher(intent: TopicScreenContracts.Intent): Job = intent {
         when (intent) {
             TopicScreenContracts.Intent.OnClickBack -> directions.goBack()
-            TopicScreenContracts.Intent.SearchQuery -> reduce {
-                state.copy(questions = questions.filter {
-                    it.name.contains(
-                        searchQuery.value,
-                        ignoreCase = true
-                    )
-                })
+            TopicScreenContracts.Intent.SearchQuery ->
 
-            }
+
+                UIState.update {
+                    it.copy(questions = questions.filter {
+                        it.name.contains(
+                            searchQuery.value,
+                            ignoreCase = true
+                        )
+                    })
+                }
 
             is TopicScreenContracts.Intent.OnClickTopic -> directions.goQuestionsScreen(intent.title, intent.list)
+
         }
     }
 
     override fun init(section: Section): Job = intent {
-        reduce { state.copy(isLoading = true, section = section) }
+        UIState.update { it.copy(isLoading = true, section = section) }
 //        delay(1_000)
 
         when (section) {
@@ -53,18 +67,19 @@ class TopicScreenVM(
         val partOneQuestions = localStorage.getPartOne()
         if (partOneQuestions == null) {
             println("getPartOneQuestions from net")
-            apiService.getPartOneQuestions().onSuccess { result ->
-                result.content.forEach { if (it.value.active) questions.add(it.value) }
-                localStorage.addPartOne(result)
-                reduce { state.copy(isLoading = false, questions = questions) }
-            }.onFailure {
-                reduce { state.copy(isLoading = false) }
-            }
+            resultOf { apiService.getPartOneQuestions() }
+                .onSuccess { result ->
+                    result.content.forEach { if (it.value.active) questions.add(it.value) }
+                    localStorage.addPartOne(result)
+                    UIState.update { it.copy(isLoading = false, questions = questions) }
+                }.onFailure {
+                    UIState.update { it.copy(isLoading = false) }
+                }
         } else {
             println("getPartOneQuestions from local")
 
             partOneQuestions.content.forEach { if (it.value.active) questions.add(it.value) }
-            reduce { state.copy(isLoading = false, questions = questions) }
+            UIState.update { it.copy(isLoading = false, questions = questions) }
         }
     }
 
@@ -75,15 +90,15 @@ class TopicScreenVM(
             apiService.getPartThreeQuestions().onSuccess { result ->
                 result.content.forEach { if (it.value.active) questions.add(it.value) }
                 localStorage.addPartThree(result)
-                reduce { state.copy(isLoading = false, questions = questions) }
+                UIState.update { it.copy(isLoading = false, questions = questions) }
             }.onFailure {
-                reduce { state.copy(isLoading = false) }
+                UIState.update { it.copy(isLoading = false) }
             }
         } else {
             partThreeQuestions.content.forEach { if (it.value.active) questions.add(it.value) }
-            reduce { state.copy(isLoading = false, questions = questions) }
+            UIState.update { it.copy(isLoading = false, questions = questions) }
         }
     }
 
-    override val container = container<TopicScreenContracts.UIState, Nothing>(TopicScreenContracts.UIState())
+//    override val container = container<TopicScreenContracts.UIState, Nothing>(TopicScreenContracts.UIState())
 }
