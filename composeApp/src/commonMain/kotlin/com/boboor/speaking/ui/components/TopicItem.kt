@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.ui.screens.main.appShadow
+import com.boboor.speaking.utils.debounceClickable
 import com.valentinilk.shimmer.shimmer
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.ic_back
@@ -92,7 +93,7 @@ fun TopicItem(
                 .appShadow()
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                .clickable { onClick() }
+                .debounceClickable { onClick() }
                 .animateContentSize(spring(stiffness = Spring.StiffnessLow))
         ) {
 

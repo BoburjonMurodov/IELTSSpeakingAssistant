@@ -68,12 +68,13 @@ fun AppTheme(
     )
 
     DynamicMaterialTheme(
-        seedColor = Color.Yellow,
+        seedColor = Color(0xff268334),
         animate = true,
         content = content,
         shapes = MaterialTheme.shapes,
         typography = typography,
     )
+
 
 
 //    MaterialTheme(

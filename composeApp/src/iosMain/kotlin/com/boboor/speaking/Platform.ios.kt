@@ -40,19 +40,6 @@ actual fun createHttpClient(): HttpClient = HttpClient(Darwin) {
 }
 
 
-actual fun onTapStatusBar(onTapped: () -> Unit): () -> Unit {
-    val observer = NSNotificationCenter.defaultCenter.addObserverForName(
-        name = "StatusBarTapped",
-        `object` = null,
-        queue = null
-    ) {
-        onTapped.invoke()
-    }
-
-    return {
-        NSNotificationCenter.defaultCenter.removeObserver(observer)
-    }
-}
 
 
 //

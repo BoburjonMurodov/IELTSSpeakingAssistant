@@ -27,10 +27,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -48,6 +51,8 @@ import com.boboor.speaking.ui.components.SearchInput
 import com.boboor.speaking.ui.components.TopicItem
 import com.boboor.speaking.ui.components.TopicItemShimmer
 import com.boboor.speaking.utils.Section
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 
 
 /*
@@ -62,9 +67,7 @@ class TopicScreen(private val section: Section) : Screen {
     @Composable
     override fun Content() {
         val viewModel = koinScreenModel<TopicScreenContracts.ViewModel>()
-
         LifecycleEffectOnce { viewModel.init(section = section) }
-
         val state = viewModel.collectAsState()
 
         TopicScreenContent(state, viewModel.searchQuery, viewModel::onEventDispatcher)
@@ -81,12 +84,9 @@ private fun TopicScreenContent(
     val isSearchVisible = remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-
+    var offsetY by remember { mutableFloatStateOf(0f) }
     val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(state){
-        snackBarHostState.showSnackbar("loading state = ${state.value.isLoading}")
-    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -122,7 +122,6 @@ private fun TopicScreenContent(
                     isSearchVisible.value = !isSearchVisible.value
                 }
             )
-
         },
     ) {
         LazyColumn(

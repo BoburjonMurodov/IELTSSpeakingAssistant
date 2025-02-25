@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.boboor.speaking.utils.debounceClickable
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.ic_back
 import org.jetbrains.compose.resources.painterResource
@@ -66,7 +67,7 @@ fun AppBar(
                 )
                 .clip(RoundedCornerShape(6.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                .clickable { onClickBack.invoke() }
+                .debounceClickable { onClickBack.invoke() }
                 .padding(6.dp),
 
             contentAlignment = Alignment.Center
