@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -51,6 +53,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.transitions.ScreenTransition
 import com.boboor.speaking.getScreenWidth
 import com.boboor.speaking.presenter.main.MainScreenContracts
+import com.boboor.speaking.ui.theme.setColor
 import com.boboor.speaking.utils.OnExitBackPressHandler
 import com.boboor.speaking.utils.Section
 import com.boboor.speaking.utils.debounceClickable
@@ -106,12 +109,10 @@ private fun MainScreenContent(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
-
     OnExitBackPressHandler { snackBarHostState.showSnackbar("Click again to exit") }
 
-
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         snackbarHost = {
             SnackbarHost(snackBarHostState,
                 snackbar = {
@@ -173,15 +174,10 @@ private fun MainScreenContent(
 
                     Row(
                         modifier = Modifier.padding(vertical = 12.dp)
-                            .shadow(
-                                elevation = 40.dp, shape = RoundedCornerShape(24.dp),
-                                ambientColor = Color(0xffc61531),
-                                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
-                            )
                             .fillMaxWidth()
                             .height(150.dp)
                             .clip(RoundedCornerShape(24.dp))
-                            .background(MaterialTheme.colorScheme.surface)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                             .clickable {
                                 coroutineScope.launch {
                                     snackBarHostState.showSnackbar(
@@ -216,9 +212,10 @@ private fun MainScreenContent(
                         ) {
                             Text(
                                 text = "Check IELTS result",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.W600,
-                                color = Color(0xffb5142d)
+//                                fontSize = 18.sp,
+//                                fontWeight = FontWeight.W600,
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.titleLarge
                             )
 
                             Spacer(Modifier.height(8.dp))
@@ -270,6 +267,23 @@ private fun MainScreenContent(
 
                 Spacer(Modifier.weight(5f))
             }
+
+            LazyRow(
+                modifier = Modifier.fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+
+                items(listOf(Color.Red, Color.Blue, Color.Yellow, Color.Green, Color.White, Color.Black)) {
+                    Box(
+                        modifier = Modifier.size(24.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(it)
+                            .clickable{ setColor(it) }
+                    )
+                }
+            }
         }
     }
 }
@@ -287,10 +301,9 @@ fun AppCard(
 
     Column(
         modifier = Modifier
-            .appShadow(alpha = 0.5f)
             .width(if (takeFull) screenWidth + 24.dp else screenWidth / 2)
             .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .debounceClickable { onClick.invoke() }
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -307,7 +320,7 @@ fun AppCard(
         Text(
             title,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

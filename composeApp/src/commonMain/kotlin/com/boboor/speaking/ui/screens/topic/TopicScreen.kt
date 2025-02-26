@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,7 +27,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -38,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
@@ -51,8 +54,10 @@ import com.boboor.speaking.ui.components.SearchInput
 import com.boboor.speaking.ui.components.TopicItem
 import com.boboor.speaking.ui.components.TopicItemShimmer
 import com.boboor.speaking.utils.Section
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
+import dev.chrisbanes.haze.HazeDefaults
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 
 
 /*
@@ -86,6 +91,9 @@ private fun TopicScreenContent(
     val coroutineScope = rememberCoroutineScope()
     var offsetY by remember { mutableFloatStateOf(0f) }
     val snackBarHostState = remember { SnackbarHostState() }
+    val hazeState = remember { HazeState() }
+    val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
 
 
     Scaffold(
@@ -99,7 +107,7 @@ private fun TopicScreenContent(
                             .padding(horizontal = 16.dp, vertical = 12.dp)
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(12))
-                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                            .background(MaterialTheme.colorScheme.surface)
                             .padding(horizontal = 16.dp, vertical = 12.dp), contentAlignment = Alignment.CenterStart
                     ) {
 
@@ -116,21 +124,30 @@ private fun TopicScreenContent(
         topBar = {
             AppBar(
                 title = state.value.section.title,
+                modifier = Modifier.hazeEffect(
+                    hazeState,
+                    style = HazeDefaults.style(backgroundColor = MaterialTheme.colorScheme.surfaceContainerHighest)
+                ),
                 isSearchVisible = !state.value.isLoading,
                 onClickBack = { onEventDispatcher.invoke(TopicScreenContracts.Intent.OnClickBack) },
                 onClickSearch = {
                     isSearchVisible.value = !isSearchVisible.value
                 }
             )
+
         },
     ) {
+
         LazyColumn(
             userScrollEnabled = !state.value.isLoading,
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
+                .hazeSource(
+                    state = hazeState,
+                )
                 .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(bottom = 24.dp, top = it.calculateTopPadding()),
+            contentPadding = PaddingValues(bottom = 24.dp + navigationBarHeight, top = it.calculateTopPadding()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 

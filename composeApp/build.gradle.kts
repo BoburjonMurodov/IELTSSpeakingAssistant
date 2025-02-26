@@ -99,6 +99,9 @@ kotlin {
 
             //SHIMMER
             implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
+
+            //HAZE FOR BLUR
+            implementation("dev.chrisbanes.haze:haze:1.3.1")
         }
 
         nativeMain.dependencies {

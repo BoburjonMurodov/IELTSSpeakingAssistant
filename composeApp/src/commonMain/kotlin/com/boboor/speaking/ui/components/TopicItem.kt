@@ -90,7 +90,6 @@ fun TopicItem(
 
         Box(
             Modifier.fillMaxWidth()
-                .appShadow()
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .debounceClickable { onClick() }

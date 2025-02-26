@@ -7,7 +7,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.platform.debugInspectorInfo
-import androidx.compose.ui.semantics.Role
 import com.boboor.speaking.TimeUtil
 
 
@@ -43,14 +42,13 @@ private object MultipleEventsCutterImpl : MultipleEventsCutter {
 fun Modifier.debounceClickable(
     enabled: Boolean = true,
     onClickLabel: String? = null,
-    role: Role? = null,
-    onClick: () -> Unit
+    isRippleAvailable: Boolean = true,
+    onClick: () -> Unit,
 ) = composed(
     inspectorInfo = debugInspectorInfo {
         name = "clickable"
         properties["enabled"] = enabled
         properties["onClickLabel"] = onClickLabel
-        properties["role"] = role
         properties["onClick"] = onClick
     }
 ) {
@@ -59,8 +57,7 @@ fun Modifier.debounceClickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
         onClick = { multipleEventsCutter.processEvent { onClick() } },
-        role = role,
-        indication = LocalIndication.current,
-        interactionSource = remember { MutableInteractionSource() }
+        indication = if (isRippleAvailable) LocalIndication.current else null,
+        interactionSource = MutableInteractionSource(),
     )
 }

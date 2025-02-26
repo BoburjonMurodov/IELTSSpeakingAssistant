@@ -71,7 +71,7 @@ private fun SplashScreenContent() {
     LaunchedEffect(Unit) {
         alpha.animateTo(1f, animationSpec = tween(500))
         delay(300)
-        scale.animateTo(2f, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
+        scale.animateTo(1.7f, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
         delay(700)
         navigator.push(MainScreen())
     }

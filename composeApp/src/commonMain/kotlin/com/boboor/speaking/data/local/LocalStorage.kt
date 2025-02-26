@@ -26,8 +26,11 @@ class LocalStorage {
     val PART_THREE_PREFIX = "PART_THREE_PART_".encrypt(getKey())
     private val CHUNK_SIZE = 4000 // Adjust based on storage limits
 
+//    init {
+//        settings.clear()
+//    }
     private fun getRandomString(length: Int = Random.nextInt(12, 55)): String {
-        val charset = "AAAB"
+        val charset = "A%#(LKB_-+G"
         return (1..length)
             .map { charset.random() }
             .joinToString("")
@@ -38,7 +41,7 @@ class LocalStorage {
         if (key.isEmpty()) {
             settings.putString("KEY", getRandomString())
         }
-        return settings.getString("KEY", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+        return settings.getString("KEY", "A%#(LKB_-+G")
     }
 
     private lateinit var partOneResponse: CommonTopicResponse.Response
@@ -83,26 +86,23 @@ class LocalStorage {
 @OptIn(ExperimentalEncodingApi::class)
 private suspend fun String.encryptWithKey(key: String): String = withContext(Dispatchers.Default) {
 
-//    val inputBytes = encodeToByteArray()
-//    val keyBytes = key.encodeToByteArray()
-//    for (i in inputBytes.indices) {
-//        inputBytes[i] = inputBytes[i] xor keyBytes[i % keyBytes.size]
-//    }
-//    Base64.encode(inputBytes)
-    return@withContext this@encryptWithKey
+    val inputBytes = encodeToByteArray()
+    val keyBytes = key.encodeToByteArray()
+    for (i in inputBytes.indices) {
+        inputBytes[i] = inputBytes[i] xor keyBytes[i % keyBytes.size]
+    }
+
+    return@withContext Base64.encode(inputBytes)
 }
 
 @OptIn(ExperimentalEncodingApi::class)
 private suspend fun String.decryptWithKey(key: String): String = withContext(Dispatchers.Default) {
-//    val decodedBytes = Base64.decode(this@decryptWithKey)
-//    val keyBytes = key.encodeToByteArray()
-//    for (i in decodedBytes.indices) {
-//        decodedBytes[i] = decodedBytes[i] xor keyBytes[i % keyBytes.size]
-//    }
-//    decodedBytes.decodeToString()
-
-    return@withContext this@decryptWithKey
-
+    val decodedBytes = Base64.decode(this@decryptWithKey)
+    val keyBytes = key.encodeToByteArray()
+    for (i in decodedBytes.indices) {
+        decodedBytes[i] = decodedBytes[i] xor keyBytes[i % keyBytes.size]
+    }
+    return@withContext decodedBytes.decodeToString()
 }
 
 @OptIn(ExperimentalEncodingApi::class)

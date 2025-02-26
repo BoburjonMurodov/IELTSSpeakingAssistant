@@ -4,10 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
 //import org.orbitmvi.orbit.ContainerHost
 //import org.orbitmvi.orbit.SettingsBuilder
 //import org.orbitmvi.orbit.container
@@ -17,7 +20,6 @@ import kotlinx.coroutines.launch
 /*
     Created by Boburjon Murodov 20/12/24 at 18:49
 */
-
 
 
 //interface AppViewModel<STATE : Any, SIDE_EFFECT : Any> : ContainerHost<STATE, SIDE_EFFECT>, ScreenModel {
@@ -34,9 +36,10 @@ interface AppViewModel<STATE : Any> : ScreenModel {
     private val reducer: AppSyntax<STATE>
         get() = AppSyntax(UIState)
 
-    fun intent(action: suspend AppSyntax<STATE>.() -> Unit): Job = screenModelScope.launch {
-        action.invoke(reducer)
-    }
+    fun intent(dispatcher: CoroutineDispatcher = Dispatchers.Main, action: suspend AppSyntax<STATE>.() -> Unit): Job =
+        screenModelScope.launch(dispatcher) {
+            action.invoke(reducer)
+        }
 
     @Composable
     fun collectAsState() = UIState.collectAsState()

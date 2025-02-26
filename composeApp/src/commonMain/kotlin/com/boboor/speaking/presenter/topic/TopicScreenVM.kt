@@ -7,6 +7,8 @@ import com.boboor.speaking.data.remote.ApiService
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.utils.Section
 import com.boboor.speaking.utils.resultOf
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -63,7 +65,7 @@ class TopicScreenVM(
         }
     }
 
-    private fun getPartOneQuestions() = intent {
+    private fun getPartOneQuestions() = intent(Dispatchers.IO) {
         val partOneQuestions = localStorage.getPartOne()
         if (partOneQuestions == null) {
             println("getPartOneQuestions from net")
@@ -84,7 +86,7 @@ class TopicScreenVM(
     }
 
 
-    private fun getPartThreeQuestions() = intent {
+    private fun getPartThreeQuestions() = intent(Dispatchers.IO) {
         val partThreeQuestions = localStorage.getPartThree()
         if (partThreeQuestions == null) {
             apiService.getPartThreeQuestions().onSuccess { result ->

@@ -1,19 +1,28 @@
 package com.boboor.speaking.ui.theme
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import com.materialkolor.DynamicMaterialTheme
+import com.materialkolor.PaletteStyle
+import com.russhwolf.settings.ObservableSettings
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.SettingsListener
+import com.russhwolf.settings.get
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.mont_bold
 import ieltsspeakingassistant.composeapp.generated.resources.mont_medium
 import ieltsspeakingassistant.composeapp.generated.resources.mont_regular
 import ieltsspeakingassistant.composeapp.generated.resources.mont_semibold
-
 import org.jetbrains.compose.resources.Font
+import kotlin.jvm.JvmInline
 
 
 /*
@@ -67,23 +76,243 @@ fun AppTheme(
         labelSmall = MaterialTheme.typography.labelSmall.copy(fontFamily = MontFontFamily()),
     )
 
+    // MAIN COLOR - Color(0xff7b580c)
+
+    val colorCode = remember { mutableStateOf(0L) }
+    val seedColor = remember(colorCode.value) {
+        println("###initial color ${getColor().value}")
+        mutableStateOf(getColor())
+    }
+
+    DisposableEffect(Unit) {
+        val listener = colorSettings.addLongListener("color", 0xff7b580c) { newColor ->
+            seedColor.value = Color(newColor) // Update the state, triggering recomposition
+            colorCode.value = newColor
+        }
+
+        onDispose {
+            listener.deactivate() // Clean up the listener when the composable is disposed
+        }
+    }
+
+    println("--saved color = ${getColor().value}")
+    println("--seed color = ${seedColor.value}")
+
     DynamicMaterialTheme(
-        seedColor = Color(0xff268334),
+        seedColor = seedColor.value,
         animate = true,
+        animationSpec = tween(1000),
         content = content,
         shapes = MaterialTheme.shapes,
         typography = typography,
+        withAmoled = true,
+        style = PaletteStyle.Content
     )
 
 
+}
 
-//    MaterialTheme(
-//        colors = MaterialTheme.colors,
-//        typography = MaterialTheme.typography,
-//        shapes = MaterialTheme.shapes,
-//        content = content,
-//    )
+private val colorSettings = MakeObservableSettings(Settings()) //Settings() as ObservableSettings
+
+fun getColor(): Color {
+    val colorCode = colorSettings.getLong("color", 0xff7b580c)
+    println("colorCode from getColor = $colorCode")
+    return Color(colorCode.toULong())
+}
+
+
+fun setColor(color: Color) {
+    println("color = $color")
+    val colorCode = color.value
+    colorSettings.putLong("color", colorCode.toLong())
+}
+
+
+private class MakeObservableSettings(
+    private val delegate: Settings,
+) : Settings by delegate, ObservableSettings {
+
+    private val listenerMap = mutableMapOf<String, MutableSet<() -> Unit>>()
+
+    override fun remove(key: String) {
+        delegate.remove(key)
+        invokeListeners(key)
+    }
+
+    override fun clear() {
+        delegate.clear()
+        invokeAllListeners()
+    }
+
+    override fun putInt(key: String, value: Int) {
+        delegate.putInt(key, value)
+        invokeListeners(key)
+    }
+
+    override fun putLong(key: String, value: Long) {
+        delegate.putLong(key, value)
+        invokeListeners(key)
+    }
+
+    override fun putString(key: String, value: String) {
+        delegate.putString(key, value)
+        invokeListeners(key)
+    }
+
+    override fun putFloat(key: String, value: Float) {
+        delegate.putFloat(key, value)
+        invokeListeners(key)
+    }
+
+    override fun putDouble(key: String, value: Double) {
+        delegate.putDouble(key, value)
+        invokeListeners(key)
+    }
+
+    override fun putBoolean(key: String, value: Boolean) {
+        delegate.putBoolean(key, value)
+        invokeListeners(key)
+    }
+
+    override fun addIntListener(
+        key: String,
+        defaultValue: Int,
+        callback: (Int) -> Unit
+    ): SettingsListener = addListener<Int>(key) {
+        callback(getInt(key, defaultValue))
+    }
+
+
+    override fun addLongListener(
+        key: String,
+        defaultValue: Long,
+        callback: (Long) -> Unit
+    ): SettingsListener = addListener<Long>(key) {
+        callback(getLong(key, defaultValue))
+    }
+
+    override fun addStringListener(
+        key: String,
+        defaultValue: String,
+        callback: (String) -> Unit
+    ): SettingsListener = addListener<String>(key) {
+        callback(getString(key, defaultValue))
+    }
+
+    override fun addFloatListener(
+        key: String,
+        defaultValue: Float,
+        callback: (Float) -> Unit
+    ): SettingsListener = addListener<Float>(key) {
+        callback(getFloat(key, defaultValue))
+    }
+
+    override fun addDoubleListener(
+        key: String,
+        defaultValue: Double,
+        callback: (Double) -> Unit
+    ): SettingsListener = addListener<Double>(key) {
+        callback(getDouble(key, defaultValue))
+    }
+
+    override fun addBooleanListener(
+        key: String,
+        defaultValue: Boolean,
+        callback: (Boolean) -> Unit
+    ): SettingsListener = addListener<Boolean>(key) {
+        callback(getBoolean(key, defaultValue))
+    }
+
+    override fun addIntOrNullListener(
+        key: String, callback: (Int?) -> Unit
+    ): SettingsListener = addListener<Int>(key) {
+        callback(getIntOrNull(key))
+    }
+
+    override fun addLongOrNullListener(
+        key: String,
+        callback: (Long?) -> Unit
+    ): SettingsListener = addListener<Long>(key) {
+        callback(getLongOrNull(key))
+    }
+
+    override fun addStringOrNullListener(
+        key: String,
+        callback: (String?) -> Unit
+    ): SettingsListener = addListener<String>(key) {
+        callback(getStringOrNull(key))
+    }
+
+    override fun addFloatOrNullListener(
+        key: String,
+        callback: (Float?) -> Unit
+    ): SettingsListener = addListener<Float>(key) {
+        callback(getFloatOrNull(key))
+    }
+
+    override fun addDoubleOrNullListener(
+        key: String,
+        callback: (Double?) -> Unit
+    ): SettingsListener = addListener<Double>(key) {
+        callback(getDoubleOrNull(key))
+    }
+
+    override fun addBooleanOrNullListener(
+        key: String,
+        callback: (Boolean?) -> Unit
+    ): SettingsListener = addListener<Boolean>(key) {
+        callback(getBooleanOrNull(key))
+    }
+
+    private inline fun <reified T> addListener(
+        key: String,
+        noinline callback: () -> Unit
+    ): SettingsListener {
+        var prev: T? = delegate[key]
+
+        val listener = {
+            val current: T? = delegate[key]
+            if (prev != current) {
+                callback()
+                prev = current
+            }
+        }
+
+        val listeners = listenerMap.getOrPut(key) { mutableSetOf() }
+        listeners += listener
+
+        return Listener {
+            removeListener(key, listener)
+        }
+    }
+
+    private fun removeListener(key: String, listener: () -> Unit) {
+        listenerMap[key]?.also {
+            it -= listener
+        }
+    }
+
+    private fun invokeListeners(key: String) {
+        listenerMap[key]?.forEach { callback ->
+            callback()
+        }
+    }
+
+    private fun invokeAllListeners() {
+        listenerMap.forEach { entry ->
+            entry.value.forEach { callback ->
+                callback()
+            }
+        }
+    }
 
 }
 
 
+@JvmInline
+private value class Listener(
+    private val removeListener: () -> Unit
+) : SettingsListener {
+
+    override fun deactivate(): Unit = removeListener()
+}
