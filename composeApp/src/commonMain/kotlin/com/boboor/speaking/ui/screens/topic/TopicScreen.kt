@@ -88,8 +88,6 @@ private fun TopicScreenContent(
 ) {
     val isSearchVisible = remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-    var offsetY by remember { mutableFloatStateOf(0f) }
     val snackBarHostState = remember { SnackbarHostState() }
     val hazeState = remember { HazeState() }
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()

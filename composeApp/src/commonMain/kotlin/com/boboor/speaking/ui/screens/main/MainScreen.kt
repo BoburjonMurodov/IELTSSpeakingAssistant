@@ -2,10 +2,13 @@ package com.boboor.speaking.ui.screens.main
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,6 +56,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.transitions.ScreenTransition
 import com.boboor.speaking.getScreenWidth
 import com.boboor.speaking.presenter.main.MainScreenContracts
+import com.boboor.speaking.ui.theme.getColor
 import com.boboor.speaking.ui.theme.setColor
 import com.boboor.speaking.utils.OnExitBackPressHandler
 import com.boboor.speaking.utils.Section
@@ -276,11 +280,18 @@ private fun MainScreenContent(
             ) {
 
                 items(listOf(Color.Red, Color.Blue, Color.Yellow, Color.Green, Color.White, Color.Black)) {
+                    val isSelected = getColor() == it
+                    val animatedWidth = animateIntAsState(if (isSelected) 1 else 0)
+                    val animatedPadding = animateIntAsState(if (isSelected) 4 else 0)
+                    val animatedColor = animateColorAsState(if (isSelected) Color.Blue else Color.Transparent)
+
                     Box(
                         modifier = Modifier.size(24.dp)
+                            .border(width = animatedWidth.value.dp, color = animatedColor.value, shape = RoundedCornerShape(4.dp))
+                            .padding(animatedPadding.value.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .background(it)
-                            .clickable{ setColor(it) }
+                            .clickable { setColor(it) }
                     )
                 }
             }
