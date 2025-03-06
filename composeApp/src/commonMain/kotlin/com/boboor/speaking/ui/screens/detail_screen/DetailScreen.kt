@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -86,16 +87,16 @@ data class DetailScreen(
 
         val pagerState = rememberPagerState(
             initialPage = questionIndex,
+
             pageCount = { topics[topicIndex].questions.size }
         )
 
-        val screenWidthPx = with(LocalDensity.current) {
-            getScreenWidth().toPx()
-        }
-
-        HorizontalPager(state = pagerState) { page ->
+        HorizontalPager(state = pagerState,
+            beyondViewportPageCount = 1
+            ) { page ->
             val scrollProgress = abs(pagerState.currentPageOffsetFraction).coerceAtMost(1f)
-            val cornerRadius = lerp(32.dp, 0.dp, scrollProgress)
+            val cornerRadius by remember { derivedStateOf { lerp(32.dp, 0.dp, scrollProgress) } }
+
 
             val scale = when {
                 scrollProgress <= 0.5f -> lerp(1f, 0.9f, scrollProgress * 2f)
