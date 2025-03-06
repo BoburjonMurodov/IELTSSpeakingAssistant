@@ -1,0 +1,55 @@
+name: Build iOS App (IPA)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest  # macOS required for Xcode
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'  # Adjust based on your project
+
+      - name: Install Kotlin & Dependencies
+        run: |
+          brew install kotlin
+          brew install cocoapods
+          cd iosApp
+          pod install
+
+      - name: Build iOS Framework
+        run: ./gradlew :shared:assembleXCFramework
+
+      - name: Build Xcode Project
+        run: |
+          cd iosApp
+          xcodebuild clean archive \
+            -scheme iosApp \
+            -archivePath build/iosApp.xcarchive \
+            -sdk iphoneos \
+            -configuration Release \
+            CODE_SIGNING_ALLOWED=NO  # Remove this if you want signing
+
+      - name: Export IPA
+        run: |
+          cd iosApp
+          xcodebuild -exportArchive \
+            -archivePath build/iosApp.xcarchive \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath build
+
+      - name: Upload IPA as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-app
+          path: iosApp/build/*.ipa
