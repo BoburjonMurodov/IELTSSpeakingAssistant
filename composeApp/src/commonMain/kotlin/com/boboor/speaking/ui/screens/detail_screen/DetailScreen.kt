@@ -197,15 +197,14 @@ private fun DetailScreenContent(
                     HorizontalDivider()
                 }
             }
-            var index by remember { mutableStateOf(0) }
             Spacer(Modifier.height(16.dp))
             ScrollableTabRow(
                 modifier = Modifier.fillMaxWidth(), selectedTabIndex = pagerState.currentPage
             ) {
                 tabs.forEachIndexed { tabIndex, value ->
-                    Tab(selected = index == tabIndex, onClick = {
+                    Tab(selected = pagerState.currentPage == tabIndex, onClick = {
                         coroutine.launch {
-                            pagerState.animateScrollToPage(index)
+                            pagerState.animateScrollToPage(tabIndex)
                         }
                     }) {
                         Text(tabs[tabIndex])
