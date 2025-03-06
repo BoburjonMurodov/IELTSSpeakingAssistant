@@ -5,15 +5,20 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import platform.Foundation.NSNotificationCenter
+import org.koin.core.module.Module
+import org.koin.dsl.module
+import platform.AVFAudio.AVSpeechSynthesizer
+import platform.AVFAudio.AVSpeechUtterance
 import platform.UIKit.UIDevice
 import platform.UIKit.UIScreen
-import kotlin.experimental.ExperimentalObjCName
+import platform.Foundation.NSString
+import platform.Foundation.stringWithString
 
 class IOSPlatform : Platform {
     override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
@@ -40,13 +45,3 @@ actual fun createHttpClient(): HttpClient = HttpClient(Darwin) {
 }
 
 
-
-
-//
-//actual class StatusBarTapListener {
-//    private val bridge = StatusBarTapListener()
-//
-//    actual fun onStatusBarTapped(callback: () -> Unit) {
-//        bridge.listenForStatusBarTaps(callback = callback)
-//    }
-//}

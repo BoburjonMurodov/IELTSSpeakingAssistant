@@ -3,8 +3,10 @@
 package com.boboor.speaking.ui.screens.topic
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -30,24 +33,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.boboor.speaking.presenter.topic.TopicScreenContracts
 import com.boboor.speaking.ui.components.AppBar
 import com.boboor.speaking.ui.components.SearchInput
@@ -74,8 +78,10 @@ class TopicScreen(private val section: Section) : Screen {
         val viewModel = koinScreenModel<TopicScreenContracts.ViewModel>()
         LifecycleEffectOnce { viewModel.init(section = section) }
         val state = viewModel.collectAsState()
-
-        TopicScreenContent(state, viewModel.searchQuery, viewModel::onEventDispatcher)
+        val navigator = LocalNavigator.currentOrThrow
+//        SwipeToDismissScreen(onDismiss = { navigator.pop() }) {
+            TopicScreenContent(state, viewModel.searchQuery, viewModel::onEventDispatcher)
+//        }
     }
 }
 
@@ -91,8 +97,6 @@ private fun TopicScreenContent(
     val snackBarHostState = remember { SnackbarHostState() }
     val hazeState = remember { HazeState() }
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-
-
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -124,15 +128,17 @@ private fun TopicScreenContent(
                 title = state.value.section.title,
                 modifier = Modifier.hazeEffect(
                     hazeState,
-                    style = HazeDefaults.style(backgroundColor = MaterialTheme.colorScheme.surfaceContainerHighest)
-                ),
+                    style = HazeDefaults.style(
+                        backgroundColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        blurRadius = 25.dp
+                    )
+                    ),
                 isSearchVisible = !state.value.isLoading,
                 onClickBack = { onEventDispatcher.invoke(TopicScreenContracts.Intent.OnClickBack) },
                 onClickSearch = {
                     isSearchVisible.value = !isSearchVisible.value
                 }
             )
-
         },
     ) {
 
@@ -141,9 +147,7 @@ private fun TopicScreenContent(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .hazeSource(
-                    state = hazeState,
-                )
+                .hazeSource(state = hazeState)
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(bottom = 24.dp + navigationBarHeight, top = it.calculateTopPadding()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -178,6 +182,7 @@ private fun TopicScreenContent(
                 val isExpanded = rememberSaveable { mutableStateOf(false) }
                 val hasOverFlow = rememberSaveable { mutableStateOf(false) }
                 TopicItem(state.value.questions[it], it + 1, isExpanded, hasOverFlow, searchQuery.value) {
+
                     onEventDispatcher.invoke(
                         TopicScreenContracts.Intent.OnClickTopic(
                             title = state.value.questions[it].name,
@@ -205,6 +210,36 @@ private fun TopicScreenContent(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SwipeToDismissScreen(
+    onDismiss: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    var offsetX by remember { mutableStateOf(0f) }
+    val animatedOffsetX by animateFloatAsState(targetValue = offsetX, label = "")
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .offset { IntOffset(animatedOffsetX.toInt(), 0) }
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onDragEnd = {
+                        if (offsetX > 300f) { // Threshold for dismiss
+                            onDismiss()
+                        } else {
+                            offsetX = 0f
+                        }
+                    }
+                ) { change, dragAmount ->
+                    offsetX += dragAmount
+                }
+            }
+    ) {
+        content()
     }
 }
 

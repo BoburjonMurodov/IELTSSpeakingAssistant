@@ -1,6 +1,8 @@
 package com.boboor.speaking
 
+import android.content.Context
 import android.os.Build
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
@@ -10,6 +12,7 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import java.util.Locale
 import kotlin.system.exitProcess
 
 class AndroidPlatform : Platform {

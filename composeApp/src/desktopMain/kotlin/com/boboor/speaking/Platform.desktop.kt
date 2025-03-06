@@ -6,12 +6,12 @@ import androidx.compose.ui.unit.dp
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import java.awt.Toolkit
+import java.io.File
+import java.io.FileWriter
 import kotlin.system.exitProcess
-
 
 
 @Composable
@@ -43,12 +43,4 @@ actual fun closeApp() {
     exitProcess(0)
 }
 
-//actual fun onTapStatusBar(onTapped: () -> Unit): () -> Unit {
-//    return {}
-//}
 
-//actual class StatusBarTapListener {
-//    actual fun onStatusBarTapped(callback: () -> Unit) {
-//
-//    }
-//}

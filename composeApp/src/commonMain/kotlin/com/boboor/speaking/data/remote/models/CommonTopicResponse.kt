@@ -16,7 +16,6 @@ sealed interface CommonTopicResponse {
 
     @Serializable
     data class Topic(
-//        val type: TopicType, // Distinguishes Part 1, 2, 3
         val active: Boolean,
         val free: Boolean,
         val name: String,

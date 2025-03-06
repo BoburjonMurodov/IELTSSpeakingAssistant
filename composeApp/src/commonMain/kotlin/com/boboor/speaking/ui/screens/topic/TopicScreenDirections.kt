@@ -3,7 +3,7 @@ package com.boboor.speaking.ui.screens.topic
 import AppNavigator
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.presenter.topic.TopicScreenContracts
-import com.boboor.speaking.ui.screens.CommonQuestionsScreen
+import com.boboor.speaking.ui.screens.common_questions.CommonQuestionsScreen
 
 
 /*

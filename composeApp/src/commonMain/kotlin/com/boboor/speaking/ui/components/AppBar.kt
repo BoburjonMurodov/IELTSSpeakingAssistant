@@ -1,10 +1,12 @@
 package com.boboor.speaking.ui.components
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -21,14 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.boboor.speaking.Platform
-import com.boboor.speaking.getPlatform
 import com.boboor.speaking.utils.debounceClickable
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.ic_back
@@ -50,17 +50,24 @@ fun AppBar(
     onClickSearch: () -> Unit,
 ) {
     val backButtonWith = remember { mutableStateOf(0) }
+    val density = LocalDensity.current
 
     Box(
         modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp)
-            .statusBarsPadding(),
+            .statusBarsPadding()
+        ,
     ) {
         Row(
             modifier = Modifier
                 .layout { measurable, constraints ->
                     val placeable = measurable.measure(constraints)
+
+                    if (backButtonWith.value != placeable.width) {
+                        backButtonWith.value = with(density) { placeable.width.toDp().value.toInt() }
+                    }
+
                     layout(placeable.width, placeable.height) {
                         placeable.placeRelative(0, 0)
                     }
@@ -85,14 +92,20 @@ fun AppBar(
                 style = MaterialTheme.typography.titleMedium,
             )
         }
-
-        Text(
-            modifier = Modifier.basicMarquee().align(Alignment.Center).padding(start = backButtonWith.value.dp),
-            text = title,
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.W600),
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-
+        Box(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = backButtonWith.value.dp)
+                .align(Alignment.Center),
+        ) {
+            Text(
+                modifier = Modifier
+                    .basicMarquee()
+                    .align(Alignment.Center),
+                text = title,
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.W600),
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
         if (showSearch)
             IconButton(
                 modifier = Modifier.align(Alignment.CenterEnd),

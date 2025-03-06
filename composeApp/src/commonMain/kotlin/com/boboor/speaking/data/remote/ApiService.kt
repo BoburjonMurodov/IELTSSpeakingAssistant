@@ -29,7 +29,7 @@ class ApiService(private val httpClient: HttpClient) {
 //            .onSuccess { return Result.success(it.body()) }
 //            .onFailure { return Result.failure(it) }
 //        return Result.failure(Exception("Unknown error"))
-//
+
         return@withContext httpClient.get("$BASE_URL$SECTION_ONE").body();
     }
 

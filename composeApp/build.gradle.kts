@@ -62,6 +62,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.kotlinx.coroutines.core)
 
             val voyagerVersion = "1.1.0-beta03"
 
@@ -102,7 +103,18 @@ kotlin {
 
             //HAZE FOR BLUR
             implementation("dev.chrisbanes.haze:haze:1.3.1")
+
+
+            //TTS
+            val ttsVersion = "3.0.0-alpha.2"
+            implementation("nl.marc-apps:tts:$ttsVersion")
+//             Optional: Extensions for Compose
+            implementation("nl.marc-apps:tts-compose:$ttsVersion")
+
+            //HTML PARSER
+            implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc11")
         }
+
 
         nativeMain.dependencies {
             //KTOR
@@ -115,6 +127,9 @@ kotlin {
 
             //KTOR
             implementation(libs.ktor.client.okhttp)
+
+            //TTS
+            implementation("net.java.dev.jna:jna:5.12.1")
         }
     }
 }

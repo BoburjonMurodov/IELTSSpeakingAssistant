@@ -14,7 +14,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             title = "IELTS Speaking Assistant",
             resizable = false,
-            state = WindowState(size = DpSize(400.dp, 800.dp))
+            state = WindowState(size = DpSize(400.dp, 850.dp))
         ) {
             App()
         }
