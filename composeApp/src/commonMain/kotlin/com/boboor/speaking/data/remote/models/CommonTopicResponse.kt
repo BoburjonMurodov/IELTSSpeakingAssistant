@@ -1,5 +1,6 @@
 package com.boboor.speaking.data.remote.models
 
+import androidx.compose.runtime.Stable
 import kotlinx.serialization.Serializable
 
 
@@ -7,7 +8,7 @@ import kotlinx.serialization.Serializable
     Created by Boburjon Murodov 20/02/25 at 14:58
 */
 
-
+@Stable
 sealed interface CommonTopicResponse {
     @Serializable
     data class Response(

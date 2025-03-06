@@ -49,7 +49,7 @@ class TopicScreenVM(
                     })
                 }
 
-            is TopicScreenContracts.Intent.OnClickTopic -> directions.goQuestionsScreen(intent.title, intent.list)
+            is TopicScreenContracts.Intent.OnClickTopic -> directions.goQuestionsScreen(intent.title, topics = intent.topics, topicIndex = intent.topicIndex)
 
         }
     }

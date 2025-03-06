@@ -186,7 +186,8 @@ private fun TopicScreenContent(
                     onEventDispatcher.invoke(
                         TopicScreenContracts.Intent.OnClickTopic(
                             title = state.value.questions[it].name,
-                            list = state.value.questions[it].questions
+                            topics = state.value.questions,
+                            topicIndex = it
                         )
                     )
                 }

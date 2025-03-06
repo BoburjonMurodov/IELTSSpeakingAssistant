@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -38,9 +37,10 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 
 data class CommonQuestionsScreen(
+    private val title: String,
     @Stable
-    private val questions: List<CommonTopicResponse.Question>,
-    private val title: String
+    private val topics: List<CommonTopicResponse.Topic>,
+    private val index: Int
 ) : Screen {
 
     override val key: ScreenKey
@@ -48,14 +48,15 @@ data class CommonQuestionsScreen(
 
     @Composable
     override fun Content() {
-        CommonQuestionsScreenContent(title, questions)
+        CommonQuestionsScreenContent(title, topics, index)
     }
 }
 
 @Composable
 private fun CommonQuestionsScreenContent(
     title: String,
-    questions: List<CommonTopicResponse.Question>
+    topics: List<CommonTopicResponse.Topic>,
+    topicIndex: Int
 ) {
     val navigator = LocalNavigator.current
     val hazeState = remember { HazeState() }
@@ -67,8 +68,8 @@ private fun CommonQuestionsScreenContent(
         list.clear()
         val builder = StringBuilder()
 
-        println("questions size: ${questions.size}")
-        questions.forEach {
+        println("questions size: ${topics[topicIndex].questions.size}")
+        topics[topicIndex].questions.forEach {
             builder.clear()
             val tempList = mutableListOf<String>()
             builder.append(it.text)
@@ -106,20 +107,20 @@ private fun CommonQuestionsScreenContent(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            items(list.size) {
-                if (list[it].size == 1) {
+            items(list.size) {questionIndex->
+                if (list[questionIndex].size == 1) {
                     Box(
                         modifier = Modifier.fillMaxWidth()
                             .clip(RoundedCornerShape(16.dp))
                             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                            .debounceClickable { navigator?.push(DetailScreen("", questions[it])) }
+                            .debounceClickable { navigator?.push(DetailScreen("", topics = topics, topicIndex = topicIndex, questionIndex = questionIndex)) }
                             .padding(16.dp)
                     ) {
-                        Text(text = list[it].first())
+                        Text(text = list[questionIndex].first())
                     }
                 } else {
-                    list[it].forEachIndexed() { index, question ->
-                        if (index != 0 && index != list[it].size) {
+                    list[questionIndex].forEachIndexed() { index, question ->
+                        if (index != 0 && index != list[questionIndex].size) {
                             Spacer(Modifier.height(4.dp))
                         }
                         Box(
@@ -127,14 +128,14 @@ private fun CommonQuestionsScreenContent(
                                 .then(
                                     if (index == 0) {
                                         Modifier.clip(RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp))
-                                    } else if (index == list[it].size - 1) {
+                                    } else if (index == list[questionIndex].size - 1) {
                                         Modifier.clip(RoundedCornerShape(bottomEnd = 16.dp, bottomStart = 16.dp))
                                     } else {
                                         Modifier.clip(RoundedCornerShape(0.dp))
                                     }
                                 )
                                 .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                                .debounceClickable { navigator?.push(DetailScreen("", questions[it])) }
+                                .debounceClickable { navigator?.push(DetailScreen("", topics = topics, topicIndex = topicIndex, questionIndex = questionIndex)) }
                                 .padding(16.dp)
                         ) {
                             Text(text = question)

@@ -2,12 +2,10 @@ package com.boboor.speaking.presenter.topic
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
-import cafe.adriel.voyager.core.model.ScreenModel
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.utils.AppViewModel
 import com.boboor.speaking.utils.Section
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.StateFlow
 
 
 /*
@@ -16,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 
 class TopicScreenContracts {
     interface ViewModel : AppViewModel<UIState> {
-//        val UIState: StateFlow<UIState>
         val searchQuery: MutableState<String>
 
         fun onEventDispatcher(intent: Intent): Job
@@ -33,11 +30,11 @@ class TopicScreenContracts {
     sealed interface Intent {
         data object OnClickBack : Intent
         data object SearchQuery : Intent
-        data class OnClickTopic(val title: String, val list: List<CommonTopicResponse.Question>) : Intent
+        data class OnClickTopic(val title: String, val topics: List<CommonTopicResponse.Topic>, val topicIndex: Int) : Intent
     }
 
     interface Directions {
-        suspend fun goQuestionsScreen(title: String, list: List<CommonTopicResponse.Question>)
+        suspend fun goQuestionsScreen(title: String, topics: List<CommonTopicResponse.Topic>, topicIndex: Int)
         suspend fun goBack()
     }
 }

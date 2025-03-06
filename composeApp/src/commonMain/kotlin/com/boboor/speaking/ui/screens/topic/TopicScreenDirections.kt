@@ -11,8 +11,8 @@ import com.boboor.speaking.ui.screens.common_questions.CommonQuestionsScreen
 */
 
 class TopicScreenDirections(private val navigator: AppNavigator) : TopicScreenContracts.Directions {
-    override suspend fun goQuestionsScreen(title: String, list: List<CommonTopicResponse.Question>) {
-        navigator.push(CommonQuestionsScreen(title = title, questions = list));
+    override suspend fun goQuestionsScreen(title: String, topics: List<CommonTopicResponse.Topic>, topicIndex: Int) {
+        navigator.push(CommonQuestionsScreen(title = title, topics = topics, index = topicIndex));
     }
 
     override suspend fun goBack() {
