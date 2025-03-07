@@ -1,6 +1,9 @@
 package com.boboor.speaking.ui.screens.detail_screen
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,30 +34,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.util.lerp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
-import com.boboor.speaking.getScreenWidth
 import com.boboor.speaking.ui.components.AppBar
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.launch
@@ -80,6 +75,7 @@ data class DetailScreen(
         get() = hashCode().toString()
 
 
+    @OptIn(ExperimentalFoundationApi::class)
     @ExperimentalIOSTarget
     @ExperimentalDesktopTarget
     @Composable
@@ -87,22 +83,27 @@ data class DetailScreen(
 
         val pagerState = rememberPagerState(
             initialPage = questionIndex,
-
             pageCount = { topics[topicIndex].questions.size }
         )
 
-        HorizontalPager(state = pagerState,
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface),
             beyondViewportPageCount = 1
-            ) { page ->
+        ) { page ->
             val scrollProgress = abs(pagerState.currentPageOffsetFraction).coerceAtMost(1f)
-            val cornerRadius by remember { derivedStateOf { lerp(32.dp, 0.dp, scrollProgress) } }
-
+            val cornerRadius = (64.dp * (abs(scrollProgress).coerceIn(0f, 1f)))
 
             val scale = when {
                 scrollProgress <= 0.5f -> lerp(1f, 0.9f, scrollProgress * 2f)
                 else -> 0.9f
             }
 
+            val borderWidth = when {
+                scrollProgress <= 0.5f -> lerp(0f, 1f, scrollProgress * 2f)
+                else -> 0f
+            }
 
             Box(
                 modifier = Modifier
@@ -110,7 +111,11 @@ data class DetailScreen(
                         scaleX = scale
                         scaleY = scale
                     }
-                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .border(
+                        border = BorderStroke(borderWidth.dp, color = MaterialTheme.colorScheme.outlineVariant),
+                        shape = RoundedCornerShape(cornerRadius)
+                    )
                     .clip(RoundedCornerShape(cornerRadius))
             ) {
                 DetailScreenContent(
@@ -158,46 +163,50 @@ private fun DetailScreenContent(
 
     Scaffold(
         topBar = {
-            AppBar(
-                onClickBack = { navigator.pop() },
-                title = "Detail",
-                modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerHighest),
-                showSearch = false,
-                onClickSearch = { },
-            )
+            Column {
+                AppBar(
+                    onClickBack = { navigator.pop() },
+                    title = "Detail",
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerHighest),
+                    showSearch = false,
+                    onClickSearch = { },
+                )
+
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    list.forEach {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = it, modifier = Modifier.weight(1f))
+
+                            Spacer(modifier = Modifier.width(16.dp))
+
+                            IconButton(onClick = {
+                                coroutine.launch {
+                                    try {
+                                        textToSpeech?.stop()
+                                        textToSpeech?.say(it)
+                                    } catch (e: Exception) {
+                                        showToast("error")
+                                    }
+                                }
+                            }) {
+                                Icon(Icons.Default.PlayArrow, contentDescription = null)
+                            }
+                        }
+                        HorizontalDivider()
+                    }
+                }
+            }
+
         }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = it.calculateTopPadding())
+                .padding(top = it.calculateTopPadding() + 16.dp)
         ) {
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                list.forEach {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = it, modifier = Modifier.weight(1f))
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        IconButton(onClick = {
-                            coroutine.launch {
-                                try {
-                                    textToSpeech?.stop()
-                                    textToSpeech?.say(it)
-                                } catch (e: Exception) {
-                                    showToast("error")
-                                }
-                            }
-                        }) {
-                            Icon(Icons.Default.PlayArrow, contentDescription = null)
-                        }
-                    }
-                    HorizontalDivider()
-                }
-            }
             Spacer(Modifier.height(16.dp))
             ScrollableTabRow(
                 modifier = Modifier.fillMaxWidth(), selectedTabIndex = pagerState.currentPage
@@ -212,100 +221,90 @@ private fun DetailScreenContent(
                     }
                 }
             }
-            Spacer(Modifier.height(16.dp))
             HorizontalPager(
                 pagerState,
                 modifier = Modifier.weight(1f)
                     .fillMaxWidth()
             ) { index ->
-                when (index) {
-                    0 -> {
-                        LazyColumn(
-                            contentPadding = PaddingValues(vertical = 16.dp),
 
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(if (tabsOpen[0]) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent)
-                                .pointerInput(null) {
-                                    detectTapGestures(
-                                        onLongPress = {
-                                            tabsOpen[index] = !tabsOpen[index]
+                val values = when (index) {
+                    0 -> vocabularies
+                    1 -> questions.ideas
+                    else -> questions.answer
+                }
+
+                Box(modifier = Modifier.fillMaxSize()) {
+                    LazyColumn(
+                        contentPadding = PaddingValues(vertical = 16.dp),
+
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(if (tabsOpen[0]) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent)
+                            .pointerInput(null) {
+                                detectTapGestures(
+                                    onLongPress = {
+                                        tabsOpen[index] = !tabsOpen[index]
+                                    }
+                                )
+                            },
+
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+
+                        when (index) {
+                            0 -> {
+                                items(vocabularies) {
+                                    val richText = rememberRichTextState()
+                                    Row {
+                                        if (it.text.contains("<arrow>")) {
+                                            IconButton(onClick = {}) {
+                                                Icon(Icons.Default.PlayArrow, contentDescription = "play")
+                                            }
                                         }
-                                    )
-                                },
+                                        richText.setHtml(it.text.replace("<arrow>", " ")).annotatedString
 
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            items(vocabularies) {
-                                val richText = rememberRichTextState()
-                                richText.setHtml(it.text.replace("<arrow>", "→ ")).annotatedString
-                                Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
+                                        Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
+                                    }
+                                }
+                            }
+
+                            1 -> {
+                                items(questions.ideas) {
+                                    val richText = rememberRichTextState()
+
+                                    Row {
+                                        if (it.text.contains("<arrow>")) {
+                                            IconButton(onClick = {}) {
+                                                Icon(Icons.Default.PlayArrow, contentDescription = "play")
+                                            }
+                                        }
+                                        richText.setHtml(it.text.replace("<arrow>", " ")).annotatedString
+
+                                        Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
+                                    }
+                                }
+                            }
+
+                            else -> {
+                                items(questions.answer) {
+                                    val richText = rememberRichTextState()
+                                    richText.setHtml(it.text.replace("<arrow>", "→ "))
+
+                                    Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
+                                }
                             }
                         }
-                    }
 
-                    1 -> {
-                        LazyColumn(
-                            contentPadding = PaddingValues(vertical = 16.dp),
-
-                            modifier = Modifier.weight(1f)
-                                .background(if (tabsOpen[0]) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent)
-                                .pointerInput(null) {
-                                    detectTapGestures(
-                                        onLongPress = {
-                                            tabsOpen[index] = !tabsOpen[index]
-                                        }
-                                    )
-                                },
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            items(questions.ideas) {
-                                val richText = rememberRichTextState()
-                                richText.setHtml(it.text.replace("<arrow>", "→ ")).annotatedString
-                                Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
-                            }
-                        }
-                    }
-
-                    else -> {
-                        LazyColumn(
-                            contentPadding = PaddingValues(vertical = 16.dp),
-                            modifier = Modifier.weight(1f)
-                                .background(if (tabsOpen[0]) MaterialTheme.colorScheme.surfaceContainerHighest else Color.Transparent)
-                                .pointerInput(null) {
-                                    detectTapGestures(
-                                        onLongPress = {
-                                            tabsOpen[index] = !tabsOpen[index]
-                                        }
-                                    )
-                                },
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            items(questions.answer) {
-                                val richText = rememberRichTextState()
-                                richText.setHtml(it.text.replace("<arrow>", "→ "))
-
-                                Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
-                            }
-                        }
                     }
                 }
+
+
             }
         }
 
     }
+
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -25,11 +25,6 @@ class ApiService(private val httpClient: HttpClient) {
     }
 
     suspend fun getPartOneQuestions(): CommonTopicResponse.Response = withContext(Dispatchers.IO) {
-//        resultOf { httpClient.get("$BASE_URL$SECTION_ONE") }
-//            .onSuccess { return Result.success(it.body()) }
-//            .onFailure { return Result.failure(it) }
-//        return Result.failure(Exception("Unknown error"))
-
         return@withContext httpClient.get("$BASE_URL$SECTION_ONE").body();
     }
 

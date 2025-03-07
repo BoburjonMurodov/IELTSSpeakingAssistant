@@ -113,6 +113,9 @@ kotlin {
 
             //HTML PARSER
             implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc11")
+
+            //APP WALKTHROUGH / COACH MARK
+            implementation("io.github.pseudoankit:coachmark:3.0.1")
         }
 
 
