@@ -75,7 +75,6 @@ data class DetailScreen(
         get() = hashCode().toString()
 
 
-    @OptIn(ExperimentalFoundationApi::class)
     @ExperimentalIOSTarget
     @ExperimentalDesktopTarget
     @Composable
