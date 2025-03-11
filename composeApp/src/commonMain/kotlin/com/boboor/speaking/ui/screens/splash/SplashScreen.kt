@@ -36,6 +36,7 @@ import cafe.adriel.voyager.navigator.internal.BackHandler
 import cafe.adriel.voyager.transitions.FadeTransition
 import cafe.adriel.voyager.transitions.ScreenTransition
 import com.boboor.speaking.data.local.LocalStorage
+import com.boboor.speaking.ui.screens.HomeScreen
 import com.boboor.speaking.ui.screens.main.MainScreen
 import com.boboor.speaking.ui.screens.main.darken
 import kotlinx.coroutines.delay
@@ -73,7 +74,7 @@ private fun SplashScreenContent() {
         delay(300)
         scale.animateTo(1.7f, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
         delay(700)
-        navigator.push(MainScreen())
+        navigator.push(HomeScreen())
     }
 
     Scaffold(

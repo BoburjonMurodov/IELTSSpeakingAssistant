@@ -5,11 +5,15 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import com.boboor.speaking.TimeUtil
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.PaletteStyle
 import com.russhwolf.settings.ObservableSettings
@@ -23,6 +27,7 @@ import ieltsspeakingassistant.composeapp.generated.resources.mont_regular
 import ieltsspeakingassistant.composeapp.generated.resources.mont_semibold
 import org.jetbrains.compose.resources.Font
 import kotlin.jvm.JvmInline
+import kotlin.math.log
 
 
 /*
@@ -76,27 +81,20 @@ fun AppTheme(
         labelSmall = MaterialTheme.typography.labelSmall.copy(fontFamily = MontFontFamily()),
     )
 
-    // MAIN COLOR - Color(0xff7b580c)
-
     val colorCode = remember { mutableStateOf(0L) }
-    val seedColor = remember(colorCode.value) {
-        println("###initial color ${getColor().value}")
-        mutableStateOf(getColor())
-    }
+    val seedColor = remember(colorCode.value) { mutableStateOf(getColor()) }
 
     DisposableEffect(Unit) {
         val listener = colorSettings.addLongListener("color", 0xff7b580c) { newColor ->
-            seedColor.value = Color(newColor) // Update the state, triggering recomposition
+            seedColor.value = Color(newColor)
             colorCode.value = newColor
         }
 
         onDispose {
-            listener.deactivate() // Clean up the listener when the composable is disposed
+            listener.deactivate()
         }
     }
 
-    println("--saved color = ${getColor().value}")
-    println("--seed color = ${seedColor.value}")
 
     DynamicMaterialTheme(
         seedColor = seedColor.value,
@@ -108,8 +106,6 @@ fun AppTheme(
         withAmoled = true,
         style = PaletteStyle.Content
     )
-
-
 }
 
 private val colorSettings = MakeObservableSettings(Settings()) //Settings() as ObservableSettings
@@ -316,3 +312,4 @@ private value class Listener(
 
     override fun deactivate(): Unit = removeListener()
 }
+

@@ -71,6 +71,7 @@ kotlin {
             implementation("cafe.adriel.voyager:voyager-screenmodel:$voyagerVersion") // Screen Model
             implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion") // Transitions
             implementation("cafe.adriel.voyager:voyager-koin:$voyagerVersion") // Koin integration
+            implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion") // TabNavigator
 
             //MVI ORBIT
 //            implementation("org.orbit-mvi:orbit-core:9.0.0")
@@ -114,8 +115,6 @@ kotlin {
             //HTML PARSER
             implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc11")
 
-            //APP WALKTHROUGH / COACH MARK
-            implementation("io.github.pseudoankit:coachmark:3.0.1")
         }
 
 
