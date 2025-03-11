@@ -63,7 +63,6 @@ import cafe.adriel.voyager.transitions.ScreenTransition
 import com.boboor.speaking.getScreenWidth
 import com.boboor.speaking.presenter.main.MainScreenContracts
 import com.boboor.speaking.ui.theme.AppTheme
-import com.boboor.speaking.ui.theme.VoyagerTabThemeChanger
 import com.boboor.speaking.ui.theme.getColor
 import com.boboor.speaking.ui.theme.setColor
 import com.boboor.speaking.utils.OnExitBackPressHandler
