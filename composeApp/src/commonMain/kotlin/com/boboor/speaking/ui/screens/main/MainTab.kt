@@ -83,7 +83,7 @@ import org.jetbrains.compose.resources.painterResource
 */
 
 @OptIn(ExperimentalVoyagerApi::class)
-object MainScreen : Tab, ScreenTransition {
+object MainTab : Tab, ScreenTransition {
 
     override fun enter(lastEvent: StackEvent): EnterTransition {
         return fadeIn()

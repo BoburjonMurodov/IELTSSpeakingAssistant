@@ -89,7 +89,8 @@ class TopicScreenVM(
     private fun getPartThreeQuestions() = intent(Dispatchers.IO) {
         val partThreeQuestions = localStorage.getPartThree()
         if (partThreeQuestions == null) {
-            apiService.getPartThreeQuestions().onSuccess { result ->
+            resultOf{ apiService.getPartThreeQuestions() }
+                .onSuccess { result ->
                 result.content.forEach { if (it.value.active) questions.add(it.value) }
                 localStorage.addPartThree(result)
                 UIState.update { it.copy(isLoading = false, questions = questions) }
