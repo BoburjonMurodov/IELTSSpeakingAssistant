@@ -83,7 +83,7 @@ private fun RowScope.MaterialNavigationBarItem(
             Icon(
                 painter = tab.options.icon!!,
                 contentDescription = tab.options.title,
-                tint = MaterialTheme.colorScheme.primaryContainer
+                tint = if (tabNavigator.current == tab) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     )
