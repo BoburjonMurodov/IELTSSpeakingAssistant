@@ -38,18 +38,8 @@ class HomeScreen : Screen {
             Scaffold(
                 bottomBar = {
                     AppTheme {
-//                        val tabs = listOf(MainTab)
-//                        val tabNavigator = LocalTabNavigator.current
-
                         BottomAppBar {
                             tabs.forEach {
-//                                NavigationBarItem(
-//                                    selected = tabNavigator.current == it,
-//                                    onClick = { tabNavigator.current = it },
-//                                    label = { Text(it.options.title) },
-//                                    icon = { Icon(painter = it.options.icon!!, contentDescription = it.options.title) }
-//                                )
-
                                 MaterialNavigationBarItem(it)
                             }
                         }
@@ -83,7 +73,7 @@ private fun RowScope.MaterialNavigationBarItem(
             Icon(
                 painter = tab.options.icon!!,
                 contentDescription = tab.options.title,
-                tint = if (tabNavigator.current == tab) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                tint = if (tabNavigator.current == tab) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     )

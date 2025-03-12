@@ -23,7 +23,6 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
     listOf(
         iosX64(),
         iosArm64(),
@@ -193,6 +192,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.boboor.speaking"
             packageVersion = "1.0.0"
+
         }
     }
 }

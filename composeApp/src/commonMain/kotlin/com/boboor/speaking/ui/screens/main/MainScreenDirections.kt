@@ -16,7 +16,6 @@ class MainScreenDirections(
     private val appNavigator: AppNavigator
 ) : MainScreenContracts.Directions {
     override suspend fun goTopicScreen(section: Section) {
-        println("go to topic screen action")
         appNavigator.push(TopicScreen(section))
     }
 }

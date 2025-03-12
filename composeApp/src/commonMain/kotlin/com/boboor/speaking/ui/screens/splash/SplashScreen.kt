@@ -35,7 +35,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
 import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.ui.screens.HomeScreen
-import com.boboor.speaking.ui.screens.main.darken
+import com.boboor.speaking.utils.darken
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
 

@@ -53,7 +53,6 @@ import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.ui.components.AppBar
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.launch
-import multiplatform.network.cmptoast.showToast
 import nl.marc_apps.tts.TextToSpeechEngine
 import nl.marc_apps.tts.experimental.ExperimentalDesktopTarget
 import nl.marc_apps.tts.experimental.ExperimentalIOSTarget
@@ -187,7 +186,7 @@ private fun DetailScreenContent(
                                         textToSpeech?.stop()
                                         textToSpeech?.say(it)
                                     } catch (e: Exception) {
-                                        showToast("error")
+
                                     }
                                 }
                             }) {

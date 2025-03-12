@@ -1,5 +1,6 @@
 package com.boboor.speaking.utils
 
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.CancellationException
 
 
@@ -18,4 +19,11 @@ inline fun <T, R> T.resultOf(block: T.() -> R): Result<R> {
     }
 }
 
-
+fun Color.darken(factor: Float = 0.8f): Color {
+    return Color(
+        red = (red * factor).coerceIn(0f, 1f),
+        green = (green * factor).coerceIn(0f, 1f),
+        blue = (blue * factor).coerceIn(0f, 1f),
+        alpha = alpha
+    )
+}
