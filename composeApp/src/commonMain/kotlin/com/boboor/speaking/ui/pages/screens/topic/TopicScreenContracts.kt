@@ -1,4 +1,4 @@
-package com.boboor.speaking.presenter.topic
+package com.boboor.speaking.ui.pages.screens.topic
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState

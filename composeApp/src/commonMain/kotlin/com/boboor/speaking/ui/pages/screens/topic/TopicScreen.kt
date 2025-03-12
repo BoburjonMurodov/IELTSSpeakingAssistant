@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package com.boboor.speaking.ui.screens.topic
+package com.boboor.speaking.ui.pages.screens.topic
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -52,7 +52,6 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.boboor.speaking.presenter.topic.TopicScreenContracts
 import com.boboor.speaking.ui.components.AppBar
 import com.boboor.speaking.ui.components.SearchInput
 import com.boboor.speaking.ui.components.TopicItem

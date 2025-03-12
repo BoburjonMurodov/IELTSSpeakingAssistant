@@ -1,9 +1,8 @@
-package com.boboor.speaking.ui.screens.topic
+package com.boboor.speaking.ui.pages.screens.topic
 
 import AppNavigator
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
-import com.boboor.speaking.presenter.topic.TopicScreenContracts
-import com.boboor.speaking.ui.screens.common_questions.CommonQuestionsScreen
+import com.boboor.speaking.ui.pages.screens.common_questions.CommonQuestionsScreen
 
 
 /*
