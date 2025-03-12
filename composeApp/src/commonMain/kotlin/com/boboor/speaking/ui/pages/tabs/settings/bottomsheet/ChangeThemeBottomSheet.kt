@@ -46,10 +46,13 @@ fun ChangeThemeBottomSheet(
     onClick: (Color) -> Unit,
     onDismiss: () -> Unit
 ) {
-    ModalBottomSheet(onDismiss) {
+    ModalBottomSheet(
+        onDismiss,
+        tonalElevation = 8.dp
+    ) {
         val pagerState = rememberPagerState(
             pageCount = { seedColors.size },
-            initialPage = seedColors.indexOf(getColor())
+            initialPage = seedColors.indexOf(getColor()).coerceIn(0, seedColors.size)
         )
 
         val screenWidth = getScreenWidth()
@@ -62,7 +65,7 @@ fun ChangeThemeBottomSheet(
                     .fillMaxWidth()
                     .padding(16.dp),
                 text = "Choose your color palette",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.headlineMedium
             )
 
             HorizontalPager(
