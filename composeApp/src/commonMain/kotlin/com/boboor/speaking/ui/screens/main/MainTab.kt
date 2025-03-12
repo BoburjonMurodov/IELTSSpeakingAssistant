@@ -68,6 +68,7 @@ import com.boboor.speaking.ui.theme.setColor
 import com.boboor.speaking.utils.OnExitBackPressHandler
 import com.boboor.speaking.utils.Section
 import com.boboor.speaking.utils.debounceClickable
+import com.materialkolor.ktx.darken
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.ic_ielts_envelope
 import ieltsspeakingassistant.composeapp.generated.resources.ic_part_one
@@ -105,18 +106,10 @@ object MainTab : Tab, ScreenTransition {
 
     override val options: TabOptions
         @Composable
-        get() = TabOptions(0u, "Speaking", icon = rememberVectorPainter(Icons.Default.Home))
+        get() = TabOptions(0u, "Home", icon = rememberVectorPainter(Icons.Default.Home))
 
 }
 
-fun Color.darken(factor: Float = 0.8f): Color {
-    return Color(
-        red = (red * factor).coerceIn(0f, 1f),
-        green = (green * factor).coerceIn(0f, 1f),
-        blue = (blue * factor).coerceIn(0f, 1f),
-        alpha = alpha
-    )
-}
 
 @Composable
 private fun MainScreenContent(
@@ -128,7 +121,6 @@ private fun MainScreenContent(
     OnExitBackPressHandler { snackBarHostState.showSnackbar("Click again to exit") }
 
     AppTheme {
-
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             snackbarHost = {
@@ -230,8 +222,6 @@ private fun MainScreenContent(
                             ) {
                                 Text(
                                     text = "Check IELTS result",
-//                                fontSize = 18.sp,
-//                                fontWeight = FontWeight.W600,
                                     color = MaterialTheme.colorScheme.primary,
                                     style = MaterialTheme.typography.titleLarge
                                 )
