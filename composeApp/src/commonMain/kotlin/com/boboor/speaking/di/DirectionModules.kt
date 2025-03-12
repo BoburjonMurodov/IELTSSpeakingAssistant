@@ -1,10 +1,9 @@
 package com.boboor.speaking.di
 
-import androidx.compose.ui.modifier.modifierLocalMapOf
-import com.boboor.speaking.presenter.main.MainScreenContracts
-import com.boboor.speaking.presenter.topic.TopicScreenContracts
-import com.boboor.speaking.ui.screens.main.MainScreenDirections
-import com.boboor.speaking.ui.screens.topic.TopicScreenDirections
+import com.boboor.speaking.ui.pages.tabs.main.MainScreenContracts
+import com.boboor.speaking.ui.pages.screens.topic.TopicScreenContracts
+import com.boboor.speaking.ui.pages.tabs.main.MainScreenDirections
+import com.boboor.speaking.ui.pages.screens.topic.TopicScreenDirections
 import org.koin.dsl.module
 
 

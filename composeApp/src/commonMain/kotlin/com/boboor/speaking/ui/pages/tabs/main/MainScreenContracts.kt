@@ -1,4 +1,4 @@
-package com.boboor.speaking.presenter.main
+package com.boboor.speaking.ui.pages.tabs.main
 
 import com.boboor.speaking.utils.AppViewModel
 import com.boboor.speaking.utils.Section

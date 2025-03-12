@@ -1,10 +1,13 @@
-package com.boboor.speaking.ui.screens
+package com.boboor.speaking.ui.pages
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -12,6 +15,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.stack.StackEvent
@@ -21,8 +25,8 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabDisposable
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import cafe.adriel.voyager.transitions.ScreenTransition
-import com.boboor.speaking.ui.screens.main.MainTab
-import com.boboor.speaking.ui.screens.settings.SettingsTab
+import com.boboor.speaking.ui.pages.tabs.main.MainTab
+import com.boboor.speaking.ui.pages.tabs.settings.SettingsTab
 import com.boboor.speaking.ui.theme.AppTheme
 
 
@@ -61,7 +65,12 @@ class HomeScreen : Screen, ScreenTransition {
                     }
                 }
             ) {
-                CurrentTab()
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(bottom = it.calculateBottomPadding())
+                ) {
+                    CurrentTab()
+                }
             }
         }
     }

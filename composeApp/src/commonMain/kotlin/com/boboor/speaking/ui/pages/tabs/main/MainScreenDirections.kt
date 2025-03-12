@@ -1,11 +1,8 @@
-package com.boboor.speaking.ui.screens.main
+package com.boboor.speaking.ui.pages.tabs.main
 
 import AppNavigator
-import androidx.compose.runtime.Composable
-import com.boboor.speaking.presenter.main.MainScreenContracts
-import com.boboor.speaking.ui.screens.topic.TopicScreen
+import com.boboor.speaking.ui.pages.screens.topic.TopicScreen
 import com.boboor.speaking.utils.Section
-import kotlin.math.log
 
 
 /*

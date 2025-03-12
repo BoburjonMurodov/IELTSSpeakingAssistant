@@ -1,7 +1,6 @@
-package com.boboor.speaking.ui.screens.detail_screen
+package com.boboor.speaking.ui.pages.screens.detail_screen
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
