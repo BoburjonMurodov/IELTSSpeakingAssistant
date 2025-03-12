@@ -1,7 +1,6 @@
 package com.boboor.speaking.ui.pages.tabs.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -181,7 +181,7 @@ object SettingsTab : Tab {
                                 contentDescription = null
                             )
                         },
-                        modifier = Modifier.clickable {
+                        modifier = Modifier.debounceClickable {
                             uriHandler.openUri("https://t.me/pwn17wnd")
                         }
                     )
@@ -200,8 +200,34 @@ object SettingsTab : Tab {
                                 contentDescription = null
                             )
                         },
-                        modifier = Modifier.clickable {
+                        modifier = Modifier.debounceClickable {
                             uriHandler.openUri("https://github.com/BoburjonMurodov")
+                        }
+                    )
+
+                    HorizontalDivider()
+
+                    ListItem(
+                        headlineContent = {
+                            Text(
+                                text = "Clear Cache",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = "app will be restarted",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        },
+                        trailingContent = {
+                            Icon(
+                                Icons.Default.Clear, contentDescription = null,
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        },
+                        modifier = Modifier.debounceClickable {
+                            onEventDispatcher.invoke(SettingsContracts.Intent.OnClickClearCache)
                         }
                     )
 

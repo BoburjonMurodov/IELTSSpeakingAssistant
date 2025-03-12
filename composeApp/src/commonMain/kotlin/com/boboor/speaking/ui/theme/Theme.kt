@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.PaletteStyle
 import com.russhwolf.settings.Settings
+import com.russhwolf.settings.get
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.mont_bold
 import ieltsspeakingassistant.composeapp.generated.resources.mont_medium
@@ -133,7 +134,7 @@ fun AppTheme(
     val seedColor = remember(colorCode.value) { mutableStateOf(getColor()) }
 
     DisposableEffect(Unit) {
-        val colorListener = colorSettings.addLongListener("color", 0xFFF44336) { newColor ->
+        val colorListener = colorSettings.addLongListener("color", Color.Red.value.toLong()) { newColor ->
             seedColor.value = Color(newColor)
             colorCode.value = newColor
         }
@@ -169,8 +170,11 @@ fun AppTheme(
 private val colorSettings = MakeObservableSettings(Settings())
 
 fun getColor(): Color {
-    val colorCode = colorSettings.getLong("color", 0xFFF44336)
+    val colorCode = colorSettings.get<Long>("color") ?: Color.Red.value.toLong()
+//    println("colorCode $colorCode")
+
     return Color(colorCode.toULong())
+//    return Color.Red
 }
 
 

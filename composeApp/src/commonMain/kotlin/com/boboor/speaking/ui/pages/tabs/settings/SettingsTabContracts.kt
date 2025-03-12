@@ -30,6 +30,13 @@ interface SettingsContracts {
 
         data object OpenChangeThemeBottomSheet : Intent
         data object DismissChangeThemeBottomSheet: Intent
+
+        data object OnClickClearCache: Intent
+    }
+
+
+    interface Directions{
+        suspend fun goBackToSplashScreen()
     }
 }
 
