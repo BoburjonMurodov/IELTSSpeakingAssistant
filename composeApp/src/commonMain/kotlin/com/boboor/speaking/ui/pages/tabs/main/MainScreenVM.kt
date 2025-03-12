@@ -1,6 +1,6 @@
-package com.boboor.speaking.presenter.main
+package com.boboor.speaking.ui.pages.tabs.main
 
-import com.boboor.speaking.presenter.main.MainScreenContracts.Intent.OnClickPart
+import com.boboor.speaking.ui.pages.tabs.main.MainScreenContracts.Intent.OnClickPart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 

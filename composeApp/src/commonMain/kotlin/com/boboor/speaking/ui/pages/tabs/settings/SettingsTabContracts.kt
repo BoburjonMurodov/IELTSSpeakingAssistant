@@ -1,4 +1,4 @@
-package com.boboor.speaking.ui.screens.settings
+package com.boboor.speaking.ui.pages.tabs.settings
 
 import androidx.compose.ui.graphics.Color
 import com.boboor.speaking.ui.theme.FontDimension
@@ -20,11 +20,16 @@ interface SettingsContracts {
     data class UIState(
         val selectedThemeColor: Color = getColor(),
         val selectedFontDimension: FontDimension = getFontDimension(),
+        val isChangeThemeBottomSheetOpen: Boolean = false
     )
 
     sealed interface Intent {
         data class ChangeThemeColor(val color: Color) : Intent
         data class ChangeFontDimension(val scale: FontDimension) : Intent
+
+
+        data object OpenChangeThemeBottomSheet : Intent
+        data object DismissChangeThemeBottomSheet: Intent
     }
 }
 

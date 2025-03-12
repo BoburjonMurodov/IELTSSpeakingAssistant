@@ -1,15 +1,14 @@
-package com.boboor.speaking.ui.screens.settings
+package com.boboor.speaking.ui.pages.tabs.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -29,25 +28,30 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.boboor.speaking.ui.pages.tabs.settings.bottomsheet.ChangeThemeBottomSheet
 import com.boboor.speaking.ui.theme.AppTheme
 import com.boboor.speaking.ui.theme.FontDimension
 import com.boboor.speaking.ui.theme.getFontDimension
 import com.boboor.speaking.ui.theme.setFontDimension
+import com.boboor.speaking.utils.darken
+import com.boboor.speaking.utils.debounceClickable
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.ic_back
 import org.jetbrains.compose.resources.painterResource
@@ -70,13 +74,18 @@ object SettingsTab : Tab {
 
     @Composable
     override fun Content() {
-        SettingsTabContent()
+        val viewModel = koinScreenModel<SettingsContracts.ViewModel>()
+        val state = viewModel.collectAsState()
+        SettingsTabContent(state, viewModel::onEventDispatcher)
     }
 
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun SettingsTabContent() {
+    private fun SettingsTabContent(
+        state: State<SettingsContracts.UIState>,
+        onEventDispatcher: (SettingsContracts.Intent) -> Unit = {}
+    ) {
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
         AppTheme {
@@ -100,13 +109,16 @@ object SettingsTab : Tab {
                     Text("Appearance", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
 
                     ListItem(
+                        modifier = Modifier.debounceClickable {
+                            onEventDispatcher(SettingsContracts.Intent.OpenChangeThemeBottomSheet)
+                        },
                         headlineContent = { Text("Theme Color") },
-                        supportingContent = { Text("selectedThemeColor") },
                         trailingContent = {
-                            DropdownMenuComponent(
-                                options = listOf("Green", "Dark", "System"),
-                                selectedOption = "selectedThemeColor",
-                                onOptionSelected = {  }
+                            Box(
+                                modifier = Modifier
+                                    .size(30.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(state.value.selectedThemeColor.gradient())
                             )
                         }
                     )
@@ -136,7 +148,7 @@ object SettingsTab : Tab {
                             DropdownMenuComponent(
                                 options = listOf("Every day", "Every app opening", "Never"),
                                 selectedOption = "Every day",
-                                onOptionSelected = {  }
+                                onOptionSelected = { }
                             )
                         }
                     )
@@ -188,7 +200,7 @@ object SettingsTab : Tab {
                                 contentDescription = null
                             )
                         },
-                        modifier = Modifier.clickable{
+                        modifier = Modifier.clickable {
                             uriHandler.openUri("https://github.com/BoburjonMurodov")
                         }
                     )
@@ -201,6 +213,17 @@ object SettingsTab : Tab {
                     )
 
                     Spacer(Modifier.height(padding.calculateBottomPadding()))
+                }
+
+                if (state.value.isChangeThemeBottomSheetOpen) {
+                    ChangeThemeBottomSheet(
+                        onClick = {
+                            onEventDispatcher(SettingsContracts.Intent.ChangeThemeColor(it))
+                            onEventDispatcher(SettingsContracts.Intent.DismissChangeThemeBottomSheet)
+                        },
+                        onDismiss = {
+                            onEventDispatcher(SettingsContracts.Intent.DismissChangeThemeBottomSheet)
+                        })
                 }
             }
         }
@@ -258,3 +281,12 @@ val seedColors = listOf(
     Color(0xFF000000),
     Color(0xFFFFFFFF)
 )
+
+fun Color.gradient(): Brush {
+    return Brush.linearGradient(
+        colors = listOf(
+            this,
+            this.copy(alpha = 0.8f).darken(0.5f)
+        )
+    )
+}

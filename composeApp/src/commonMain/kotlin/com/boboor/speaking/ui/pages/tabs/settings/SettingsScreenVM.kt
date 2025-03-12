@@ -1,4 +1,4 @@
-package com.boboor.speaking.ui.screens.settings
+package com.boboor.speaking.ui.pages.tabs.settings
 
 import com.boboor.speaking.ui.theme.getColor
 import com.boboor.speaking.ui.theme.getFontDimension
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 
 
-class SettingsVM : SettingsContracts.ViewModel {
+class SettingsScreenVM : SettingsContracts.ViewModel {
     override fun onEventDispatcher(intent: SettingsContracts.Intent): Job = intent {
         when (intent) {
             is SettingsContracts.Intent.ChangeFontDimension -> {
@@ -25,6 +25,7 @@ class SettingsVM : SettingsContracts.ViewModel {
                     )
                 }
             }
+
             is SettingsContracts.Intent.ChangeThemeColor -> {
                 setColor(intent.color)
                 reduce {
@@ -34,6 +35,13 @@ class SettingsVM : SettingsContracts.ViewModel {
                 }
             }
 
+            SettingsContracts.Intent.OpenChangeThemeBottomSheet -> reduce {
+                UIState.value.copy(isChangeThemeBottomSheetOpen = true)
+            }
+
+            SettingsContracts.Intent.DismissChangeThemeBottomSheet -> reduce {
+                UIState.value.copy(isChangeThemeBottomSheetOpen = false)
+            }
         }
     }
 

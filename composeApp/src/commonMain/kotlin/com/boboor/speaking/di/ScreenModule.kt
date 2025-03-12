@@ -1,9 +1,11 @@
 package com.boboor.speaking.di
 
-import com.boboor.speaking.presenter.main.MainScreenContracts
-import com.boboor.speaking.presenter.main.MainScreenVM
-import com.boboor.speaking.presenter.topic.TopicScreenContracts
-import com.boboor.speaking.presenter.topic.TopicScreenVM
+import com.boboor.speaking.ui.pages.tabs.main.MainScreenContracts
+import com.boboor.speaking.ui.pages.tabs.main.MainScreenVM
+import com.boboor.speaking.ui.pages.screens.topic.TopicScreenContracts
+import com.boboor.speaking.ui.pages.screens.topic.TopicScreenVM
+import com.boboor.speaking.ui.pages.tabs.settings.SettingsContracts
+import com.boboor.speaking.ui.pages.tabs.settings.SettingsScreenVM
 import org.koin.dsl.module
 
 
@@ -15,4 +17,5 @@ import org.koin.dsl.module
 val mainScreenModule = module {
     factory<MainScreenContracts.ViewModel> { MainScreenVM(get()) }
     factory<TopicScreenContracts.ViewModel> { TopicScreenVM(get(), get(), get()) }
+    factory<SettingsContracts.ViewModel> { SettingsScreenVM() }
 }
