@@ -18,6 +18,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.input.KeyboardType.Companion.Uri
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
@@ -87,58 +89,95 @@ object SettingsTab : Tab {
                         .verticalScroll(rememberScrollState())
                 ) {
                     Spacer(Modifier.height(padding.calculateTopPadding()))
-                    repeat(1) {
-                        Text("Appearance", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
 
-                        ListItem(
-                            headlineContent = { Text("Theme Color") },
-                            supportingContent = { Text("selectedThemeColor") },
-                            trailingContent = {
-                                DropdownMenuComponent(
-                                    options = listOf("green", "dark", "system"),
-                                    selectedOption = "selectedThemeColor",
-                                    onOptionSelected = { }
-                                )
-                            }
-                        )
+                    // Appearance Section
+                    Text("Appearance", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
 
-                        HorizontalDivider()
+                    ListItem(
+                        headlineContent = { Text("Theme Color") },
+                        supportingContent = { Text("selectedThemeColor") },
+                        trailingContent = {
+                            DropdownMenuComponent(
+                                options = listOf("Green", "Dark", "System"),
+                                selectedOption = "selectedThemeColor",
+                                onOptionSelected = { }
+                            )
+                        }
+                    )
 
-                        Text("Content Updates", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
+                    HorizontalDivider()
 
-                        ListItem(
-                            headlineContent = { Text("Update Frequency") },
-                            supportingContent = { Text("updateFrequency") },
-                            trailingContent = {
-                                DropdownMenuComponent(
-                                    options = listOf("every day", "every app opening", "never"),
-                                    selectedOption = "updateFrequency",
-                                    onOptionSelected = { }
-                                )
-                            }
-                        )
+                    // Font Size Selection
+                    ListItem(
+                        headlineContent = { Text("Font Size") },
+                        supportingContent = { Text("Medium") },
+                        trailingContent = {
+                            DropdownMenuComponent(
+                                options = listOf("Small", "Medium", "Large"),
+                                selectedOption = "Medium",
+                                onOptionSelected = { }
+                            )
+                        }
+                    )
 
-                        HorizontalDivider()
+                    HorizontalDivider()
 
-                        Text("Preferences", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
+                    Text("Content Updates", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
 
-                        ListItem(
-                            headlineContent = { Text("Show Hidden Questions") },
-                            trailingContent = {
-                                Switch(
-                                    checked = true,
-                                    onCheckedChange = {}
-                                )
-                            }
-                        )
+                    ListItem(
+                        headlineContent = { Text("Update Frequency") },
+                        supportingContent = { Text("Every day") },
+                        trailingContent = {
+                            DropdownMenuComponent(
+                                options = listOf("Every day", "Every app opening", "Never"),
+                                selectedOption = "Every day",
+                                onOptionSelected = { }
+                            )
+                        }
+                    )
 
-                        HorizontalDivider()
+                    HorizontalDivider()
 
-                        ListItem(
-                            headlineContent = { Text("App Version") },
-                            supportingContent = { Text("1.0.0") }
-                        )
-                    }
+                    Text("Preferences", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
+
+                    ListItem(
+                        headlineContent = { Text("Show Hidden Questions") },
+                        trailingContent = {
+                            Switch(
+                                checked = true,
+                                onCheckedChange = {
+
+                                }
+                            )
+                        }
+                    )
+
+
+                    HorizontalDivider()
+
+                    ListItem(
+                        headlineContent = { Text("Report a Bug") },
+                        supportingContent = { Text("Join our Telegram") },
+                        trailingContent = {
+                        },
+                    )
+
+                    HorizontalDivider()
+
+                    ListItem(
+                        headlineContent = { Text("Open Source Licenses") },
+                        supportingContent = { Text("View third-party licenses") },
+                        trailingContent = {
+                        }
+                    )
+
+                    HorizontalDivider()
+
+                    ListItem(
+                        headlineContent = { Text("App Version") },
+                        supportingContent = { Text("1.0.0") },
+                    )
+
                     Spacer(Modifier.height(padding.calculateBottomPadding()))
                 }
             }

@@ -29,12 +29,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -84,17 +88,7 @@ import org.jetbrains.compose.resources.painterResource
 */
 
 @OptIn(ExperimentalVoyagerApi::class)
-object MainTab : Tab, ScreenTransition {
-
-    override fun enter(lastEvent: StackEvent): EnterTransition {
-        return fadeIn()
-    }
-
-    override fun exit(lastEvent: StackEvent): ExitTransition {
-        return fadeOut()
-    }
-
-    override val key: ScreenKey get() = this.hashCode().toString()
+object MainTab : Tab{
 
     @Composable
     override fun Content() {
@@ -109,6 +103,7 @@ object MainTab : Tab, ScreenTransition {
         get() = TabOptions(0u, "Home", icon = rememberVectorPainter(Icons.Default.Home))
 
 }
+
 
 
 @Composable
@@ -346,13 +341,3 @@ fun AppCard(
         )
     }
 }
-
-
-@Composable
-fun Modifier.appShadow(alpha: Float = 0.4f): Modifier {
-    return shadow(
-        elevation = 40.dp, shape = RoundedCornerShape(24.dp),
-        spotColor = MaterialTheme.colorScheme.primary.copy(alpha = alpha)
-    )
-}
-

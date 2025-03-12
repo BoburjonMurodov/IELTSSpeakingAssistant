@@ -1,5 +1,9 @@
 package com.boboor.speaking.ui.screens
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
@@ -8,12 +12,15 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabDisposable
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import cafe.adriel.voyager.transitions.ScreenTransition
 import com.boboor.speaking.ui.screens.main.MainTab
 import com.boboor.speaking.ui.screens.settings.SettingsTab
 import com.boboor.speaking.ui.theme.AppTheme
@@ -23,7 +30,17 @@ import com.boboor.speaking.ui.theme.AppTheme
     Created by Boburjon Murodov 09/03/25 at 21:29
 */
 
-class HomeScreen : Screen {
+@OptIn(ExperimentalVoyagerApi::class)
+class HomeScreen : Screen, ScreenTransition {
+
+    override fun enter(lastEvent: StackEvent): EnterTransition {
+        return fadeIn()
+    }
+
+    override fun exit(lastEvent: StackEvent): ExitTransition {
+        return fadeOut()
+    }
+
 
     @Composable
     override fun Content() {
@@ -31,9 +48,7 @@ class HomeScreen : Screen {
 
         TabNavigator(
             tab = MainTab,
-            tabDisposable = {
-                TabDisposable(it, tabs = tabs)
-            }
+            tabDisposable = { TabDisposable(it, tabs = tabs) }
         ) {
             Scaffold(
                 bottomBar = {
