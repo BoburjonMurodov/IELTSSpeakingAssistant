@@ -54,35 +54,86 @@ fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val fontDimension = remember { mutableStateOf(getFontDimension()) }
+
     val typography = MaterialTheme.typography.copy(
-        displayLarge = MaterialTheme.typography.displayLarge.copy(fontFamily = MontFontFamily()),
-        displayMedium = MaterialTheme.typography.displayMedium.copy(fontFamily = MontFontFamily()),
-        displaySmall = MaterialTheme.typography.displaySmall.copy(fontFamily = MontFontFamily()),
-        bodyLarge = MaterialTheme.typography.bodyLarge.copy(fontFamily = MontFontFamily()),
-        bodyMedium = MaterialTheme.typography.bodyMedium.copy(fontFamily = MontFontFamily()),
-        bodySmall = MaterialTheme.typography.bodySmall.copy(fontFamily = MontFontFamily()),
-        headlineLarge = MaterialTheme.typography.headlineLarge.copy(fontFamily = MontFontFamily()),
-        headlineMedium = MaterialTheme.typography.headlineMedium.copy(fontFamily = MontFontFamily()),
-        headlineSmall = MaterialTheme.typography.headlineSmall.copy(fontFamily = MontFontFamily()),
-        titleLarge = MaterialTheme.typography.titleLarge.copy(fontFamily = MontFontFamily()),
-        titleMedium = MaterialTheme.typography.titleMedium.copy(fontFamily = MontFontFamily()),
-        titleSmall = MaterialTheme.typography.titleSmall.copy(fontFamily = MontFontFamily()),
-        labelLarge = MaterialTheme.typography.labelLarge.copy(fontFamily = MontFontFamily()),
-        labelMedium = MaterialTheme.typography.labelMedium.copy(fontFamily = MontFontFamily()),
-        labelSmall = MaterialTheme.typography.labelSmall.copy(fontFamily = MontFontFamily()),
+        displayLarge = MaterialTheme.typography.displayLarge.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.displayLarge.fontSize * fontDimension.value.scale
+        ),
+        displayMedium = MaterialTheme.typography.displayMedium.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.displayMedium.fontSize * fontDimension.value.scale
+        ),
+        displaySmall = MaterialTheme.typography.displaySmall.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.displaySmall.fontSize * fontDimension.value.scale
+        ),
+        bodyLarge = MaterialTheme.typography.bodyLarge.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize * fontDimension.value.scale
+        ),
+        bodyMedium = MaterialTheme.typography.bodyMedium.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize * fontDimension.value.scale
+        ),
+        bodySmall = MaterialTheme.typography.bodySmall.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.bodySmall.fontSize * fontDimension.value.scale
+        ),
+        headlineLarge = MaterialTheme.typography.headlineLarge.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.headlineLarge.fontSize * fontDimension.value.scale
+        ),
+        headlineMedium = MaterialTheme.typography.headlineMedium.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.headlineMedium.fontSize * fontDimension.value.scale
+        ),
+        headlineSmall = MaterialTheme.typography.headlineSmall.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.headlineSmall.fontSize * fontDimension.value.scale
+        ),
+        titleLarge = MaterialTheme.typography.titleLarge.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.titleLarge.fontSize * fontDimension.value.scale
+        ),
+        titleMedium = MaterialTheme.typography.titleMedium.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.titleMedium.fontSize * fontDimension.value.scale
+        ),
+        titleSmall = MaterialTheme.typography.titleSmall.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.titleSmall.fontSize * fontDimension.value.scale
+        ),
+        labelLarge = MaterialTheme.typography.labelLarge.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.labelLarge.fontSize * fontDimension.value.scale
+        ),
+        labelMedium = MaterialTheme.typography.labelMedium.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.labelMedium.fontSize * fontDimension.value.scale
+        ),
+        labelSmall = MaterialTheme.typography.labelSmall.copy(
+            fontFamily = MontFontFamily(),
+            fontSize = MaterialTheme.typography.labelSmall.fontSize * fontDimension.value.scale
+        )
     )
 
     val colorCode = remember { mutableStateOf(0L) }
     val seedColor = remember(colorCode.value) { mutableStateOf(getColor()) }
 
     DisposableEffect(Unit) {
-        val listener = colorSettings.addLongListener("color", 0xff7b580c) { newColor ->
+        val colorListener = colorSettings.addLongListener("color", 0xff7b580c) { newColor ->
             seedColor.value = Color(newColor)
             colorCode.value = newColor
         }
 
+        val fontScaleListener = colorSettings.addStringListener("fontDimension", FontDimension.MEDIUM.name){
+            fontDimension.value = FontDimension.valueOf(it)
+        }
+
         onDispose {
-            listener.deactivate()
+            colorListener.deactivate()
         }
     }
 
@@ -112,4 +163,11 @@ fun setColor(color: Color) {
     colorSettings.putLong("color", colorCode.toLong())
 }
 
+fun getFontDimension(): FontDimension {
+    val dimension = colorSettings.getString("fontDimension", FontDimension.MEDIUM.name)
+    return FontDimension.valueOf(dimension)
+}
 
+fun setFontDimension(dimension: FontDimension){
+    colorSettings.putString("fontDimension", dimension.name)
+}

@@ -1,6 +1,7 @@
 package com.boboor.speaking.ui.screens.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,12 +23,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,13 +36,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.input.KeyboardType.Companion.Uri
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.boboor.speaking.ui.theme.AppTheme
+import com.boboor.speaking.ui.theme.FontDimension
+import com.boboor.speaking.ui.theme.getFontDimension
+import com.boboor.speaking.ui.theme.setFontDimension
+import ieltsspeakingassistant.composeapp.generated.resources.Res
+import ieltsspeakingassistant.composeapp.generated.resources.ic_back
+import org.jetbrains.compose.resources.painterResource
 
 
 /*
@@ -90,7 +97,6 @@ object SettingsTab : Tab {
                 ) {
                     Spacer(Modifier.height(padding.calculateTopPadding()))
 
-                    // Appearance Section
                     Text("Appearance", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
 
                     ListItem(
@@ -100,29 +106,28 @@ object SettingsTab : Tab {
                             DropdownMenuComponent(
                                 options = listOf("Green", "Dark", "System"),
                                 selectedOption = "selectedThemeColor",
-                                onOptionSelected = { }
+                                onOptionSelected = {  }
                             )
                         }
                     )
 
-                    HorizontalDivider()
-
-                    // Font Size Selection
                     ListItem(
                         headlineContent = { Text("Font Size") },
-                        supportingContent = { Text("Medium") },
+                        supportingContent = { Text(getFontDimension().name) },
                         trailingContent = {
                             DropdownMenuComponent(
-                                options = listOf("Small", "Medium", "Large"),
-                                selectedOption = "Medium",
-                                onOptionSelected = { }
+                                options = FontDimension.entries.map { it.name },
+                                selectedOption = getFontDimension().name,
+                                onOptionSelected = {
+                                    setFontDimension(FontDimension.valueOf(it))
+                                }
                             )
                         }
                     )
 
                     HorizontalDivider()
 
-                    Text("Content Updates", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
+                    Text("Content Settings", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
 
                     ListItem(
                         headlineContent = { Text("Update Frequency") },
@@ -131,14 +136,11 @@ object SettingsTab : Tab {
                             DropdownMenuComponent(
                                 options = listOf("Every day", "Every app opening", "Never"),
                                 selectedOption = "Every day",
-                                onOptionSelected = { }
+                                onOptionSelected = {  }
                             )
                         }
                     )
 
-                    HorizontalDivider()
-
-                    Text("Preferences", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(16.dp))
 
                     ListItem(
                         headlineContent = { Text("Show Hidden Questions") },
@@ -152,22 +154,42 @@ object SettingsTab : Tab {
                         }
                     )
 
-
+                    val uriHandler = LocalUriHandler.current
                     HorizontalDivider()
 
                     ListItem(
-                        headlineContent = { Text("Report a Bug") },
-                        supportingContent = { Text("Join our Telegram") },
+                        headlineContent = { Text("Our Telegram Channel") },
+                        supportingContent = { Text("Join our channel for news and updates") },
                         trailingContent = {
+                            Icon(
+                                modifier = Modifier.graphicsLayer {
+                                    rotationZ = 180f
+                                },
+                                painter = painterResource(Res.drawable.ic_back),
+                                contentDescription = null
+                            )
                         },
+                        modifier = Modifier.clickable {
+                            uriHandler.openUri("https://t.me/pwn17wnd")
+                        }
                     )
 
                     HorizontalDivider()
 
                     ListItem(
-                        headlineContent = { Text("Open Source Licenses") },
-                        supportingContent = { Text("View third-party licenses") },
+                        headlineContent = { Text("Licenses") },
+                        supportingContent = { Text("Third-party licenses") },
                         trailingContent = {
+                            Icon(
+                                modifier = Modifier.graphicsLayer {
+                                    rotationZ = 180f
+                                },
+                                painter = painterResource(Res.drawable.ic_back),
+                                contentDescription = null
+                            )
+                        },
+                        modifier = Modifier.clickable{
+                            uriHandler.openUri("https://github.com/BoburjonMurodov")
                         }
                     )
 
@@ -185,38 +207,6 @@ object SettingsTab : Tab {
     }
 
 
-
-}
-
-
-@Composable
-fun ListTile(
-    title: String,
-    content: @Composable () -> Unit,
-    isFirst: Boolean = false,
-    isLast: Boolean = false,
-    onClick: () -> Unit = {}
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth()
-            .then(
-                if (isFirst) Modifier.clip(RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp))
-                else if (isLast) Modifier.clip(RoundedCornerShape(bottomEnd = 16.dp, bottomStart = 16.dp))
-                else Modifier
-            ).background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .padding(16.dp),
-
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        Spacer(Modifier.weight(1f))
-
-        content.invoke()
-    }
 }
 
 
@@ -244,3 +234,27 @@ fun DropdownMenuComponent(options: List<String>, selectedOption: String, onOptio
         }
     }
 }
+
+val seedColors = listOf(
+    Color(0xFFF44336),
+    Color(0xFFE91E63),
+    Color(0xFF9C27B0),
+    Color(0xFF673AB7),
+    Color(0xFF3F51B5),
+    Color(0xFF2196F3),
+    Color(0xFF03A9F4),
+    Color(0xFF00BCD4),
+    Color(0xFF009688),
+    Color(0xFF4CAF50),
+    Color(0xFF8BC34A),
+    Color(0xFFCDDC39),
+    Color(0xFFFFEB3B),
+    Color(0xFFFFC107),
+    Color(0xFFFF9800),
+    Color(0xFFFF5722),
+    Color(0xFF795548),
+    Color(0xFF9E9E9E),
+    Color(0xFF607D8B),
+    Color(0xFF000000),
+    Color(0xFFFFFFFF)
+)
