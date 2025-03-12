@@ -4,6 +4,8 @@ import com.boboor.speaking.ui.pages.tabs.main.MainScreenContracts
 import com.boboor.speaking.ui.pages.screens.topic.TopicScreenContracts
 import com.boboor.speaking.ui.pages.tabs.main.MainScreenDirections
 import com.boboor.speaking.ui.pages.screens.topic.TopicScreenDirections
+import com.boboor.speaking.ui.pages.tabs.settings.SettingsContracts
+import com.boboor.speaking.ui.pages.tabs.settings.SettingsTabDirections
 import org.koin.dsl.module
 
 
@@ -15,4 +17,5 @@ import org.koin.dsl.module
 val directionModule = module {
     factory<MainScreenContracts.Directions> { MainScreenDirections(get()) }
     factory<TopicScreenContracts.Directions> { TopicScreenDirections(get()) }
+    factory<SettingsContracts.Directions> { SettingsTabDirections(get()) }
 }

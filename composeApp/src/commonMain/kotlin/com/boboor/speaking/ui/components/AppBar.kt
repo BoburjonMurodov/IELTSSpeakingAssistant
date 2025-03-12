@@ -47,7 +47,7 @@ fun AppBar(
     showSearch: Boolean = true,
     isSearchVisible: Boolean = true,
     onClickBack: () -> Unit,
-    onClickSearch: () -> Unit,
+    onClickSearch: () -> Unit = {},
 ) {
     val backButtonWith = remember { mutableStateOf(0) }
     val density = LocalDensity.current

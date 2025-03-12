@@ -1,10 +1,13 @@
 package com.boboor.speaking.ui.pages.tabs.settings
 
+import com.boboor.speaking.closeApp
+import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.ui.theme.getColor
 import com.boboor.speaking.ui.theme.getFontDimension
 import com.boboor.speaking.ui.theme.setColor
 import com.boboor.speaking.ui.theme.setFontDimension
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 
 
@@ -14,7 +17,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 
 
-class SettingsScreenVM : SettingsContracts.ViewModel {
+class SettingsScreenVM(
+    private val directions: SettingsContracts.Directions,
+    private val localStorage: LocalStorage
+) : SettingsContracts.ViewModel {
     override fun onEventDispatcher(intent: SettingsContracts.Intent): Job = intent {
         when (intent) {
             is SettingsContracts.Intent.ChangeFontDimension -> {
@@ -41,6 +47,13 @@ class SettingsScreenVM : SettingsContracts.ViewModel {
 
             SettingsContracts.Intent.DismissChangeThemeBottomSheet -> reduce {
                 UIState.value.copy(isChangeThemeBottomSheetOpen = false)
+            }
+
+            SettingsContracts.Intent.OnClickClearCache -> {
+                localStorage.clear()
+//                directions.goBackToSplashScreen()
+                delay(100)
+                closeApp()
             }
         }
     }

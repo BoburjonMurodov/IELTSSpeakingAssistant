@@ -2,12 +2,7 @@ package com.boboor.speaking.data.local
 
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.russhwolf.settings.Settings
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -26,7 +21,7 @@ class LocalStorage {
     val PART_THREE_PREFIX = "PART_THREE_PART_".encrypt(getKey())
     private val CHUNK_SIZE = 4000 // Adjust based on storage limits
 
-//    init {
+    //    init {
 //        settings.clear()
 //    }
     private fun getRandomString(length: Int = Random.nextInt(12, 55)): String {
@@ -52,6 +47,10 @@ class LocalStorage {
 
     suspend fun addPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
     suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)
+
+    fun clear() {
+        settings.clear()
+    }
 
     private suspend fun storeInParts(prefix: String, value: CommonTopicResponse.Response) {
         val json = Json.encodeToString(value).encryptWithKey(getKey())
@@ -80,6 +79,8 @@ class LocalStorage {
             null
         }
     }
+
+
 }
 
 
