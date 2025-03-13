@@ -16,7 +16,7 @@ std::string encryptedString = R"(2..*)`uu>8,3(./;6?>/9;.354t957u3?6.)u;*3u)";
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_boboor_speaking_utils_NativeLib_getBaseUrl(JNIEnv *env, jobject thiz) {
-    char key = 0x5A; // Same key as encryption
+    char key = 0x5A;
     std::string decrypted = xorDecrypt(encryptedString, key);
     return env->NewStringUTF(decrypted.c_str());
 }
