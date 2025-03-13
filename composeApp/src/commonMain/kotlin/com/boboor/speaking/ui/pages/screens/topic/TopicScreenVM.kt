@@ -49,7 +49,11 @@ class TopicScreenVM(
                     })
                 }
 
-            is TopicScreenContracts.Intent.OnClickTopic -> directions.goQuestionsScreen(intent.title, topics = intent.topics, topicIndex = intent.topicIndex)
+            is TopicScreenContracts.Intent.OnClickTopic -> directions.goQuestionsScreen(
+                intent.title,
+                topics = intent.topics,
+                topicIndex = intent.topicIndex
+            )
 
         }
     }
@@ -67,11 +71,13 @@ class TopicScreenVM(
 
     private fun getPartOneQuestions() = intent(Dispatchers.IO) {
         val partOneQuestions = localStorage.getPartOne()
+        val showAnyWay = localStorage.getQuestionsVisibility()
+
         if (partOneQuestions == null) {
             println("getPartOneQuestions from net")
             resultOf { apiService.getPartOneQuestions() }
                 .onSuccess { result ->
-                    result.content.forEach { if (it.value.active) questions.add(it.value) }
+                    result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
                     localStorage.addPartOne(result)
                     UIState.update { it.copy(isLoading = false, questions = questions) }
                 }.onFailure {
@@ -79,8 +85,7 @@ class TopicScreenVM(
                 }
         } else {
             println("getPartOneQuestions from local")
-
-            partOneQuestions.content.forEach { if (it.value.active) questions.add(it.value) }
+            partOneQuestions.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
             UIState.update { it.copy(isLoading = false, questions = questions) }
         }
     }
@@ -88,17 +93,18 @@ class TopicScreenVM(
 
     private fun getPartThreeQuestions() = intent(Dispatchers.IO) {
         val partThreeQuestions = localStorage.getPartThree()
+        val showAnyWay = localStorage.getQuestionsVisibility()
         if (partThreeQuestions == null) {
-            resultOf{ apiService.getPartThreeQuestions() }
+            resultOf { apiService.getPartThreeQuestions() }
                 .onSuccess { result ->
-                result.content.forEach { if (it.value.active) questions.add(it.value) }
-                localStorage.addPartThree(result)
-                UIState.update { it.copy(isLoading = false, questions = questions) }
-            }.onFailure {
-                UIState.update { it.copy(isLoading = false) }
-            }
+                    result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
+                    localStorage.addPartThree(result)
+                    UIState.update { it.copy(isLoading = false, questions = questions) }
+                }.onFailure {
+                    UIState.update { it.copy(isLoading = false) }
+                }
         } else {
-            partThreeQuestions.content.forEach { if (it.value.active) questions.add(it.value) }
+            partThreeQuestions.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
             UIState.update { it.copy(isLoading = false, questions = questions) }
         }
     }

@@ -33,7 +33,7 @@ import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
-import com.boboor.speaking.data.local.LocalStorage
+import com.boboor.speaking.data.local.LocalStorageImpl
 import com.boboor.speaking.ui.pages.HomeScreen
 import com.boboor.speaking.utils.darken
 import kotlinx.coroutines.delay
@@ -53,7 +53,6 @@ class SplashScreen : Screen, ScreenTransition {
 
     @Composable
     override fun Content() {
-        val localStorage = koinInject<LocalStorage>()
         SplashScreenContent()
     }
 }

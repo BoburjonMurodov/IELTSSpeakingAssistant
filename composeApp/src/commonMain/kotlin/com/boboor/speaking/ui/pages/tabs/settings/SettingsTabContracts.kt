@@ -20,7 +20,8 @@ interface SettingsContracts {
     data class UIState(
         val selectedThemeColor: Color = getColor(),
         val selectedFontDimension: FontDimension = getFontDimension(),
-        val isChangeThemeBottomSheetOpen: Boolean = false
+        val isChangeThemeBottomSheetOpen: Boolean = false,
+        val showHiddenQuestions: Boolean = false
     )
 
     sealed interface Intent {
@@ -32,6 +33,8 @@ interface SettingsContracts {
         data object DismissChangeThemeBottomSheet: Intent
 
         data object OnClickClearCache: Intent
+
+        data class OnClickShowHideQuestions(val show: Boolean) : Intent
     }
 
 

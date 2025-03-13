@@ -1,6 +1,5 @@
 package com.boboor.speaking.ui.pages.tabs.settings
 
-import com.boboor.speaking.closeApp
 import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.ui.theme.getColor
 import com.boboor.speaking.ui.theme.getFontDimension
@@ -21,6 +20,14 @@ class SettingsScreenVM(
     private val directions: SettingsContracts.Directions,
     private val localStorage: LocalStorage
 ) : SettingsContracts.ViewModel {
+
+    init {
+        intent {
+            val visibility = localStorage.getQuestionsVisibility()
+            reduce { UIState.value.copy(showHiddenQuestions = visibility) }
+        }
+    }
+
     override fun onEventDispatcher(intent: SettingsContracts.Intent): Job = intent {
         when (intent) {
             is SettingsContracts.Intent.ChangeFontDimension -> {
@@ -51,9 +58,15 @@ class SettingsScreenVM(
 
             SettingsContracts.Intent.OnClickClearCache -> {
                 localStorage.clear()
-//                directions.goBackToSplashScreen()
                 delay(100)
-                closeApp()
+                directions.goBackToSplashScreen()
+            }
+
+            is SettingsContracts.Intent.OnClickShowHideQuestions -> {
+                localStorage.setQuestionsVisibility(intent.show)
+                reduce {
+                    UIState.value.copy(showHiddenQuestions = localStorage.getQuestionsVisibility())
+                }
             }
         }
     }

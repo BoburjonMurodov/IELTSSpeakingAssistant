@@ -125,7 +125,6 @@ object SettingsTab : Tab {
 
                     ListItem(
                         headlineContent = { Text("Font Size") },
-                        supportingContent = { Text(getFontDimension().name) },
                         trailingContent = {
                             DropdownMenuComponent(
                                 options = FontDimension.entries.map { it.name },
@@ -143,7 +142,6 @@ object SettingsTab : Tab {
 
                     ListItem(
                         headlineContent = { Text("Update Frequency") },
-                        supportingContent = { Text("Every day") },
                         trailingContent = {
                             DropdownMenuComponent(
                                 options = listOf("Every day", "Every app opening", "Never"),
@@ -153,14 +151,13 @@ object SettingsTab : Tab {
                         }
                     )
 
-
                     ListItem(
                         headlineContent = { Text("Show Hidden Questions") },
                         trailingContent = {
                             Switch(
-                                checked = true,
+                                checked = state.value.showHiddenQuestions,
                                 onCheckedChange = {
-
+                                    onEventDispatcher(SettingsContracts.Intent.OnClickShowHideQuestions(it))
                                 }
                             )
                         }

@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -30,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -71,7 +71,13 @@ fun TopicItem(
     val maxLines = animateIntAsState(if (isExpanded.value) 10 else 2)
     val lineCount = remember { mutableStateOf(0) }
 
-    Row {
+    Row(
+        modifier = Modifier.then(
+            if (item.active)
+                Modifier
+            else Modifier.alpha(0.5f)
+        )
+    ) {
         Box(
             modifier = Modifier
                 .padding(end = 8.dp)

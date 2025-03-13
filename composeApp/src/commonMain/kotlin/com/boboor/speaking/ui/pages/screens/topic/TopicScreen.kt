@@ -181,7 +181,6 @@ private fun TopicScreenContent(
                 val isExpanded = rememberSaveable { mutableStateOf(false) }
                 val hasOverFlow = rememberSaveable { mutableStateOf(false) }
                 TopicItem(state.value.questions[it], it + 1, isExpanded, hasOverFlow, searchQuery.value) {
-
                     onEventDispatcher.invoke(
                         TopicScreenContracts.Intent.OnClickTopic(
                             title = state.value.questions[it].name,
