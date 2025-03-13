@@ -13,6 +13,5 @@ object NativeLib {
 
     init {
         System.loadLibrary("native-lib")
-        Log.d("TTT", "the decompiled base url is ${getBaseUrl()}")
     }
 }

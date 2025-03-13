@@ -50,7 +50,6 @@ kotlin {
 
             //KTOR
             implementation(libs.ktor.client.okhttp)
-
         }
 
         commonMain.dependencies {

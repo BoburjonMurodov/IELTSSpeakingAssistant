@@ -1,18 +1,21 @@
 package com.boboor.speaking
 
-import android.content.Context
 import android.os.Build
-import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.boboor.speaking.utils.NativeLib
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import java.util.Locale
 import kotlin.system.exitProcess
 
 class AndroidPlatform : Platform {
@@ -33,8 +36,30 @@ actual fun createHttpClient(): HttpClient = HttpClient(OkHttp) {
     install(ContentNegotiation) {
         json(Json { ignoreUnknownKeys = true })
     }
-}
 
+    engine {
+        addInterceptor({ chain ->
+            val request = chain.request().newBuilder()
+                .build()
+
+            chain.proceed(request)
+        })
+    }
+
+    install(DefaultRequest) {
+        val baseUrl = NativeLib.getBaseUrl()
+
+        url {
+            protocol = URLProtocol.HTTPS
+            host = baseUrl.removeSuffix("/").removePrefix("https://").removePrefix("http://") // Set host
+        }
+
+    }
+
+    install(Logging) {
+        level = LogLevel.ALL
+    }
+}
 
 actual object TimeUtil {
     actual fun systemTimeMs(): Long = System.currentTimeMillis()
@@ -43,3 +68,5 @@ actual object TimeUtil {
 actual fun closeApp() {
     exitProcess(0)
 }
+
+
