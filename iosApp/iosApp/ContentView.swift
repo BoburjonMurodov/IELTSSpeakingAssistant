@@ -4,13 +4,18 @@ import ComposeApp
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController()
+        return MainViewControllerKt.MainViewController()
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
 }
 
 struct ContentView: View {
+    init() {
+        let baseUrl = NativeLibWrapper.getBaseUrl()
+        IOSUtilsKt.BASE_URl = baseUrl
+    }
+    
     var body: some View {
         ComposeView()
             .ignoresSafeArea(.container)

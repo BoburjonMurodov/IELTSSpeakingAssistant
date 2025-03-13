@@ -29,7 +29,7 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.ui.components.AppBar
-import com.boboor.speaking.ui.pages.screens.detail_screen.DetailScreen
+import com.boboor.speaking.ui.pages.screens.detail.DetailScreen
 import com.boboor.speaking.utils.debounceClickable
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState

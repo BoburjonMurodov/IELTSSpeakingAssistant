@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,7 +38,7 @@ interface AppViewModel<STATE : Any> : ScreenModel {
         get() = AppSyntax(UIState)
 
     fun intent(dispatcher: CoroutineDispatcher = Dispatchers.Main, action: suspend AppSyntax<STATE>.() -> Unit): Job =
-        screenModelScope.launch(dispatcher) {
+        screenModelScope.launch(dispatcher + SupervisorJob()) {
             action.invoke(reducer)
         }
 

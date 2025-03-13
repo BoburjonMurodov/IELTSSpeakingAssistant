@@ -1,0 +1,151 @@
+package com.boboor.speaking.data.local
+
+import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.russhwolf.settings.Settings
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlin.experimental.xor
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlin.random.Random
+
+
+/*
+    Created by Boburjon Murodov 20/02/25 at 13:59
+*/
+
+interface LocalStorage {
+    suspend fun addPartOne(value: CommonTopicResponse.Response)
+    suspend fun addPartThree(value: CommonTopicResponse.Response)
+
+    suspend fun getPartOne(): CommonTopicResponse.Response?
+    suspend fun getPartThree(): CommonTopicResponse.Response?
+
+    suspend fun setQuestionsVisibility(value: Boolean)
+    suspend fun getQuestionsVisibility(): Boolean
+
+    suspend fun clear()
+}
+
+
+class LocalStorageImpl : LocalStorage {
+    private val settings = Settings()
+    val PART_ONE_PREFIX = "SPEAKING_ONE_PART_".encrypt(getKey())
+    val PART_THREE_PREFIX = "PART_THREE_PART_".encrypt(getKey())
+    val QUESTION_VISIBILITY = "QUESTION_VISIBILITY".encrypt(getKey())
+    private val CHUNK_SIZE = 4000
+
+
+    private fun getRandomString(length: Int = Random.nextInt(12, 55)): String {
+        val charset = "A%#(LKB_-+G"
+        return (1..length)
+            .map { charset.random() }
+            .joinToString("")
+    }
+
+    private fun getKey(): String {
+        val key = settings.getString("KEY", "")
+        if (key.isEmpty()) {
+            settings.putString("KEY", getRandomString())
+        }
+        return settings.getString("KEY", "A%#(LKB_-+G")
+    }
+
+    override suspend fun addPartOne(value: CommonTopicResponse.Response) =
+        withContext(Dispatchers.IO) { storeInParts(PART_ONE_PREFIX, value) }
+
+    override suspend fun getPartOne(): CommonTopicResponse.Response? =
+        withContext(Dispatchers.IO) { retrieveFromParts(PART_ONE_PREFIX) }
+
+    override suspend fun addPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
+    override suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)
+
+    override suspend fun setQuestionsVisibility(value: Boolean) {
+        settings.putBoolean(QUESTION_VISIBILITY, value)
+    }
+
+    override suspend fun getQuestionsVisibility(): Boolean =
+        withContext(Dispatchers.IO) { settings.getBoolean(QUESTION_VISIBILITY, false) }
+
+
+    override suspend fun clear() {
+        settings.clear()
+    }
+
+    private suspend fun storeInParts(prefix: String, value: CommonTopicResponse.Response) {
+        val json = Json.encodeToString(value).encryptWithKey(getKey())
+        val parts = json.chunked(CHUNK_SIZE)
+
+        settings.putInt("${prefix}_COUNT", parts.size)
+        parts.forEachIndexed { index, part ->
+            settings.putString("$prefix$index", part)
+        }
+    }
+
+    private suspend fun retrieveFromParts(prefix: String): CommonTopicResponse.Response? {
+        val count = settings.getInt("${prefix}_COUNT", 0)
+        if (count == 0) return null
+
+        val json = (0 until count)
+            .mapNotNull { settings.getString("$prefix$it", "") }
+            .joinToString("")
+            .decryptWithKey(getKey())
+
+        return try {
+            Json.decodeFromString(json)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("Error retrieving data: ${e.message}")
+            null
+        }
+    }
+
+
+}
+
+
+@OptIn(ExperimentalEncodingApi::class)
+private suspend fun String.encryptWithKey(key: String): String = withContext(Dispatchers.Default) {
+
+    val inputBytes = encodeToByteArray()
+    val keyBytes = key.encodeToByteArray()
+    for (i in inputBytes.indices) {
+        inputBytes[i] = inputBytes[i] xor keyBytes[i % keyBytes.size]
+    }
+
+    return@withContext Base64.encode(inputBytes)
+}
+
+@OptIn(ExperimentalEncodingApi::class)
+private suspend fun String.decryptWithKey(key: String): String = withContext(Dispatchers.Default) {
+    val decodedBytes = Base64.decode(this@decryptWithKey)
+    val keyBytes = key.encodeToByteArray()
+    for (i in decodedBytes.indices) {
+        decodedBytes[i] = decodedBytes[i] xor keyBytes[i % keyBytes.size]
+    }
+    return@withContext decodedBytes.decodeToString()
+}
+
+@OptIn(ExperimentalEncodingApi::class)
+private fun String.encrypt(key: String): String {
+    val inputBytes = encodeToByteArray()
+    val keyBytes = key.encodeToByteArray()
+    for (i in inputBytes.indices) {
+        inputBytes[i] = inputBytes[i] xor keyBytes[i % keyBytes.size]
+    }
+    return Base64.encode(inputBytes)
+}
+
+@OptIn(ExperimentalEncodingApi::class)
+private fun String.decrypt(key: String): String {
+    val decodedBytes = Base64.decode(this)
+    val keyBytes = key.encodeToByteArray()
+    for (i in decodedBytes.indices) {
+        decodedBytes[i] = decodedBytes[i] xor keyBytes[i % keyBytes.size]
+    }
+    return decodedBytes.decodeToString()
+}
+

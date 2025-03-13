@@ -2,6 +2,7 @@ package com.boboor.speaking
 
 import android.app.Application
 import com.boboor.speaking.di.initKoin
+import com.boboor.speaking.utils.NativeLib
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 
@@ -19,6 +20,8 @@ class MyApp : Application() {
             androidContext(this@MyApp)
             androidLogger()
         }
+
+        NativeLib.getBaseUrl()
 
         multiplatform.network.cmptoast.AppContext.apply { set(applicationContext) }
     }
