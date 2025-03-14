@@ -255,34 +255,6 @@ private fun MainScreenContent(
                         onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_THREE))
                     }
 
-//                Spacer(Modifier.weight(5f))
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth()
-                            .navigationBarsPadding()
-                            .padding(horizontal = 24.dp, vertical = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-
-                        items(listOf(Color.Red, Color.Blue, Color.Yellow, Color.Green, Color.White, Color.Black)) {
-                            val isSelected = getColor() == it
-                            val animatedWidth = animateIntAsState(if (isSelected) 1 else 0)
-                            val animatedPadding = animateIntAsState(if (isSelected) 4 else 0)
-                            val animatedColor = animateColorAsState(if (isSelected) Color.Blue else Color.Transparent)
-
-                            Box(
-                                modifier = Modifier.size(24.dp)
-                                    .border(
-                                        width = animatedWidth.value.dp,
-                                        color = animatedColor.value,
-                                        shape = RoundedCornerShape(4.dp)
-                                    )
-                                    .padding(animatedPadding.value.dp)
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(it)
-                                    .clickable { setColor(it) }
-                            )
-                        }
-                    }
                 }
 
 
