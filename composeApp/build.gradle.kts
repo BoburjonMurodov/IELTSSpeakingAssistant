@@ -72,9 +72,6 @@ kotlin {
             implementation("cafe.adriel.voyager:voyager-koin:$voyagerVersion") // Koin integration
             implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion") // TabNavigator
 
-            //MVI ORBIT
-//            implementation("org.orbit-mvi:orbit-core:9.0.0")
-//            implementation("org.orbit-mvi:orbit-compose:9.0.0")
 
             //KOIN DI
             api(libs.koin.core)
@@ -88,6 +85,7 @@ kotlin {
             //KTOR
             implementation(libs.bundles.ktor)
 
+            //SETTINGS LOCAL STORAGE
             implementation("com.russhwolf:multiplatform-settings-no-arg:1.3.0")
 
             //MATERIAL COLOR GENERATOR
@@ -108,7 +106,6 @@ kotlin {
             //TTS
             val ttsVersion = "3.0.0-alpha.2"
             implementation("nl.marc-apps:tts:$ttsVersion")
-//             Optional: Extensions for Compose
             implementation("nl.marc-apps:tts-compose:$ttsVersion")
 
             //HTML PARSER
