@@ -30,6 +30,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -96,6 +97,12 @@ private fun TopicScreenContent(
     val snackBarHostState = remember { SnackbarHostState() }
     val hazeState = remember { HazeState() }
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
+    LaunchedEffect(state.value.error){
+        if (state.value.error != null) {
+            snackBarHostState.showSnackbar(state.value.error ?: "unknown error happened")
+        }
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,

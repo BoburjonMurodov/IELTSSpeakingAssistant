@@ -81,7 +81,8 @@ class TopicScreenVM(
                     localStorage.addPartOne(result)
                     UIState.update { it.copy(isLoading = false, questions = questions) }
                 }.onFailure {
-                    UIState.update { it.copy(isLoading = false) }
+                    println("ERROR ${it.message}")
+                    UIState.update { it.copy(isLoading = false, error = it.error) }
                 }
         } else {
             println("getPartOneQuestions from local")
@@ -101,7 +102,8 @@ class TopicScreenVM(
                     localStorage.addPartThree(result)
                     UIState.update { it.copy(isLoading = false, questions = questions) }
                 }.onFailure {
-                    UIState.update { it.copy(isLoading = false) }
+                    println("ERROR ${it.message}")
+                    UIState.update { it.copy(isLoading = false, error = it.error) }
                 }
         } else {
             partThreeQuestions.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }

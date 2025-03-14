@@ -25,6 +25,7 @@ class TopicScreenContracts {
         val section: Section = Section.PART_ONE,
         val isLoading: Boolean = false,
         val questions: List<CommonTopicResponse.Topic> = emptyList(),
+        val error: String? = null
     )
 
     sealed interface Intent {
