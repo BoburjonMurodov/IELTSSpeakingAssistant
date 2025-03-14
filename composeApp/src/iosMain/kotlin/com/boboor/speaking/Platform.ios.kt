@@ -8,7 +8,9 @@ import androidx.compose.ui.unit.dp
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
@@ -42,4 +44,15 @@ actual fun createHttpClient(): HttpClient = HttpClient(Darwin) {
     install(ContentNegotiation) {
         json(Json { ignoreUnknownKeys = true })
     }
+
+    install(DefaultRequest) {
+        val baseUrl = BASE_URl
+
+        url {
+            protocol = URLProtocol.HTTPS
+            host = baseUrl.removeSuffix("/").removePrefix("https://").removePrefix("http://") // Set host
+        }
+
+    }
+
 }
