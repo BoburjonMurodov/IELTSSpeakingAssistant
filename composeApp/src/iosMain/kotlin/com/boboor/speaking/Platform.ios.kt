@@ -44,6 +44,4 @@ actual fun createHttpClient(): HttpClient = HttpClient(Darwin) {
     install(DefaultRequest) {
         url(BASE_URl)
     }
-
-
 }
