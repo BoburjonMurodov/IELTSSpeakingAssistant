@@ -256,8 +256,6 @@ private fun MainScreenContent(
                     }
 
                 }
-
-
             }
         }
 
