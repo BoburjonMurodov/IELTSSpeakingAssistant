@@ -43,5 +43,3 @@ actual fun createHttpClient(): HttpClient = HttpClient(Darwin) {
         json(Json { ignoreUnknownKeys = true })
     }
 }
-
-
