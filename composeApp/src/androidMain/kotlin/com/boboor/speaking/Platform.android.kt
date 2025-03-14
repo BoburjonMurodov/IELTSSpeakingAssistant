@@ -56,9 +56,6 @@ actual fun createHttpClient(): HttpClient = HttpClient(OkHttp) {
 
     }
 
-    install(Logging) {
-        level = LogLevel.ALL
-    }
 }
 
 actual object TimeUtil {
