@@ -6,6 +6,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.defaultTransformers
+import io.ktor.client.plugins.plugin
 import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -26,7 +27,6 @@ class ApiService(private val httpClient: HttpClient) {
 
 
     suspend fun getPartOneQuestions(): CommonTopicResponse.Response = withContext(Dispatchers.IO) {
-
         return@withContext httpClient.get(SECTION_ONE).body();
     }
 
