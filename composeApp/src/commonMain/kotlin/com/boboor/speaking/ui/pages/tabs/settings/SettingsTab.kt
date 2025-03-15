@@ -190,7 +190,7 @@ object SettingsTab : Tab {
                             )
                         },
                         modifier = Modifier.debounceClickable {
-                            uriHandler.openUri("https://github.com/BoburjonMurodov")
+                            onEventDispatcher.invoke(SettingsContracts.Intent.GoLicenseScreen)
                         }
                     )
 
