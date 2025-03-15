@@ -19,7 +19,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -29,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,6 +43,9 @@ import com.boboor.speaking.ui.theme.FontDimension
 import com.boboor.speaking.ui.theme.getFontDimension
 import com.boboor.speaking.ui.theme.setFontDimension
 import com.boboor.speaking.utils.debounceClickable
+import com.boboor.speaking.utils.enums.EVERY_DAY
+import com.boboor.speaking.utils.enums.NEVER
+import com.boboor.speaking.utils.enums.UpdateFrequency
 import com.boboor.speaking.utils.gradient
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.ic_back
@@ -137,17 +138,26 @@ object SettingsTab : Tab {
 
                     ListItem(
                         headlineContent = { Text("Update Frequency") },
+                        supportingContent = { Text("How often to cache updates") },
                         trailingContent = {
                             DropdownMenuComponent(
-                                options = listOf("Every day", "Every app opening", "Never"),
-                                selectedOption = "Every day",
-                                onOptionSelected = { }
+                                options = UpdateFrequency.entries.map { it.title },
+                                selectedOption = state.value.selectedUpdateFrequency.title,
+                                onOptionSelected = {
+                                    val value = when (it) {
+                                        EVERY_DAY -> UpdateFrequency.EVERY_DAY
+                                        NEVER -> UpdateFrequency.NEVER
+                                        else -> UpdateFrequency.EVERY_APP_OPENING
+                                    }
+                                    onEventDispatcher(SettingsContracts.Intent.OnSelectedUpdateFrequency(value))
+                                }
                             )
                         }
                     )
 
                     ListItem(
                         headlineContent = { Text("Show Hidden Questions") },
+                        supportingContent = { Text("Outdated questions might be hidden") },
                         trailingContent = {
                             Switch(
                                 checked = state.value.showHiddenQuestions,

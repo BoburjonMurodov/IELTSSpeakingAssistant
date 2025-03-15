@@ -1,4 +1,4 @@
-package com.boboor.speaking.utils
+package com.boboor.speaking.utils.enums
 
 
 /*

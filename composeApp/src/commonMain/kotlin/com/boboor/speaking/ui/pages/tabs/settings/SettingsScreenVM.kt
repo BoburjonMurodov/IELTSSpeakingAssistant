@@ -48,6 +48,19 @@ class SettingsScreenVM(
                 }
             }
 
+            is SettingsContracts.Intent.OnClickShowHideQuestions -> {
+                localStorage.setQuestionsVisibility(intent.show)
+                reduce {
+                    UIState.value.copy(showHiddenQuestions = localStorage.getQuestionsVisibility())
+                }
+            }
+
+            is SettingsContracts.Intent.OnSelectedUpdateFrequency -> {
+                localStorage.setUpdateFrequency(value = intent.value)
+                reduce { UIState.value.copy(selectedUpdateFrequency = localStorage.getUpdateFrequency()) }
+            }
+
+
             SettingsContracts.Intent.OpenChangeThemeBottomSheet -> reduce {
                 UIState.value.copy(isChangeThemeBottomSheetOpen = true)
             }
@@ -62,16 +75,14 @@ class SettingsScreenVM(
                 directions.goBackToSplashScreen()
             }
 
-            is SettingsContracts.Intent.OnClickShowHideQuestions -> {
-                localStorage.setQuestionsVisibility(intent.show)
-                reduce {
-                    UIState.value.copy(showHiddenQuestions = localStorage.getQuestionsVisibility())
-                }
-            }
-
             SettingsContracts.Intent.GoLicenseScreen -> directions.goLicenseScreen()
         }
     }
 
-    override val UIState = MutableStateFlow(SettingsContracts.UIState())
+    override val UIState = MutableStateFlow(
+        SettingsContracts.UIState(
+            showHiddenQuestions = localStorage.getQuestionsVisibility(),
+            selectedUpdateFrequency = localStorage.getUpdateFrequency()
+        )
+    )
 }

@@ -5,6 +5,7 @@ import com.boboor.speaking.ui.theme.FontDimension
 import com.boboor.speaking.ui.theme.getColor
 import com.boboor.speaking.ui.theme.getFontDimension
 import com.boboor.speaking.utils.AppViewModel
+import com.boboor.speaking.utils.enums.UpdateFrequency
 import kotlinx.coroutines.Job
 
 
@@ -21,7 +22,8 @@ interface SettingsContracts {
         val selectedThemeColor: Color = getColor(),
         val selectedFontDimension: FontDimension = getFontDimension(),
         val isChangeThemeBottomSheetOpen: Boolean = false,
-        val showHiddenQuestions: Boolean = false
+        val showHiddenQuestions: Boolean,
+        val selectedUpdateFrequency: UpdateFrequency
     )
 
     sealed interface Intent {
@@ -32,6 +34,7 @@ interface SettingsContracts {
         data object OnClickClearCache : Intent
         data class OnClickShowHideQuestions(val show: Boolean) : Intent
         data object GoLicenseScreen : Intent
+        data class OnSelectedUpdateFrequency(val value: UpdateFrequency) : Intent
     }
 
 
