@@ -1,18 +1,22 @@
 package com.boboor.speaking.ui.pages.screens.license
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.boboor.speaking.ui.components.AppBar
 import com.boboor.speaking.utils.debounceClickable
 
 
@@ -36,21 +40,23 @@ class LicenseScreen : Screen {
             Scaffold(
                 topBar = {
 
-                    LargeTopAppBar(title = {
-                        Text("Licenses")
-                    })
-
-//                    AppBar(
-//                        title = "",
-//                        showSearch = false,
-//                        isSearchEnabled = false,
-//                        onClickBack = {
-//                            navigator.pop()
-//                        },
-//                    )
+                    AppBar(
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                        title = "Licenses",
+                        showSearch = false,
+                        isSearchEnabled = false,
+                        onClickBack = {
+                            navigator.pop()
+                        },
+                    )
                 }
-            ) {
-                LazyColumn {
+            ) { innerPadding ->
+                LazyColumn(
+                    contentPadding = PaddingValues(
+                        top = innerPadding.calculateTopPadding() + 16.dp,
+                        bottom = innerPadding.calculateBottomPadding() + 16.dp,
+                    )
+                ) {
                     items(licenseList) {
                         ListItem(
                             headlineContent = {
@@ -82,11 +88,11 @@ private val licenseList = listOf(
     LicenseData("Haze", "https://github.com/chrisbanes/haze/blob/main/LICENSE"),
     LicenseData("Text to Speech (TTS)", "https://github.com/Marc-JB/TextToSpeechKt/blob/main/LICENSE"),
     LicenseData("Compose RichEditor", "https://github.com/MohamedRejeb/compose-rich-editor/blob/main/LICENSE"),
-    LicenseData("Kotlinx.serialization", "https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt"),
-    LicenseData("Kotlinx.coroutines", "https://github.com/Kotlin/kotlinx.coroutines/blob/master/LICENSE.txt"),
+    LicenseData("kotlinx.serialization", "https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt"),
+    LicenseData("kotlinx.coroutines", "https://github.com/Kotlin/kotlinx.coroutines/blob/master/LICENSE.txt"),
     LicenseData("ksp", "https://github.com/google/ksp/blob/main/LICENSE"),
-    LicenseData("Androidx", "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt"),
+    LicenseData("ndroidx", "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt"),
     LicenseData("okhttp", "https://github.com/square/okhttp/blob/master/LICENSE.txt"),
-    LicenseData("Sofia Pro", "https://github.com/William-Jung/WeJ/blob/master/LICENSE"),
+    LicenseData("Sofia Pro font", "https://github.com/William-Jung/WeJ/blob/master/LICENSE"),
 
     )
