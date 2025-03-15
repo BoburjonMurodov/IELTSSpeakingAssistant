@@ -14,8 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -25,18 +23,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,13 +36,14 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.boboor.speaking.ui.components.DropdownMenuComponent
 import com.boboor.speaking.ui.pages.tabs.settings.bottomsheet.ChangeThemeBottomSheet
 import com.boboor.speaking.ui.theme.AppTheme
 import com.boboor.speaking.ui.theme.FontDimension
 import com.boboor.speaking.ui.theme.getFontDimension
 import com.boboor.speaking.ui.theme.setFontDimension
-import com.boboor.speaking.utils.darken
 import com.boboor.speaking.utils.debounceClickable
+import com.boboor.speaking.utils.gradient
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.ic_back
 import org.jetbrains.compose.resources.painterResource
@@ -255,61 +247,3 @@ object SettingsTab : Tab {
 
 }
 
-
-@Composable
-fun DropdownMenuComponent(options: List<String>, selectedOption: String, onOptionSelected: (String) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Box {
-        TextButton(onClick = { expanded = true }) {
-            Text(selectedOption)
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            options.forEach { option ->
-                DropdownMenuItem(
-                    text = { Text(option) },
-                    onClick = {
-                        onOptionSelected(option)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-}
-
-val seedColors = listOf(
-    Color(0xFFF44336),
-    Color(0xFFE91E63),
-    Color(0xFF9C27B0),
-    Color(0xFF673AB7),
-    Color(0xFF3F51B5),
-    Color(0xFF2196F3),
-    Color(0xFF03A9F4),
-    Color(0xFF00BCD4),
-    Color(0xFF009688),
-    Color(0xFF4CAF50),
-    Color(0xFF8BC34A),
-    Color(0xFFCDDC39),
-    Color(0xFFFFEB3B),
-    Color(0xFFFFC107),
-    Color(0xFFFF9800),
-    Color(0xFFFF5722),
-    Color(0xFF795548),
-    Color(0xFF9E9E9E),
-    Color(0xFF607D8B),
-    Color(0xFF000000),
-    Color(0xFFFFFFFF)
-)
-
-fun Color.gradient(): Brush {
-    return Brush.linearGradient(
-        colors = listOf(
-            this,
-            this.copy(alpha = 0.8f).darken(0.5f)
-        )
-    )
-}
