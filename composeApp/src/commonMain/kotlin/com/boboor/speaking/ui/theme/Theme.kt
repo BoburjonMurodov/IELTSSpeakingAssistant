@@ -18,10 +18,10 @@ import com.materialkolor.PaletteStyle
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import ieltsspeakingassistant.composeapp.generated.resources.Res
-import ieltsspeakingassistant.composeapp.generated.resources.mont_bold
-import ieltsspeakingassistant.composeapp.generated.resources.mont_medium
-import ieltsspeakingassistant.composeapp.generated.resources.mont_regular
-import ieltsspeakingassistant.composeapp.generated.resources.mont_semibold
+import ieltsspeakingassistant.composeapp.generated.resources.sofia_pro_bold
+import ieltsspeakingassistant.composeapp.generated.resources.sofia_pro_medium
+import ieltsspeakingassistant.composeapp.generated.resources.sofia_pro_regular
+import ieltsspeakingassistant.composeapp.generated.resources.sofie_pro_semi_bold
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.Font
 
@@ -47,10 +47,10 @@ import org.jetbrains.compose.resources.Font
 
 @Composable
 fun MontFontFamily() = FontFamily(
-    Font(Res.font.mont_semibold, FontWeight.SemiBold),
-    Font(Res.font.mont_bold, FontWeight.Bold),
-    Font(Res.font.mont_medium, FontWeight.Medium),
-    Font(Res.font.mont_regular, FontWeight.Normal),
+    Font(Res.font.sofie_pro_semi_bold, FontWeight.SemiBold),
+    Font(Res.font.sofia_pro_bold, FontWeight.Bold),
+    Font(Res.font.sofia_pro_medium, FontWeight.Medium),
+    Font(Res.font.sofia_pro_regular, FontWeight.Normal),
 )
 
 @Composable
