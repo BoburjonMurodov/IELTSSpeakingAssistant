@@ -27,19 +27,17 @@ interface SettingsContracts {
     sealed interface Intent {
         data class ChangeThemeColor(val color: Color) : Intent
         data class ChangeFontDimension(val scale: FontDimension) : Intent
-
-
         data object OpenChangeThemeBottomSheet : Intent
-        data object DismissChangeThemeBottomSheet: Intent
-
-        data object OnClickClearCache: Intent
-
+        data object DismissChangeThemeBottomSheet : Intent
+        data object OnClickClearCache : Intent
         data class OnClickShowHideQuestions(val show: Boolean) : Intent
+        data object GoLicenseScreen : Intent
     }
 
 
-    interface Directions{
+    interface Directions {
         suspend fun goBackToSplashScreen()
+        suspend fun goLicenseScreen()
     }
 }
 

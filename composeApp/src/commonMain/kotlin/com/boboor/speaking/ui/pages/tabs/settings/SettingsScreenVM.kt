@@ -68,6 +68,8 @@ class SettingsScreenVM(
                     UIState.value.copy(showHiddenQuestions = localStorage.getQuestionsVisibility())
                 }
             }
+
+            SettingsContracts.Intent.GoLicenseScreen -> directions.goLicenseScreen()
         }
     }
 
