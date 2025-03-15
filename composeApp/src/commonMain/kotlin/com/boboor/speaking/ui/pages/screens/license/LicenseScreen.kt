@@ -31,7 +31,6 @@ class LicenseScreen : Screen {
         LicenseScreenContent()
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun LicenseScreenContent() {
         val navigator = LocalNavigator.currentOrThrow
@@ -39,7 +38,6 @@ class LicenseScreen : Screen {
         val link =
             Scaffold(
                 topBar = {
-
                     AppBar(
                         modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh),
                         title = "Licenses",
@@ -91,7 +89,7 @@ private val licenseList = listOf(
     LicenseData("kotlinx.serialization", "https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt"),
     LicenseData("kotlinx.coroutines", "https://github.com/Kotlin/kotlinx.coroutines/blob/master/LICENSE.txt"),
     LicenseData("ksp", "https://github.com/google/ksp/blob/main/LICENSE"),
-    LicenseData("ndroidx", "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt"),
+    LicenseData("androidx", "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt"),
     LicenseData("okhttp", "https://github.com/square/okhttp/blob/master/LICENSE.txt"),
     LicenseData("Sofia Pro font", "https://github.com/William-Jung/WeJ/blob/master/LICENSE"),
 
