@@ -28,9 +28,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.boboor.speaking.getScreenWidth
-import com.boboor.speaking.ui.pages.tabs.settings.gradient
 import com.boboor.speaking.ui.pages.tabs.settings.seedColors
 import com.boboor.speaking.ui.theme.getColor
+import com.boboor.speaking.utils.gradient
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
