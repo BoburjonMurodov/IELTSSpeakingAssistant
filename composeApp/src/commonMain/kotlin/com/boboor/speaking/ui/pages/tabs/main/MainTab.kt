@@ -87,7 +87,6 @@ object MainTab : Tab{
 
         AppTheme {
             Scaffold(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 snackbarHost = {
                     SnackbarHost(
                         snackBarHostState,

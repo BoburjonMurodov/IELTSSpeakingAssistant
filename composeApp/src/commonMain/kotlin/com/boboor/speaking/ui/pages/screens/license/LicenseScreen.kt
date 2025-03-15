@@ -37,7 +37,6 @@ class LicenseScreen : Screen {
         val uriHandler = LocalUriHandler.current
         val link =
             Scaffold(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 topBar = {
                     AppBar(
                         modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh),
