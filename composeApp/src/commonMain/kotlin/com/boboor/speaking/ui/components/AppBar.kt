@@ -1,12 +1,9 @@
 package com.boboor.speaking.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -23,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +41,7 @@ fun AppBar(
     title: String,
     modifier: Modifier = Modifier,
     showSearch: Boolean = true,
-    isSearchVisible: Boolean = true,
+    isSearchEnabled: Boolean = true,
     onClickBack: () -> Unit,
     onClickSearch: () -> Unit = {},
 ) {
@@ -56,8 +52,7 @@ fun AppBar(
         modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp)
-            .statusBarsPadding()
-        ,
+            .statusBarsPadding(),
     ) {
         Row(
             modifier = Modifier
@@ -109,7 +104,7 @@ fun AppBar(
         if (showSearch)
             IconButton(
                 modifier = Modifier.align(Alignment.CenterEnd),
-                enabled = isSearchVisible,
+                enabled = isSearchEnabled,
                 onClick = { onClickSearch.invoke() },
             ) {
                 Icon(

@@ -1,11 +1,18 @@
 package com.boboor.speaking.ui.pages.screens.license
 
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.boboor.speaking.ui.components.AppBar
+import com.boboor.speaking.utils.debounceClickable
 
 
 /*
@@ -22,14 +29,31 @@ class LicenseScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun LicenseScreenContent() {
+        val navigator = LocalNavigator.currentOrThrow
+        val link =
         Scaffold(
             topBar = {
-                LargeTopAppBar(title = {
-                    Text("Licenses")
-                })
+                AppBar(
+                    title = "",
+                    showSearch = false,
+                    isSearchEnabled = false,
+                    onClickBack = {
+                        navigator.pop()
+                    },
+                )
             }
         ) {
+            LazyColumn {
+                items(licenseList) {
+                    ListItem(headlineContent = {
+                        Text(it.name)
+                    },
+                        modifier = Modifier.debounceClickable {
 
+                        }
+                        )
+                }
+            }
         }
     }
 }
