@@ -79,6 +79,7 @@ object SettingsTab : Tab {
         onEventDispatcher: (SettingsContracts.Intent) -> Unit = {}
     ) {
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+        val uriHandler = LocalUriHandler.current
 
         AppTheme {
             Scaffold(
@@ -155,7 +156,6 @@ object SettingsTab : Tab {
                         }
                     )
 
-                    val uriHandler = LocalUriHandler.current
                     HorizontalDivider()
 
                     ListItem(

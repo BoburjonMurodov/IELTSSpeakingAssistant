@@ -139,7 +139,7 @@ private fun TopicScreenContent(
                         blurRadius = 25.dp
                     )
                     ),
-                isSearchVisible = !state.value.isLoading,
+                isSearchEnabled = !state.value.isLoading,
                 onClickBack = { onEventDispatcher.invoke(TopicScreenContracts.Intent.OnClickBack) },
                 onClickSearch = {
                     isSearchVisible.value = !isSearchVisible.value
