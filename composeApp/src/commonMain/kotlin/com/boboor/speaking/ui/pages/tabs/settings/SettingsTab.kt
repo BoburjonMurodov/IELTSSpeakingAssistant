@@ -83,6 +83,7 @@ object SettingsTab : Tab {
 
         AppTheme {
             Scaffold(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 topBar = {
                     LargeTopAppBar(

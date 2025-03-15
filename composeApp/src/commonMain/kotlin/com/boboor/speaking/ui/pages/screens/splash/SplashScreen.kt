@@ -74,7 +74,7 @@ private fun SplashScreenContent() {
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
         Box(
             contentAlignment = Alignment.Center,

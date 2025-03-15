@@ -105,7 +105,7 @@ private fun TopicScreenContent(
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         snackbarHost = {
             SnackbarHost(snackBarHostState,
                 snackbar = {

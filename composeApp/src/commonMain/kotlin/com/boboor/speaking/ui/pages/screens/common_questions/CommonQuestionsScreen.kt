@@ -84,6 +84,7 @@ private fun CommonQuestionsScreenContent(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         topBar = {
             AppBar(modifier = Modifier.hazeEffect(
                 hazeState,

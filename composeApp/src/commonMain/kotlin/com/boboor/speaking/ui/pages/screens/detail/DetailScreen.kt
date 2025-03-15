@@ -159,6 +159,7 @@ private fun DetailScreenContent(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         topBar = {
             Column {
                 AppBar(
