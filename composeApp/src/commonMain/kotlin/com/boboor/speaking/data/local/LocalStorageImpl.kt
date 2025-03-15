@@ -1,7 +1,9 @@
 package com.boboor.speaking.data.local
 
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.boboor.speaking.utils.enums.UpdateFrequency
 import com.russhwolf.settings.Settings
+import com.russhwolf.settings.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -24,8 +26,11 @@ interface LocalStorage {
     suspend fun getPartOne(): CommonTopicResponse.Response?
     suspend fun getPartThree(): CommonTopicResponse.Response?
 
-    suspend fun setQuestionsVisibility(value: Boolean)
-    suspend fun getQuestionsVisibility(): Boolean
+    fun setQuestionsVisibility(value: Boolean)
+    fun getQuestionsVisibility(): Boolean
+
+    fun setUpdateFrequency(value: UpdateFrequency)
+    fun getUpdateFrequency(): UpdateFrequency
 
     suspend fun clear()
 }
@@ -36,6 +41,7 @@ class LocalStorageImpl : LocalStorage {
     val PART_ONE_PREFIX = "SPEAKING_ONE_PART_".encrypt(getKey())
     val PART_THREE_PREFIX = "PART_THREE_PART_".encrypt(getKey())
     val QUESTION_VISIBILITY = "QUESTION_VISIBILITY".encrypt(getKey())
+    val UPDATE_FREQUENCY = "UPDATE_FREQUENCY".encrypt(getKey())
     private val CHUNK_SIZE = 4000
 
 
@@ -63,13 +69,19 @@ class LocalStorageImpl : LocalStorage {
     override suspend fun addPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
     override suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)
 
-    override suspend fun setQuestionsVisibility(value: Boolean) {
+    override fun setQuestionsVisibility(value: Boolean) {
         settings.putBoolean(QUESTION_VISIBILITY, value)
     }
 
-    override suspend fun getQuestionsVisibility(): Boolean =
-        withContext(Dispatchers.IO) { settings.getBoolean(QUESTION_VISIBILITY, false) }
+    override fun getQuestionsVisibility(): Boolean = settings.getBoolean(QUESTION_VISIBILITY, false)
+    override fun setUpdateFrequency(value: UpdateFrequency) {
+        settings.putString(UPDATE_FREQUENCY, value.name.encrypt(getKey()))
+    }
 
+    override fun getUpdateFrequency(): UpdateFrequency {
+        val value = settings.get<String>(UPDATE_FREQUENCY)?.decrypt(getKey()) ?: UpdateFrequency.EVERY_APP_OPENING.name
+        return UpdateFrequency.valueOf(value)
+    }
 
     override suspend fun clear() {
         settings.clear()

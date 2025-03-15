@@ -1,7 +1,4 @@
-import com.android.utils.TraceUtils.simpleId
-import org.gradle.declarative.dsl.schema.FqName.Empty.packageName
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -33,12 +30,12 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -159,8 +156,13 @@ android {
         }
     }
     buildTypes {
+        debug {
+            isMinifyEnabled = true
+            proguardFiles("proguard-rules.pro")
+        }
+
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -188,7 +190,6 @@ dependencies {
 //        dependsOn("kspCommonMainKotlinMetadata")
 //    }
 //}
-
 
 
 compose.desktop {

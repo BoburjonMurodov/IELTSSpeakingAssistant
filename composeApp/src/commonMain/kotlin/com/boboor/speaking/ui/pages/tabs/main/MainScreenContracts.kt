@@ -1,7 +1,7 @@
 package com.boboor.speaking.ui.pages.tabs.main
 
 import com.boboor.speaking.utils.AppViewModel
-import com.boboor.speaking.utils.Section
+import com.boboor.speaking.utils.enums.Section
 import kotlinx.coroutines.Job
 
 

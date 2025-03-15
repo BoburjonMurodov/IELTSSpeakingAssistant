@@ -2,7 +2,7 @@ package com.boboor.speaking.ui.pages.tabs.main
 
 import AppNavigator
 import com.boboor.speaking.ui.pages.screens.topic.TopicScreen
-import com.boboor.speaking.utils.Section
+import com.boboor.speaking.utils.enums.Section
 
 
 /*

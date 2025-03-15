@@ -1,5 +1,7 @@
 package com.boboor.speaking.ui.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -23,7 +25,10 @@ fun DropdownMenuComponent(options: List<String>, selectedOption: String, onOptio
 
     Box {
         TextButton(onClick = { expanded = true }) {
-            Text(selectedOption)
+            AnimatedContent(targetState = selectedOption,
+                ) {
+                Text(it)
+            }
         }
         DropdownMenu(
             expanded = expanded,

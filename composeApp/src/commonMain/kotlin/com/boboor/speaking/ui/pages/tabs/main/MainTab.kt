@@ -47,7 +47,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.boboor.speaking.ui.components.AppCard
 import com.boboor.speaking.ui.theme.AppTheme
 import com.boboor.speaking.utils.OnExitBackPressHandler
-import com.boboor.speaking.utils.Section
+import com.boboor.speaking.utils.enums.Section
 import com.materialkolor.ktx.darken
 import ieltsspeakingassistant.composeapp.generated.resources.Res
 import ieltsspeakingassistant.composeapp.generated.resources.ic_ielts_envelope
