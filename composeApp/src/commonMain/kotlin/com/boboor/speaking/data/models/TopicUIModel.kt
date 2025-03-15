@@ -1,7 +1,6 @@
 package com.boboor.speaking.data.models
 
-import com.boboor.speaking.data.remote.models.PartOneResponse
-import com.boboor.speaking.utils.Section
+import com.boboor.speaking.utils.enums.Section
 
 
 /*

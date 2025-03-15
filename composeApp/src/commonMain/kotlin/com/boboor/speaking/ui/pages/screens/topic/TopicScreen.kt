@@ -57,7 +57,7 @@ import com.boboor.speaking.ui.components.AppBar
 import com.boboor.speaking.ui.components.SearchInput
 import com.boboor.speaking.ui.components.TopicItem
 import com.boboor.speaking.ui.components.TopicItemShimmer
-import com.boboor.speaking.utils.Section
+import com.boboor.speaking.utils.enums.Section
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect

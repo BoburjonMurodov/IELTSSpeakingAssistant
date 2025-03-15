@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.data.remote.ApiService
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
-import com.boboor.speaking.utils.Section
+import com.boboor.speaking.utils.enums.Section
 import com.boboor.speaking.utils.resultOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
