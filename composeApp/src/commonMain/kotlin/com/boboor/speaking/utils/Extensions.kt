@@ -1,5 +1,6 @@
 package com.boboor.speaking.utils
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.CancellationException
 
@@ -25,5 +26,14 @@ fun Color.darken(factor: Float = 0.8f): Color {
         green = (green * factor).coerceIn(0f, 1f),
         blue = (blue * factor).coerceIn(0f, 1f),
         alpha = alpha
+    )
+}
+
+fun Color.gradient(): Brush {
+    return Brush.linearGradient(
+        colors = listOf(
+            this,
+            this.copy(alpha = 0.8f).darken(0.5f)
+        )
     )
 }
