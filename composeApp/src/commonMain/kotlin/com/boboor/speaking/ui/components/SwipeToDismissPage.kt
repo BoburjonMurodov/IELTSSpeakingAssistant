@@ -49,7 +49,12 @@ fun SwipeToDismissPage(content: @Composable () -> Unit) {
     val animatedOffsetX by animateFloatAsState(targetValue = offsetX, label = "")
 
     val backColor by animateColorAsState(
-        targetValue = if (animatedOffsetX < 250) Color.Transparent else MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+        targetValue = if (animatedOffsetX < 250) MaterialTheme.colorScheme.surfaceContainerLow else MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+        label = ""
+    )
+
+    val iconTintColor by animateColorAsState(
+        targetValue = if (animatedOffsetX < 250) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary,
         label = ""
     )
 
@@ -77,7 +82,7 @@ fun SwipeToDismissPage(content: @Composable () -> Unit) {
                 Icon(
                     Icons.Default.ArrowBack,
                     contentDescription = "back",
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = iconTintColor
                 )
             }
         }

@@ -58,7 +58,6 @@ class SplashScreen : Screen, ScreenTransition {
 }
 
 
-@OptIn(InternalVoyagerApi::class)
 @Composable
 private fun SplashScreenContent() {
     val scale = Animatable(1f)

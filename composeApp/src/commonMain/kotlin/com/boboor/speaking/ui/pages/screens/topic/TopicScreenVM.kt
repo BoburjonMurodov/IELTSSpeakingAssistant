@@ -78,7 +78,7 @@ class TopicScreenVM(
             resultOf { apiService.getPartOneQuestions() }
                 .onSuccess { result ->
                     result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
-                    localStorage.addPartOne(result)
+                    localStorage.setPartOne(result)
                     UIState.update { it.copy(isLoading = false, questions = questions) }
                 }.onFailure {
                     println("ERROR ${it.message}")
@@ -99,7 +99,7 @@ class TopicScreenVM(
             resultOf { apiService.getPartThreeQuestions() }
                 .onSuccess { result ->
                     result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
-                    localStorage.addPartThree(result)
+                    localStorage.setPartThree(result)
                     UIState.update { it.copy(isLoading = false, questions = questions) }
                 }.onFailure {
                     println("ERROR ${it.message}")
