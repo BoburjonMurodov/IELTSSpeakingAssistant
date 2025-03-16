@@ -118,7 +118,6 @@ data class DetailScreen(
                         .clip(RoundedCornerShape(cornerRadius))
                 ) {
                     DetailScreenContent(
-                        title = title,
                         questions = topics[topicIndex].questions[page],
                         vocabularies = topics[topicIndex].vocabulary
                     )
@@ -135,7 +134,6 @@ data class DetailScreen(
 @ExperimentalDesktopTarget
 @Composable
 private fun DetailScreenContent(
-    title: String,
     questions: CommonTopicResponse.Question,
     vocabularies: List<CommonTopicResponse.Vocabulary>
 ) {
@@ -248,33 +246,20 @@ private fun DetailScreenContent(
                             0 -> {
                                 items(vocabularies) {
                                     val richText = rememberRichTextState()
-                                    Row {
-                                        if (it.text.contains("<arrow>")) {
-                                            IconButton(onClick = {}) {
-                                                Icon(Icons.Default.PlayArrow, contentDescription = "play")
-                                            }
-                                        }
-                                        richText.setHtml(it.text.replace("<arrow>", " ")).annotatedString
+                                    richText.setHtml(it.text.replace("<arrow>", "→ ")).annotatedString
 
-                                        Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
-                                    }
+
+                                    Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
                                 }
                             }
 
                             1 -> {
                                 items(questions.ideas) {
                                     val richText = rememberRichTextState()
+                                    richText.setHtml(it.text.replace("<arrow>", "→ ")).annotatedString
 
-                                    Row {
-                                        if (it.text.contains("<arrow>")) {
-                                            IconButton(onClick = {}) {
-                                                Icon(Icons.Default.PlayArrow, contentDescription = "play")
-                                            }
-                                        }
-                                        richText.setHtml(it.text.replace("<arrow>", " ")).annotatedString
+                                    Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
 
-                                        Text(richText.annotatedString, modifier = Modifier.padding(horizontal = 16.dp))
-                                    }
                                 }
                             }
 
