@@ -160,10 +160,9 @@ android {
             isMinifyEnabled = true
             proguardFiles("proguard-rules.pro")
         }
-
-        getByName("release") {
+        release {
             isMinifyEnabled = true
-            signingConfig = signingConfigs.getByName("debug")
+            proguardFiles("proguard-rules.pro")
         }
     }
     compileOptions {

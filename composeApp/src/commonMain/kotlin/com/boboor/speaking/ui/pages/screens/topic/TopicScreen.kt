@@ -55,6 +55,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.boboor.speaking.ui.components.AppBar
 import com.boboor.speaking.ui.components.SearchInput
+import com.boboor.speaking.ui.components.SwipeToDismissPage
 import com.boboor.speaking.ui.components.TopicItem
 import com.boboor.speaking.ui.components.TopicItemShimmer
 import com.boboor.speaking.utils.enums.Section
@@ -80,8 +81,9 @@ class TopicScreen(private val section: Section) : Screen {
         val state = viewModel.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 //        SwipeToDismissScreen(onDismiss = { navigator.pop() }) {
+        SwipeToDismissPage {
             TopicScreenContent(state, viewModel.searchQuery, viewModel::onEventDispatcher)
-//        }
+        }
     }
 }
 

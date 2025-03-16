@@ -29,6 +29,7 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.ui.components.AppBar
+import com.boboor.speaking.ui.components.SwipeToDismissPage
 import com.boboor.speaking.ui.pages.screens.detail.DetailScreen
 import com.boboor.speaking.utils.debounceClickable
 import dev.chrisbanes.haze.HazeDefaults
@@ -48,7 +49,9 @@ data class CommonQuestionsScreen(
 
     @Composable
     override fun Content() {
-        CommonQuestionsScreenContent(title, topics, index)
+        SwipeToDismissPage {
+            CommonQuestionsScreenContent(title, topics, index)
+        }
     }
 }
 
@@ -85,15 +88,16 @@ private fun CommonQuestionsScreenContent(
 
     Scaffold(
         topBar = {
-            AppBar(modifier = Modifier.hazeEffect(
-                hazeState,
-                style = HazeDefaults.style(
-                    backgroundColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                    blurRadius = 25.dp
-                )
-            ), title = title, showSearch = false, onClickSearch = {}, onClickBack = {
-                navigator?.pop()
-            })
+            AppBar(
+                modifier = Modifier.hazeEffect(
+                    hazeState,
+                    style = HazeDefaults.style(
+                        backgroundColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        blurRadius = 25.dp
+                    )
+                ), title = title, showSearch = false, onClickSearch = {}, onClickBack = {
+                    navigator?.pop()
+                })
         }
     ) {
         LazyColumn(
@@ -107,13 +111,22 @@ private fun CommonQuestionsScreenContent(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            items(list.size) {questionIndex->
+            items(list.size) { questionIndex ->
                 if (list[questionIndex].size == 1) {
                     Box(
                         modifier = Modifier.fillMaxWidth()
                             .clip(RoundedCornerShape(16.dp))
                             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                            .debounceClickable { navigator?.push(DetailScreen("", topics = topics, topicIndex = topicIndex, questionIndex = questionIndex)) }
+                            .debounceClickable {
+                                navigator?.push(
+                                    DetailScreen(
+                                        "",
+                                        topics = topics,
+                                        topicIndex = topicIndex,
+                                        questionIndex = questionIndex
+                                    )
+                                )
+                            }
                             .padding(16.dp)
                     ) {
                         Text(text = list[questionIndex].first())
@@ -135,7 +148,16 @@ private fun CommonQuestionsScreenContent(
                                     }
                                 )
                                 .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                                .debounceClickable { navigator?.push(DetailScreen("", topics = topics, topicIndex = topicIndex, questionIndex = questionIndex)) }
+                                .debounceClickable {
+                                    navigator?.push(
+                                        DetailScreen(
+                                            "",
+                                            topics = topics,
+                                            topicIndex = topicIndex,
+                                            questionIndex = questionIndex
+                                        )
+                                    )
+                                }
                                 .padding(16.dp)
                         ) {
                             Text(text = question)
