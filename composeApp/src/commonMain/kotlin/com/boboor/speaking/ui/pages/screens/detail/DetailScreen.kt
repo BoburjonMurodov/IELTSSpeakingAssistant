@@ -168,9 +168,10 @@ private fun DetailScreenContent(
                     onClickBack = { navigator.pop() },
                     title = "Detail",
                     modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerLow),
-                    showSearch = false,
-                    onClickSearch = { },
+                    showSearch = false
                 )
+
+                Spacer(Modifier.height(16.dp))
 
                 Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                     list.forEach {
