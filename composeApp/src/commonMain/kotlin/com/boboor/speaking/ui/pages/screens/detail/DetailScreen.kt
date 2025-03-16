@@ -83,8 +83,6 @@ data class DetailScreen(
                 initialPage = questionIndex,
                 pageCount = { topics[topicIndex].questions.size }
             )
-
-
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
@@ -110,7 +108,7 @@ data class DetailScreen(
                             scaleX = scale
                             scaleY = scale
                         }
-                        .background(MaterialTheme.colorScheme.surface)
+//                        .background(MaterialTheme.colorScheme.surface)
                         .then(
                             if (scrollProgress == 0.0f){
                                 Modifier

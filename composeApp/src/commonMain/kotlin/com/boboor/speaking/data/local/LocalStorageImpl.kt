@@ -20,8 +20,8 @@ import kotlin.random.Random
 */
 
 interface LocalStorage {
-    suspend fun addPartOne(value: CommonTopicResponse.Response)
-    suspend fun addPartThree(value: CommonTopicResponse.Response)
+    suspend fun setPartOne(value: CommonTopicResponse.Response)
+    suspend fun setPartThree(value: CommonTopicResponse.Response)
 
     suspend fun getPartOne(): CommonTopicResponse.Response?
     suspend fun getPartThree(): CommonTopicResponse.Response?
@@ -38,10 +38,10 @@ interface LocalStorage {
 
 class LocalStorageImpl : LocalStorage {
     private val settings = Settings()
-    val PART_ONE_PREFIX = "SPEAKING_ONE_PART_".encrypt(getKey())
-    val PART_THREE_PREFIX = "PART_THREE_PART_".encrypt(getKey())
-    val QUESTION_VISIBILITY = "QUESTION_VISIBILITY".encrypt(getKey())
-    val UPDATE_FREQUENCY = "UPDATE_FREQUENCY".encrypt(getKey())
+    private val PART_ONE_PREFIX = "SPEAKING_ONE_PART_".encrypt(getKey())
+    private val PART_THREE_PREFIX = "PART_THREE_PART_".encrypt(getKey())
+    private val QUESTION_VISIBILITY = "QUESTION_VISIBILITY".encrypt(getKey())
+    private val UPDATE_FREQUENCY = "UPDATE_FREQUENCY".encrypt(getKey())
     private val CHUNK_SIZE = 4000
 
 
@@ -60,13 +60,13 @@ class LocalStorageImpl : LocalStorage {
         return settings.getString("KEY", "A%#(LKB_-+G")
     }
 
-    override suspend fun addPartOne(value: CommonTopicResponse.Response) =
-        withContext(Dispatchers.IO) { storeInParts(PART_ONE_PREFIX, value) }
+    override suspend fun setPartOne(value: CommonTopicResponse.Response) =
+        storeInParts(PART_ONE_PREFIX, value)
 
     override suspend fun getPartOne(): CommonTopicResponse.Response? =
-        withContext(Dispatchers.IO) { retrieveFromParts(PART_ONE_PREFIX) }
+         retrieveFromParts(PART_ONE_PREFIX)
 
-    override suspend fun addPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
+    override suspend fun setPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
     override suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)
 
     override fun setQuestionsVisibility(value: Boolean) {
@@ -110,12 +110,9 @@ class LocalStorageImpl : LocalStorage {
             Json.decodeFromString(json)
         } catch (e: Exception) {
             e.printStackTrace()
-            println("Error retrieving data: ${e.message}")
             null
         }
     }
-
-
 }
 
 
@@ -160,4 +157,3 @@ private fun String.decrypt(key: String): String {
     }
     return decodedBytes.decodeToString()
 }
-
