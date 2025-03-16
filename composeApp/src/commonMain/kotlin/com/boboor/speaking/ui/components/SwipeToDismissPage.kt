@@ -57,7 +57,7 @@ fun SwipeToDismissPage(content: @Composable () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.2f)),
+            .background(MaterialTheme.colorScheme.surfaceContainerLow),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -77,7 +77,7 @@ fun SwipeToDismissPage(content: @Composable () -> Unit) {
                 Icon(
                     Icons.Default.ArrowBack,
                     contentDescription = "back",
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }

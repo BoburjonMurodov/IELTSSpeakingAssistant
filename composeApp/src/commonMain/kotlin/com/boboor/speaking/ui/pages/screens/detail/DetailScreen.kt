@@ -88,7 +88,7 @@ data class DetailScreen(
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface),
+                    .background(MaterialTheme.colorScheme.surfaceContainerLow),
                 beyondViewportPageCount = 1
             ) { page ->
                 val scrollProgress = abs(pagerState.currentPageOffsetFraction).coerceAtMost(1f)
@@ -98,7 +98,7 @@ data class DetailScreen(
                     scrollProgress <= 0.5f -> lerp(1f, 0.9f, scrollProgress * 2f)
                     else -> 0.9f
                 }
-
+                println("scrollstate = $scrollProgress")
                 val borderWidth = when {
                     scrollProgress <= 0.5f -> lerp(0f, 1f, scrollProgress * 2f)
                     else -> 0f
@@ -111,9 +111,14 @@ data class DetailScreen(
                             scaleY = scale
                         }
                         .background(MaterialTheme.colorScheme.surface)
-                        .border(
-                            border = BorderStroke(borderWidth.dp, color = MaterialTheme.colorScheme.outlineVariant),
-                            shape = RoundedCornerShape(cornerRadius)
+                        .then(
+                            if (scrollProgress == 0.0f){
+                                Modifier
+                            }else Modifier
+                                .border(
+                                    border = BorderStroke(borderWidth.dp, color = MaterialTheme.colorScheme.outlineVariant),
+                                    shape = RoundedCornerShape(cornerRadius)
+                                )
                         )
                         .clip(RoundedCornerShape(cornerRadius))
                 ) {
