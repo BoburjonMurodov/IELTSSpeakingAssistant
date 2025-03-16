@@ -166,7 +166,7 @@ private fun DetailScreenContent(
             Column {
                 AppBar(
                     onClickBack = { navigator.pop() },
-                    title = "Detail",
+                    title = "Details",
                     modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerLow),
                     showSearch = false
                 )
@@ -202,13 +202,12 @@ private fun DetailScreenContent(
             }
 
         }
-    ) {
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = it.calculateTopPadding() + 16.dp)
+                .padding(top = innerPadding.calculateTopPadding() + 16.dp)
         ) {
-            Spacer(Modifier.height(16.dp))
             ScrollableTabRow(
                 modifier = Modifier.fillMaxWidth(), selectedTabIndex = pagerState.currentPage
             ) {
@@ -227,16 +226,9 @@ private fun DetailScreenContent(
                 modifier = Modifier.weight(1f)
                     .fillMaxWidth()
             ) { index ->
-
-                val values = when (index) {
-                    0 -> vocabularies
-                    1 -> questions.ideas
-                    else -> questions.answer
-                }
-
                 Box(modifier = Modifier.fillMaxSize()) {
                     LazyColumn(
-                        contentPadding = PaddingValues(vertical = 16.dp),
+                        contentPadding = PaddingValues(top = 16.dp, bottom = innerPadding.calculateBottomPadding() + 16.dp),
 
                         modifier = Modifier
                             .fillMaxSize()
@@ -298,8 +290,6 @@ private fun DetailScreenContent(
 
                     }
                 }
-
-
             }
         }
 
