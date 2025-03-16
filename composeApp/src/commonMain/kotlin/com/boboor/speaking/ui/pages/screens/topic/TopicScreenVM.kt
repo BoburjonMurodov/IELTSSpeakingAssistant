@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.data.remote.ApiService
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.boboor.speaking.data.repository.AppRepository
 import com.boboor.speaking.utils.enums.Section
 import com.boboor.speaking.utils.resultOf
 import kotlinx.coroutines.Dispatchers
@@ -21,25 +22,19 @@ import kotlinx.coroutines.flow.update
 class TopicScreenVM(
     private val directions: TopicScreenContracts.Directions,
     private val apiService: ApiService,
-    private val localStorage: LocalStorage
+    private val localStorage: LocalStorage,
+    private val repository: AppRepository
 ) : TopicScreenContracts.ViewModel {
     override val UIState = MutableStateFlow(TopicScreenContracts.UIState())
 
     override val searchQuery: MutableState<String> = mutableStateOf("")
     private val questions = ArrayList<CommonTopicResponse.Topic>()
 
-//    fun intent(action: suspend () -> Unit): Job =
-//        screenModelScope.launch {
-//            action.invoke();
-//        }
-
 
     override fun onEventDispatcher(intent: TopicScreenContracts.Intent): Job = intent {
         when (intent) {
             TopicScreenContracts.Intent.OnClickBack -> directions.goBack()
             TopicScreenContracts.Intent.SearchQuery ->
-
-
                 UIState.update {
                     it.copy(questions = questions.filter {
                         it.name.contains(
@@ -49,22 +44,36 @@ class TopicScreenVM(
                     })
                 }
 
-            is TopicScreenContracts.Intent.OnClickTopic -> directions.goQuestionsScreen(
-                intent.title,
-                topics = intent.topics,
-                topicIndex = intent.topicIndex
-            )
+            is TopicScreenContracts.Intent.OnClickTopic -> {
+                when(state.value.section){
+                    Section.PART_TWO -> {
+                        directions.goToDetailsScreen(
+//                            intent.title,
+                            topics = intent.topics,
+                            topicIndex = intent.topicIndex
+                        )
+                    }
+                    else -> {
+                        directions.goQuestionsScreen(
+                            intent.title,
+                            topics = intent.topics,
+                            topicIndex = intent.topicIndex
+                        )
+                    }
+                }
+
+
+            }
 
         }
     }
 
     override fun init(section: Section): Job = intent {
         UIState.update { it.copy(isLoading = true, section = section) }
-//        delay(1_000)
 
         when (section) {
             Section.PART_ONE -> getPartOneQuestions()
-            Section.PART_TWO -> {}
+            Section.PART_TWO -> getPartTwoQuestions()
             Section.PART_THREE -> getPartThreeQuestions()
         }
     }
@@ -92,7 +101,17 @@ class TopicScreenVM(
     }
 
     private fun getPartTwoQuestions() = intent {
-        
+        val showAnyWay = localStorage.getQuestionsVisibility()
+
+//        repository.getPartTwoQuestions()
+        resultOf { apiService.getPartTwoQuestions() }
+            .onSuccess { result->
+                result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
+                UIState.update { it.copy(isLoading = false, questions = questions) }
+            }.onFailure {
+                println("ERROR ${it.message}")
+                UIState.update { it.copy(isLoading = false, error = it.error) }
+            }
     }
 
 

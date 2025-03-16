@@ -3,6 +3,7 @@ package com.boboor.speaking.ui.pages.screens.topic
 import AppNavigator
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.ui.pages.screens.common_questions.CommonQuestionsScreen
+import com.boboor.speaking.ui.pages.screens.detail.DetailScreen
 
 
 /*
@@ -12,6 +13,17 @@ import com.boboor.speaking.ui.pages.screens.common_questions.CommonQuestionsScre
 class TopicScreenDirections(private val navigator: AppNavigator) : TopicScreenContracts.Directions {
     override suspend fun goQuestionsScreen(title: String, topics: List<CommonTopicResponse.Topic>, topicIndex: Int) {
         navigator.push(CommonQuestionsScreen(title = title, topics = topics, index = topicIndex));
+    }
+
+    override suspend fun goToDetailsScreen(topics: List<CommonTopicResponse.Topic>, topicIndex: Int) {
+        navigator.push(
+            DetailScreen(
+                topics = topics,
+                topicIndex = topicIndex,
+                title = "",
+                questionIndex = topicIndex
+            )
+        )
     }
 
     override suspend fun goBack() {

@@ -2,10 +2,14 @@ package com.boboor.speaking.ui.pages.screens.splash
 
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.boboor.speaking.data.local.LocalStorage
+import com.boboor.speaking.data.repository.AppRepository
 import com.boboor.speaking.utils.enums.UpdateFrequency
 import com.boboor.speaking.utils.resultOf
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
@@ -14,9 +18,11 @@ import kotlinx.coroutines.launch
 */
 
 class SplashScreenVM(
-    private val localStorage: LocalStorage
+    private val localStorage: LocalStorage,
+    private val repository: AppRepository,
+    private val directions: SplashScreenContracts.Directions
 ) : SplashScreenContracts.ViewModel {
-    override fun onEvent(intent: SplashScreenContracts.Intent): Job = intent {
+    override fun onEventDispatcher(intent: SplashScreenContracts.Intent): Job = intent {
         when (intent) {
             SplashScreenContracts.Intent.Init -> updateContent(localStorage.getUpdateFrequency())
         }
@@ -29,6 +35,18 @@ class SplashScreenVM(
             }
 
             UpdateFrequency.EVERY_APP_OPENING -> {
+                screenModelScope.launch {
+                    UIState.update { it.copy(isLoading = true) }
+                    val part1 = async { resultOf { repository.getPartOneQuestions(true) } }
+                    val part2 = async { resultOf { repository.getPartTwoQuestions(true) } }
+                    val part3 = async { resultOf { repository.getPartThreeQuestions(true) } }
+
+                    awaitAll(part1, part2, part3)
+
+                    UIState.update { it.copy(isLoading = false) }
+
+                    directions.navigateHomeScreen()
+                }
 
             }
 

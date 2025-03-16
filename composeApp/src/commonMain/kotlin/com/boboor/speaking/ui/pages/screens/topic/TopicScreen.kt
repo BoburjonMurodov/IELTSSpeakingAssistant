@@ -79,8 +79,7 @@ class TopicScreen(private val section: Section) : Screen {
         val viewModel = koinScreenModel<TopicScreenContracts.ViewModel>()
         LifecycleEffectOnce { viewModel.init(section = section) }
         val state = viewModel.collectAsState()
-        val navigator = LocalNavigator.currentOrThrow
-//        SwipeToDismissScreen(onDismiss = { navigator.pop() }) {
+
         SwipeToDismissPage {
             TopicScreenContent(state, viewModel.searchQuery, viewModel::onEventDispatcher)
         }
@@ -200,12 +199,10 @@ private fun TopicScreenContent(
             }
 
             if (state.value.isLoading) {
-                items(20) {
-                    TopicItemShimmer()
-                }
+                items(20) { TopicItemShimmer() }
             }
 
-            if (state.value.questions.isEmpty()) {
+            if (state.value.questions.isEmpty() && !state.value.isLoading) {
                 item {
                     Box(
                         Modifier.fillMaxWidth()

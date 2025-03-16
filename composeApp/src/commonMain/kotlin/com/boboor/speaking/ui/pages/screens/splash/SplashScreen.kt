@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -54,7 +55,7 @@ class SplashScreen : Screen, ScreenTransition {
 
     @Composable
     override fun Content() {
-        val viewModel = koinInject< SplashScreenContracts.ViewModel>()
+        val viewModel = koinInject<SplashScreenContracts.ViewModel>()
         val state = viewModel.collectAsState()
         SplashScreenContent(state, viewModel::onEventDispatcher)
     }
@@ -68,13 +69,12 @@ private fun SplashScreenContent(
 ) {
     val scale = Animatable(1f)
     val alpha = Animatable(0f)
-    val navigator = LocalNavigator.currentOrThrow
 
     LaunchedEffect(Unit) {
         alpha.animateTo(1f, animationSpec = tween(500))
-        delay(300)
         scale.animateTo(1.7f, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
-        delay(700)
+        delay(1000)
+
         onEventDispatcher.invoke(SplashScreenContracts.Intent.Init)
 //        navigator.push(HomeScreen())
     }
@@ -123,7 +123,10 @@ private fun SplashScreenContent(
         }
 
         AnimatedContent(state.value.isLoading) {
-            Column {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Spacer(Modifier.weight(2f))
                 CircularProgressIndicator()
                 Spacer(Modifier.weight(1f))
