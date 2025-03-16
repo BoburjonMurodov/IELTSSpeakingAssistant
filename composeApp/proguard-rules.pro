@@ -1,16 +1,20 @@
-# Keep all SLF4J classes
--keep class org.slf4j.** { *; }
+# Allow obfuscation of SLF4J and Logback classes fully (no -keep)
+-keepclassmembers,allowobfuscation class ch.qos.logback.** { *; }
+-keepclassmembers,allowobfuscation class org.slf4j.** { *; }
+-keepclassmembers,allowobfuscation class org.slf4j.impl.** { *; }
 
-# Keep Logback classes (if using Logback)
--keep class ch.qos.logback.** { *; }
-# Keep AndroidX Test classes (only if you're using instrumented tests)
-#-keep class androidx.test.platform.app.InstrumentationRegistry { *; }
+# Keep native methods, but allow class names to be obfuscated
+-keepclasseswithmembers class * {
+    native <methods>;
+}
 
-# Keep all SLF4J classes
--keep class org.slf4j.** { *; }
--keep class org.slf4j.impl.** { *; }
--keep class ch.qos.logback.** { *; }
+# Allow Ktor debug utilities to be fully obfuscated
+-keepclassmembers,allowobfuscation class io.ktor.util.debug.** { *; }
 
+# Suppress warnings (unchanged)
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn java.lang.management.RuntimeMXBean
+-dontwarn io.ktor.util.debug.**
 -dontwarn androidx.test.platform.app.InstrumentationRegistry
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 -dontwarn org.slf4j.impl.StaticMDCBinder

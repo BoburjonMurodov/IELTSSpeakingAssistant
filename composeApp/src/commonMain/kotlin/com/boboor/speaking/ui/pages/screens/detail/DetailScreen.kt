@@ -50,6 +50,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.ui.components.AppBar
+import com.boboor.speaking.ui.components.SwipeToDismissPage
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.launch
 import nl.marc_apps.tts.TextToSpeechEngine
@@ -77,54 +78,56 @@ data class DetailScreen(
     @ExperimentalDesktopTarget
     @Composable
     override fun Content() {
+        SwipeToDismissPage {
+            val pagerState = rememberPagerState(
+                initialPage = questionIndex,
+                pageCount = { topics[topicIndex].questions.size }
+            )
 
-        val pagerState = rememberPagerState(
-            initialPage = questionIndex,
-            pageCount = { topics[topicIndex].questions.size }
-        )
 
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface),
-            beyondViewportPageCount = 1
-        ) { page ->
-            val scrollProgress = abs(pagerState.currentPageOffsetFraction).coerceAtMost(1f)
-            val cornerRadius = (64.dp * (abs(scrollProgress).coerceIn(0f, 1f)))
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface),
+                beyondViewportPageCount = 1
+            ) { page ->
+                val scrollProgress = abs(pagerState.currentPageOffsetFraction).coerceAtMost(1f)
+                val cornerRadius = (64.dp * (abs(scrollProgress).coerceIn(0f, 1f)))
 
-            val scale = when {
-                scrollProgress <= 0.5f -> lerp(1f, 0.9f, scrollProgress * 2f)
-                else -> 0.9f
-            }
+                val scale = when {
+                    scrollProgress <= 0.5f -> lerp(1f, 0.9f, scrollProgress * 2f)
+                    else -> 0.9f
+                }
 
-            val borderWidth = when {
-                scrollProgress <= 0.5f -> lerp(0f, 1f, scrollProgress * 2f)
-                else -> 0f
-            }
+                val borderWidth = when {
+                    scrollProgress <= 0.5f -> lerp(0f, 1f, scrollProgress * 2f)
+                    else -> 0f
+                }
 
-            Box(
-                modifier = Modifier
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                    }
-                    .background(MaterialTheme.colorScheme.surface)
-                    .border(
-                        border = BorderStroke(borderWidth.dp, color = MaterialTheme.colorScheme.outlineVariant),
-                        shape = RoundedCornerShape(cornerRadius)
+                Box(
+                    modifier = Modifier
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                        }
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(
+                            border = BorderStroke(borderWidth.dp, color = MaterialTheme.colorScheme.outlineVariant),
+                            shape = RoundedCornerShape(cornerRadius)
+                        )
+                        .clip(RoundedCornerShape(cornerRadius))
+                ) {
+                    DetailScreenContent(
+                        title = title,
+                        questions = topics[topicIndex].questions[page],
+                        vocabularies = topics[topicIndex].vocabulary
                     )
-                    .clip(RoundedCornerShape(cornerRadius))
-            ) {
-                DetailScreenContent(
-                    title = title,
-                    questions = topics[topicIndex].questions[page],
-                    vocabularies = topics[topicIndex].vocabulary
-                )
+                }
             }
+
         }
-
-
     }
+
 }
 
 
@@ -164,7 +167,7 @@ private fun DetailScreenContent(
                 AppBar(
                     onClickBack = { navigator.pop() },
                     title = "Detail",
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerHighest),
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerLow),
                     showSearch = false,
                     onClickSearch = { },
                 )

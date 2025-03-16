@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,6 +16,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.boboor.speaking.ui.components.AppBar
+import com.boboor.speaking.ui.components.SwipeToDismissPage
 import com.boboor.speaking.utils.debounceClickable
 
 
@@ -28,7 +28,9 @@ class LicenseScreen : Screen {
 
     @Composable
     override fun Content() {
-        LicenseScreenContent()
+        SwipeToDismissPage {
+            LicenseScreenContent()
+        }
     }
 
     @Composable
@@ -39,7 +41,7 @@ class LicenseScreen : Screen {
             Scaffold(
                 topBar = {
                     AppBar(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerLow),
                         title = "Licenses",
                         showSearch = false,
                         isSearchEnabled = false,
