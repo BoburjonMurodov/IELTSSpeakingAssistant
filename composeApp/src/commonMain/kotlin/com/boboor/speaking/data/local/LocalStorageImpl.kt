@@ -1,11 +1,11 @@
 package com.boboor.speaking.data.local
 
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.boboor.speaking.data.remote.models.PartTwoResponse
 import com.boboor.speaking.utils.enums.UpdateFrequency
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -22,9 +22,12 @@ import kotlin.random.Random
 interface LocalStorage {
     suspend fun setPartOne(value: CommonTopicResponse.Response)
     suspend fun setPartThree(value: CommonTopicResponse.Response)
+    suspend fun setPartTwo(value: CommonTopicResponse.Response)
 
     suspend fun getPartOne(): CommonTopicResponse.Response?
+    suspend fun getPartTwo(): CommonTopicResponse.Response?
     suspend fun getPartThree(): CommonTopicResponse.Response?
+
 
     fun setQuestionsVisibility(value: Boolean)
     fun getQuestionsVisibility(): Boolean
@@ -39,6 +42,7 @@ interface LocalStorage {
 class LocalStorageImpl : LocalStorage {
     private val settings = Settings()
     private val PART_ONE_PREFIX = "SPEAKING_ONE_PART_".encrypt(getKey())
+    private val PART_TWO_PREFIX = "SPEAKING_ONE_PART_".encrypt(getKey())
     private val PART_THREE_PREFIX = "PART_THREE_PART_".encrypt(getKey())
     private val QUESTION_VISIBILITY = "QUESTION_VISIBILITY".encrypt(getKey())
     private val UPDATE_FREQUENCY = "UPDATE_FREQUENCY".encrypt(getKey())
@@ -60,11 +64,11 @@ class LocalStorageImpl : LocalStorage {
         return settings.getString("KEY", "A%#(LKB_-+G")
     }
 
-    override suspend fun setPartOne(value: CommonTopicResponse.Response) =
-        storeInParts(PART_ONE_PREFIX, value)
+    override suspend fun setPartOne(value: CommonTopicResponse.Response) = storeInParts(PART_ONE_PREFIX, value)
+    override suspend fun getPartOne(): CommonTopicResponse.Response? = retrieveFromParts(PART_ONE_PREFIX)
 
-    override suspend fun getPartOne(): CommonTopicResponse.Response? =
-         retrieveFromParts(PART_ONE_PREFIX)
+    override suspend fun setPartTwo(value: CommonTopicResponse.Response) = storeInParts(PART_TWO_PREFIX, value)
+    override suspend fun getPartTwo(): CommonTopicResponse.Response? = retrieveFromParts(PART_TWO_PREFIX)
 
     override suspend fun setPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
     override suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)

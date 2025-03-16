@@ -57,12 +57,48 @@ sealed interface PartTwoResponse {
     ) : PartTwoResponse
 }
 
+fun PartTwoResponse.Response.toCommonTopicResponse(): CommonTopicResponse.Response {
+    return CommonTopicResponse.Response(
+        content = content.mapValues { (_, partTwoQuestion) ->
+            partTwoQuestion.toTopic()
+        }
+    )
+}
 
+fun PartTwoResponse.PartTwoQuestion.toTopic(): CommonTopicResponse.Topic {
+    return CommonTopicResponse.Topic(
+        active = this.active,
+        free = this.free,
+        name = this.name,
+        new = this.new,
+        order = this.order,
+        vocabulary = this.vocabulary.map { it.toVocabulary() },
+        questions = this.questions.map { it.toCommonQuestion(this.answer, this.ideas) }
+    )
+}
 
+fun PartTwoResponse.Question.toCommonQuestion(
+    answers: List<PartTwoResponse.Answer>,
+    ideas: List<PartTwoResponse.Idea>
+): CommonTopicResponse.Question {
+    return CommonTopicResponse.Question(
+        text = this.text,
+        answer = answers.map { it.toAnswer() },
+        ideas = ideas.map { it.toCommonIdea() }
+    )
+}
 
+fun PartTwoResponse.Answer.toAnswer(): CommonTopicResponse.Answer {
+    return CommonTopicResponse.Answer(text = this.text)
+}
 
+fun PartTwoResponse.Vocabulary.toVocabulary(): CommonTopicResponse.Vocabulary {
+    return CommonTopicResponse.Vocabulary(text = this.text)
+}
 
-
-
-
+fun PartTwoResponse.Idea.toCommonIdea(): CommonTopicResponse.Idea {
+    // Convert list of PartTwoBody to a single text string
+    val combinedText = this.body.joinToString("\n") { it.text }
+    return CommonTopicResponse.Idea(text = combinedText)
+}
 
