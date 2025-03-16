@@ -2,6 +2,7 @@ package com.boboor.speaking.data.remote
 
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.data.remote.models.PartTwoResponse
+import com.boboor.speaking.data.remote.models.toCommonTopicResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpSend
@@ -26,15 +27,16 @@ class ApiService(private val httpClient: HttpClient) {
     }
 
 
-    suspend fun getPartOneQuestions(): CommonTopicResponse.Response = withContext(Dispatchers.IO) {
-        return@withContext httpClient.get(SECTION_ONE).body();
+    suspend fun getPartOneQuestions(): CommonTopicResponse.Response  {
+        return httpClient.get(SECTION_ONE).body();
     }
 
-    suspend fun getPartTwoQuestions(): Result<PartTwoResponse.Response> = withContext(Dispatchers.IO) {
-        return@withContext httpClient.get(SECTION_TWO).body()
+    suspend fun getPartTwoQuestions(): CommonTopicResponse.Response  {
+        val response = httpClient.get(SECTION_TWO).body<PartTwoResponse.Response>()
+        return response.toCommonTopicResponse()
     }
 
-    suspend fun getPartThreeQuestions(): CommonTopicResponse.Response = withContext(Dispatchers.IO) {
-        return@withContext httpClient.get(SECTION_THREE).body()
+    suspend fun getPartThreeQuestions(): CommonTopicResponse.Response {
+        return httpClient.get(SECTION_THREE).body()
     }
 }

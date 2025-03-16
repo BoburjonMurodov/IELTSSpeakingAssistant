@@ -1,9 +1,6 @@
 package com.boboor.speaking.data.repository
 
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
-import com.boboor.speaking.data.remote.models.PartOneResponse
-import com.boboor.speaking.data.remote.models.PartThreeResponse
-import com.boboor.speaking.data.remote.models.PartTwoResponse
 
 
 /*
