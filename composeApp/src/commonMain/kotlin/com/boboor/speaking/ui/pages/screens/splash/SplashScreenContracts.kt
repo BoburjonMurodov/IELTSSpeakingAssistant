@@ -10,7 +10,7 @@ import kotlinx.coroutines.Job
 
 interface SplashScreenContracts {
     interface ViewModel : AppViewModel<UIState> {
-        fun onEvent(intent: Intent): Job
+        fun onEventDispatcher(intent: Intent): Job
     }
 
     data class UIState(
@@ -19,5 +19,9 @@ interface SplashScreenContracts {
 
     interface Intent {
         object Init : Intent
+    }
+
+    interface Directions{
+        suspend fun navigateHomeScreen()
     }
 }

@@ -1,5 +1,7 @@
 package com.boboor.speaking.di
 
+import com.boboor.speaking.ui.pages.screens.splash.SplashScreenContracts
+import com.boboor.speaking.ui.pages.screens.splash.SplashScreenDirections
 import com.boboor.speaking.ui.pages.tabs.main.MainScreenContracts
 import com.boboor.speaking.ui.pages.screens.topic.TopicScreenContracts
 import com.boboor.speaking.ui.pages.tabs.main.MainScreenDirections
@@ -18,4 +20,5 @@ val directionModule = module {
     factory<MainScreenContracts.Directions> { MainScreenDirections(get()) }
     factory<TopicScreenContracts.Directions> { TopicScreenDirections(get()) }
     factory<SettingsContracts.Directions> { SettingsTabDirections(get()) }
+    factory<SplashScreenContracts.Directions> { SplashScreenDirections(get()) }
 }

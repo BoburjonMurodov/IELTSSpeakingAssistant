@@ -1,5 +1,6 @@
 package com.boboor.speaking.ui.pages.screens.splash
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
@@ -9,12 +10,15 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -27,14 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
-import com.boboor.speaking.data.local.LocalStorageImpl
-import com.boboor.speaking.ui.pages.HomeScreen
 import com.boboor.speaking.utils.darken
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
@@ -53,13 +54,18 @@ class SplashScreen : Screen, ScreenTransition {
 
     @Composable
     override fun Content() {
-        SplashScreenContent()
+        val viewModel = koinInject< SplashScreenContracts.ViewModel>()
+        val state = viewModel.collectAsState()
+        SplashScreenContent(state, viewModel::onEventDispatcher)
     }
 }
 
 
 @Composable
-private fun SplashScreenContent() {
+private fun SplashScreenContent(
+    state: State<SplashScreenContracts.UIState>,
+    onEventDispatcher: (SplashScreenContracts.Intent) -> Unit = {}
+) {
     val scale = Animatable(1f)
     val alpha = Animatable(0f)
     val navigator = LocalNavigator.currentOrThrow
@@ -69,7 +75,8 @@ private fun SplashScreenContent() {
         delay(300)
         scale.animateTo(1.7f, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
         delay(700)
-        navigator.push(HomeScreen())
+        onEventDispatcher.invoke(SplashScreenContracts.Intent.Init)
+//        navigator.push(HomeScreen())
     }
 
     Scaffold(
@@ -114,5 +121,14 @@ private fun SplashScreenContent() {
                 )
             }
         }
+
+        AnimatedContent(state.value.isLoading) {
+            Column {
+                Spacer(Modifier.weight(2f))
+                CircularProgressIndicator()
+                Spacer(Modifier.weight(1f))
+            }
+        }
+
     }
 }
