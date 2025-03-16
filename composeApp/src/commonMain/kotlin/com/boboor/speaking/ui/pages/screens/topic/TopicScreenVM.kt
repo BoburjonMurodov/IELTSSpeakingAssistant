@@ -91,6 +91,10 @@ class TopicScreenVM(
         }
     }
 
+    private fun getPartTwoQuestions() = intent {
+        
+    }
+
 
 
     private fun getPartThreeQuestions() = intent(Dispatchers.IO) {
