@@ -31,7 +31,7 @@ fun ScalableHorizontalPager(
     HorizontalPager(
         state = pagerState,
         modifier = modifier,
-        beyondViewportPageCount = 1
+        beyondViewportPageCount = beyondViewportPageCount
     ) { page ->
         val scrollProgress = abs(pagerState.currentPageOffsetFraction).coerceAtMost(1f)
         val cornerRadius = (64.dp * (abs(scrollProgress).coerceIn(0f, 1f)))
