@@ -28,7 +28,6 @@ interface LocalStorage {
     suspend fun getPartTwo(): PartTwoResponse.Response?
     suspend fun getPartThree(): CommonTopicResponse.Response?
 
-
     fun setQuestionsVisibility(value: Boolean)
     fun getQuestionsVisibility(): Boolean
 
@@ -85,9 +84,7 @@ class LocalStorageImpl : LocalStorage {
         return UpdateFrequency.valueOf(value)
     }
 
-    override suspend fun clear() {
-        settings.clear()
-    }
+    override suspend fun clear() { settings.clear() }
 
 
     private suspend inline fun <reified T> storeInParts(prefix: String, value: T) {
