@@ -3,6 +3,7 @@ package com.boboor.speaking.ui.pages.tabs.main
 import com.boboor.speaking.ui.pages.tabs.main.MainScreenContracts.Intent.OnClickPart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.orbitmvi.orbit.Container
 
 /*
     Created by Boburjon Murodov 20/12/24 at 18:18
@@ -25,9 +26,6 @@ class MainScreenVM(
 
     }
 
-    override val UIState = MutableStateFlow(MainScreenContracts.UIState())
+    override val container = container<MainScreenContracts.UIState, Nothing>(MainScreenContracts.UIState())
 }
 
-interface AppSyntax {
-
-}

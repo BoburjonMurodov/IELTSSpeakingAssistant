@@ -107,6 +107,9 @@ kotlin {
             //HTML PARSER
             implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc11")
 
+            //ORBIT MVI
+            implementation("org.orbit-mvi:orbit-core:9.0.0")
+
         }
 
 

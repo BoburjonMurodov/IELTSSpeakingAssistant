@@ -5,13 +5,9 @@ import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.data.repository.AppRepository
 import com.boboor.speaking.utils.enums.UpdateFrequency
 import com.boboor.speaking.utils.resultOf
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
@@ -38,14 +34,14 @@ class SplashScreenVM(
 
             UpdateFrequency.EVERY_APP_OPENING -> {
                 screenModelScope.launch {
-                    UIState.update { it.copy(isLoading = true) }
+                    reduce { state.copy(isLoading = true) }
                     val part1 = async { resultOf { repository.getPartOneQuestions(false) } }
                     val part2 = async { resultOf { repository.getPartTwoQuestions(false) } }
                     val part3 = async { resultOf { repository.getPartThreeQuestions(false) } }
 
                     awaitAll(part1, part2, part3)
 
-                    UIState.update { it.copy(isLoading = false) }
+                    reduce { state.copy(isLoading = false) }
 
                     directions.navigateHomeScreen()
                 }
@@ -58,5 +54,6 @@ class SplashScreenVM(
         }
     }
 
-    override val UIState = MutableStateFlow(SplashScreenContracts.UIState())
+    override val container = container<SplashScreenContracts.UIState, Nothing>(SplashScreenContracts.UIState())
+
 }

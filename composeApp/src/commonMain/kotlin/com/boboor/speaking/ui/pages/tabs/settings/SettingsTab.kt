@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
@@ -42,6 +43,7 @@ import com.boboor.speaking.ui.theme.AppTheme
 import com.boboor.speaking.ui.theme.FontDimension
 import com.boboor.speaking.ui.theme.getFontDimension
 import com.boboor.speaking.ui.theme.setFontDimension
+import com.boboor.speaking.utils.collectAsState
 import com.boboor.speaking.utils.debounceClickable
 import com.boboor.speaking.utils.enums.EVERY_DAY
 import com.boboor.speaking.utils.enums.NEVER
@@ -71,6 +73,7 @@ object SettingsTab : Tab {
     override fun Content() {
         val viewModel = koinScreenModel<SettingsContracts.ViewModel>()
         val state = viewModel.collectAsState()
+
         SettingsTabContent(state, viewModel::onEventDispatcher)
     }
 

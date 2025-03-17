@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.data.models.CommonTopicItem
 import com.boboor.speaking.data.models.toCommonTopicItem
-import com.boboor.speaking.data.remote.ApiService
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.data.remote.models.PartTwoResponse
 import com.boboor.speaking.data.repository.AppRepository
@@ -14,8 +13,8 @@ import com.boboor.speaking.utils.resultOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import org.orbitmvi.orbit.Container
 
 
 /*
@@ -24,11 +23,10 @@ import kotlinx.coroutines.flow.update
 
 class TopicScreenVM(
     private val directions: TopicScreenContracts.Directions,
-    private val apiService: ApiService,
     private val localStorage: LocalStorage,
     private val repository: AppRepository
 ) : TopicScreenContracts.ViewModel {
-    override val UIState = MutableStateFlow(TopicScreenContracts.UIState())
+//    override val UIState = MutableStateFlow(TopicScreenContracts.UIState())
 
     override val searchQuery: MutableState<String> = mutableStateOf("")
     private val questions = ArrayList<CommonTopicItem>()
@@ -39,24 +37,23 @@ class TopicScreenVM(
     override fun onEventDispatcher(intent: TopicScreenContracts.Intent): Job = intent {
         when (intent) {
             TopicScreenContracts.Intent.OnClickBack -> directions.goBack()
-            TopicScreenContracts.Intent.SearchQuery ->
-                UIState.update {
-                    it.copy(questions = questions.filter {
-                        it.question.contains(
-                            searchQuery.value,
-                            ignoreCase = true
-                        )
-                    })
-                }
+            TopicScreenContracts.Intent.SearchQuery -> reduce {
+                state.copy(questions = questions.filter {
+                    it.question.contains(
+                        searchQuery.value,
+                        ignoreCase = true
+                    )
+                })
+            }
 
             is TopicScreenContracts.Intent.OnCLickTopic -> {
-                when (state.value.section) {
+                when (state.section) {
                     Section.PART_TWO -> {
 
                     }
 
                     else -> {
-                        directions.goQuestionsScreen(state.value.section.title, commonTopicItems, intent.index)
+                        directions.goQuestionsScreen(state.section.title, commonTopicItems, intent.index)
                     }
                 }
             }
@@ -65,7 +62,7 @@ class TopicScreenVM(
     }
 
     override fun init(section: Section): Job = intent {
-        UIState.update { it.copy(isLoading = true, section = section) }
+        reduce { state.copy(isLoading = true, section = section) }
 
         when (section) {
             Section.PART_ONE -> getPartOneQuestions()
@@ -74,7 +71,7 @@ class TopicScreenVM(
         }
     }
 
-    private fun getPartOneQuestions() = intent(Dispatchers.IO) {
+    private fun getPartOneQuestions() = intent {
         val showAnyWay = localStorage.getQuestionsVisibility()
 
         resultOf { repository.getPartOneQuestions() }
@@ -86,11 +83,9 @@ class TopicScreenVM(
                         questions.add(it.value.toCommonTopicItem(index++))
                     }
                 }
-                UIState.update { it.copy(isLoading = false, questions = questions) }
-            }.onFailure {
-                println("ERROR ${it.message}")
-                UIState.update { it.copy(isLoading = false, error = it.error) }
+                reduce{ state.copy(isLoading = false, questions = questions) }
             }
+            .onFailure { reduce { state.copy(isLoading = false, error = it.message) } }
     }
 
     private fun getPartTwoQuestions() = intent {
@@ -105,17 +100,15 @@ class TopicScreenVM(
                         questions.add(it.value.toCommonTopicItem(index++))
                     }
                 }
-                UIState.update { it.copy(isLoading = false, questions = questions) }
-            }.onFailure {
-                println("ERROR ${it.message}")
-                UIState.update { it.copy(isLoading = false, error = it.error) }
+                reduce{ state.copy(isLoading = false, questions = questions) }
             }
+            .onFailure { reduce{ state.copy(isLoading = false, error = it.message) } }
     }
 
 
-    private fun getPartThreeQuestions() = intent(Dispatchers.IO) {
+    private fun getPartThreeQuestions() = intent{
         val showAnyWay = localStorage.getQuestionsVisibility()
-
+        state
         resultOf { repository.getPartThreeQuestions() }
             .onSuccess { result ->
                 var index = 0
@@ -125,11 +118,9 @@ class TopicScreenVM(
                         questions.add(it.value.toCommonTopicItem(index++))
                     }
                 }
-                UIState.update { it.copy(isLoading = false, questions = questions) }
-            }.onFailure {
-                println("ERROR ${it.message}")
-                UIState.update { it.copy(isLoading = false, error = it.error) }
-            }
+                reduce { state.copy(isLoading = false, questions = questions) }
+            }.onFailure { reduce { state.copy(isLoading = false, error = it.message) } }
     }
 
+    override val container = container<TopicScreenContracts.UIState, Nothing>(TopicScreenContracts.UIState())
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.Job
 
 
 interface MainScreenContracts {
-    interface ViewModel : AppViewModel<UIState> {
+    interface ViewModel : AppViewModel<UIState, Nothing> {
         fun onEventDispatcher(intent: Intent): Job
         fun init() : Job
     }

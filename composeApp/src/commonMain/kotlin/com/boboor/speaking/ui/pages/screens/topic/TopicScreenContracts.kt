@@ -14,7 +14,7 @@ import kotlinx.coroutines.Job
 */
 
 class TopicScreenContracts {
-    interface ViewModel : AppViewModel<UIState> {
+    interface ViewModel : AppViewModel<UIState, Nothing> {
         val searchQuery: MutableState<String>
 
         fun onEventDispatcher(intent: Intent): Job

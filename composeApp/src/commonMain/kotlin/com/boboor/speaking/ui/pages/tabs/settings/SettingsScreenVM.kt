@@ -21,19 +21,13 @@ class SettingsScreenVM(
     private val localStorage: LocalStorage
 ) : SettingsContracts.ViewModel {
 
-    init {
-        intent {
-            val visibility = localStorage.getQuestionsVisibility()
-            reduce { UIState.value.copy(showHiddenQuestions = visibility) }
-        }
-    }
 
     override fun onEventDispatcher(intent: SettingsContracts.Intent): Job = intent {
         when (intent) {
             is SettingsContracts.Intent.ChangeFontDimension -> {
                 setFontDimension(intent.scale)
                 reduce {
-                    UIState.value.copy(
+                    state.copy(
                         selectedFontDimension = getFontDimension()
                     )
                 }
@@ -42,7 +36,7 @@ class SettingsScreenVM(
             is SettingsContracts.Intent.ChangeThemeColor -> {
                 setColor(intent.color)
                 reduce {
-                    UIState.value.copy(
+                    state.copy(
                         selectedThemeColor = getColor()
                     )
                 }
@@ -51,22 +45,22 @@ class SettingsScreenVM(
             is SettingsContracts.Intent.OnClickShowHideQuestions -> {
                 localStorage.setQuestionsVisibility(intent.show)
                 reduce {
-                    UIState.value.copy(showHiddenQuestions = localStorage.getQuestionsVisibility())
+                    state.copy(showHiddenQuestions = localStorage.getQuestionsVisibility())
                 }
             }
 
             is SettingsContracts.Intent.OnSelectedUpdateFrequency -> {
                 localStorage.setUpdateFrequency(value = intent.value)
-                reduce { UIState.value.copy(selectedUpdateFrequency = localStorage.getUpdateFrequency()) }
+                reduce { state.copy(selectedUpdateFrequency = localStorage.getUpdateFrequency()) }
             }
 
 
             SettingsContracts.Intent.OpenChangeThemeBottomSheet -> reduce {
-                UIState.value.copy(isChangeThemeBottomSheetOpen = true)
+                state.copy(isChangeThemeBottomSheetOpen = true)
             }
 
             SettingsContracts.Intent.DismissChangeThemeBottomSheet -> reduce {
-                UIState.value.copy(isChangeThemeBottomSheetOpen = false)
+                state.copy(isChangeThemeBottomSheetOpen = false)
             }
 
             SettingsContracts.Intent.OnClickClearCache -> {
@@ -79,10 +73,11 @@ class SettingsScreenVM(
         }
     }
 
-    override val UIState = MutableStateFlow(
+    override val container = container<SettingsContracts.UIState, Nothing>(
         SettingsContracts.UIState(
             showHiddenQuestions = localStorage.getQuestionsVisibility(),
-            selectedUpdateFrequency = localStorage.getUpdateFrequency()
+            selectedUpdateFrequency = localStorage.getUpdateFrequency(),
         )
     )
+
 }

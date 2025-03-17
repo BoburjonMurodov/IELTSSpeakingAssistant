@@ -47,6 +47,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.boboor.speaking.ui.components.AppCard
 import com.boboor.speaking.ui.theme.AppTheme
 import com.boboor.speaking.utils.OnExitBackPressHandler
+import com.boboor.speaking.utils.collectAsState
 import com.boboor.speaking.utils.enums.Section
 import com.materialkolor.ktx.darken
 import ieltsspeakingassistant.composeapp.generated.resources.Res
@@ -71,7 +72,6 @@ object MainTab : Tab{
     @Composable
     override fun Content() {
         val viewModel = koinScreenModel<MainScreenContracts.ViewModel>()
-
         val state = viewModel.collectAsState()
         MainScreenContent(state, viewModel::onEventDispatcher)
     }
