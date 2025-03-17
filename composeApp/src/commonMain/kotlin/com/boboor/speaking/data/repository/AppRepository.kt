@@ -1,6 +1,7 @@
 package com.boboor.speaking.data.repository
 
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.boboor.speaking.data.remote.models.PartTwoResponse
 
 
 /*
@@ -9,6 +10,6 @@ import com.boboor.speaking.data.remote.models.CommonTopicResponse
 
 interface AppRepository {
     suspend fun getPartOneQuestions(fromCache: Boolean = true): CommonTopicResponse
-    suspend fun getPartTwoQuestions(fromCache: Boolean = true): CommonTopicResponse
+    suspend fun getPartTwoQuestions(fromCache: Boolean = true): PartTwoResponse.Response
     suspend fun getPartThreeQuestions(fromCache: Boolean = true): CommonTopicResponse
 }
