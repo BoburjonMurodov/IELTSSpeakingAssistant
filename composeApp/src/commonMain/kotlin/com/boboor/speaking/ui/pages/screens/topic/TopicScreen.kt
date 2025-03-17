@@ -51,8 +51,6 @@ import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.boboor.speaking.ui.components.AppBar
 import com.boboor.speaking.ui.components.SearchInput
 import com.boboor.speaking.ui.components.SwipeToDismissPage
@@ -99,7 +97,7 @@ private fun TopicScreenContent(
     val hazeState = remember { HazeState() }
     val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
-    LaunchedEffect(state.value.error){
+    LaunchedEffect(state.value.error) {
         if (state.value.error != null) {
             snackBarHostState.showSnackbar(state.value.error ?: "unknown error happened")
         }
@@ -107,7 +105,8 @@ private fun TopicScreenContent(
 
     Scaffold(
         snackbarHost = {
-            SnackbarHost(snackBarHostState,
+            SnackbarHost(
+                snackBarHostState,
                 snackbar = {
                     Box(
                         modifier = Modifier
@@ -138,7 +137,7 @@ private fun TopicScreenContent(
                         backgroundColor = MaterialTheme.colorScheme.surfaceContainerLow,
                         blurRadius = 25.dp
                     )
-                    ),
+                ),
                 isSearchEnabled = !state.value.isLoading,
                 onClickBack = { onEventDispatcher.invoke(TopicScreenContracts.Intent.OnClickBack) },
                 onClickSearch = {
@@ -184,17 +183,12 @@ private fun TopicScreenContent(
                 }
             }
 
-            items(state.value.questions.size, key = { state.value.questions[it].name }) {
+            items(state.value.questions.size, key = { state.value.questions[it].question }) {
                 val isExpanded = rememberSaveable { mutableStateOf(false) }
                 val hasOverFlow = rememberSaveable { mutableStateOf(false) }
-                TopicItem(state.value.questions[it], it + 1, isExpanded, hasOverFlow, searchQuery.value) {
-                    onEventDispatcher.invoke(
-                        TopicScreenContracts.Intent.OnClickTopic(
-                            title = state.value.questions[it].name,
-                            topics = state.value.questions,
-                            topicIndex = it
-                        )
-                    )
+
+                TopicItem(state.value.questions[it], isExpanded, hasOverFlow, searchQuery.value) {
+
                 }
             }
 

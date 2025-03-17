@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.boboor.speaking.data.models.CommonTopicItem
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.utils.debounceClickable
 import com.valentinilk.shimmer.shimmer
@@ -56,8 +57,9 @@ private val SHIMMER_COLOR = Color.Gray.copy(.3f)
 
 @Composable
 fun TopicItem(
-    item: CommonTopicResponse.Topic,
-    index: Int,
+    item: CommonTopicItem,
+//    item: CommonTopicResponse.Topic,
+//    index: Int,
     isExpanded: MutableState<Boolean>,
     hasOverFlow: MutableState<Boolean>,
     searchQuery: String = "",
@@ -87,7 +89,7 @@ fun TopicItem(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                "$index",
+                "${item.order}",
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.headlineLarge,
             )
@@ -108,7 +110,7 @@ fun TopicItem(
                         .fillMaxSize(0.9f)
                 ) {
                     Text(
-                        text = getHighLightedText(item.name, searchQuery),
+                        text = getHighLightedText(item.question, searchQuery),
                         fontWeight = FontWeight.W600,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = maxLines.value,
@@ -120,7 +122,7 @@ fun TopicItem(
                     )
 
                     Spacer(Modifier.weight(1f))
-                    Text("${item.questions.size} questions", fontSize = 12.sp)
+                    Text("${item.question} questions", fontSize = 12.sp)
                 }
 
                 if (hasOverFlow.value || isExpanded.value) {
@@ -138,7 +140,7 @@ fun TopicItem(
                     Spacer(Modifier.size(32.dp))
             }
 
-            if (item.new == "new") {
+            if (item.new) {
                 Box(
                     Modifier
                         .align(Alignment.TopEnd)

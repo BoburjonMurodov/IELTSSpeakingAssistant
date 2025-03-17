@@ -2,6 +2,7 @@ package com.boboor.speaking.ui.pages.screens.topic
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
+import com.boboor.speaking.data.models.CommonTopicItem
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.utils.AppViewModel
 import com.boboor.speaking.utils.enums.Section
@@ -24,8 +25,9 @@ class TopicScreenContracts {
     data class UIState(
         val section: Section = Section.PART_ONE,
         val isLoading: Boolean = false,
-        val questions: List<CommonTopicResponse.Topic> = emptyList(),
-        val error: String? = null
+        val questions: List<CommonTopicItem> = emptyList(),
+//        val questions: List<CommonTopicResponse.Topic> = emptyList(),
+        val error: String? = null,
     )
 
     sealed interface Intent {

@@ -3,8 +3,11 @@ package com.boboor.speaking.ui.pages.screens.topic
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.boboor.speaking.data.local.LocalStorage
+import com.boboor.speaking.data.models.CommonTopicItem
+import com.boboor.speaking.data.models.toCommonTopicItem
 import com.boboor.speaking.data.remote.ApiService
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.boboor.speaking.data.remote.models.PartTwoResponse
 import com.boboor.speaking.data.repository.AppRepository
 import com.boboor.speaking.utils.enums.Section
 import com.boboor.speaking.utils.resultOf
@@ -28,8 +31,10 @@ class TopicScreenVM(
     override val UIState = MutableStateFlow(TopicScreenContracts.UIState())
 
     override val searchQuery: MutableState<String> = mutableStateOf("")
-    private val questions = ArrayList<CommonTopicResponse.Topic>()
+    private val questions = ArrayList<CommonTopicItem>()
 
+    private lateinit var commonTopicItems: ArrayList<CommonTopicItem>
+    private lateinit var partTwoItems: PartTwoResponse.PartTwoQuestion
 
     override fun onEventDispatcher(intent: TopicScreenContracts.Intent): Job = intent {
         when (intent) {
@@ -37,7 +42,7 @@ class TopicScreenVM(
             TopicScreenContracts.Intent.SearchQuery ->
                 UIState.update {
                     it.copy(questions = questions.filter {
-                        it.name.contains(
+                        it.question.contains(
                             searchQuery.value,
                             ignoreCase = true
                         )
@@ -48,7 +53,6 @@ class TopicScreenVM(
                 when(state.value.section){
                     Section.PART_TWO -> {
                         directions.goToDetailsScreen(
-//                            intent.title,
                             topics = intent.topics,
                             topicIndex = intent.topicIndex
                         )
@@ -79,34 +83,24 @@ class TopicScreenVM(
     }
 
     private fun getPartOneQuestions() = intent(Dispatchers.IO) {
-        val partOneQuestions = localStorage.getPartOne()
         val showAnyWay = localStorage.getQuestionsVisibility()
 
-        if (partOneQuestions == null) {
-            println("getPartOneQuestions from net")
-            resultOf { apiService.getPartOneQuestions() }
-                .onSuccess { result ->
-                    result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
-                    localStorage.setPartOne(result)
-                    UIState.update { it.copy(isLoading = false, questions = questions) }
-                }.onFailure {
-                    println("ERROR ${it.message}")
-                    UIState.update { it.copy(isLoading = false, error = it.error) }
-                }
-        } else {
-            println("getPartOneQuestions from local")
-            partOneQuestions.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
-            UIState.update { it.copy(isLoading = false, questions = questions) }
-        }
+        resultOf { repository.getPartOneQuestions() }
+            .onSuccess { result ->
+                result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value.toCommonTopicItem()) }
+                UIState.update { it.copy(isLoading = false, questions = questions) }
+            }.onFailure {
+                println("ERROR ${it.message}")
+                UIState.update { it.copy(isLoading = false, error = it.error) }
+            }
     }
 
     private fun getPartTwoQuestions() = intent {
         val showAnyWay = localStorage.getQuestionsVisibility()
 
-//        repository.getPartTwoQuestions()
-        resultOf { apiService.getPartTwoQuestions() }
-            .onSuccess { result->
-                result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
+        resultOf { repository.getPartTwoQuestions() }
+            .onSuccess { result ->
+                result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value.toCommonTopicItem()) }
                 UIState.update { it.copy(isLoading = false, questions = questions) }
             }.onFailure {
                 println("ERROR ${it.message}")
@@ -117,23 +111,16 @@ class TopicScreenVM(
 
 
     private fun getPartThreeQuestions() = intent(Dispatchers.IO) {
-        val partThreeQuestions = localStorage.getPartThree()
         val showAnyWay = localStorage.getQuestionsVisibility()
-        if (partThreeQuestions == null) {
-            resultOf { apiService.getPartThreeQuestions() }
-                .onSuccess { result ->
-                    result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
-                    localStorage.setPartThree(result)
-                    UIState.update { it.copy(isLoading = false, questions = questions) }
-                }.onFailure {
-                    println("ERROR ${it.message}")
-                    UIState.update { it.copy(isLoading = false, error = it.error) }
-                }
-        } else {
-            partThreeQuestions.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value) }
-            UIState.update { it.copy(isLoading = false, questions = questions) }
-        }
+
+        resultOf { repository.getPartThreeQuestions() }
+            .onSuccess { result ->
+                result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value.toCommonTopicItem()) }
+                UIState.update { it.copy(isLoading = false, questions = questions) }
+            }.onFailure {
+                println("ERROR ${it.message}")
+                UIState.update { it.copy(isLoading = false, error = it.error) }
+            }
     }
 
-//    override val container = container<TopicScreenContracts.UIState, Nothing>(TopicScreenContracts.UIState())
 }

@@ -18,7 +18,7 @@ class AppRepositoryImpl(
     private val apiService: ApiService,
     private val localStorage: LocalStorage
 ) : AppRepository {
-    override suspend fun getPartOneQuestions(fromCache: Boolean): CommonTopicResponse = withContext(Dispatchers.IO) {
+    override suspend fun getPartOneQuestions(fromCache: Boolean): CommonTopicResponse.Response = withContext(Dispatchers.IO) {
         if (!fromCache) {
             val questions = apiService.getPartOneQuestions()
             localStorage.setPartOne(questions)
@@ -34,7 +34,7 @@ class AppRepositoryImpl(
         localStorage.getPartTwo()!!
     }
 
-    override suspend fun getPartThreeQuestions(fromCache: Boolean): CommonTopicResponse = withContext(Dispatchers.IO) {
+    override suspend fun getPartThreeQuestions(fromCache: Boolean): CommonTopicResponse.Response = withContext(Dispatchers.IO) {
         if (!fromCache) {
             val questions = apiService.getPartThreeQuestions()
             localStorage.setPartThree(questions)
