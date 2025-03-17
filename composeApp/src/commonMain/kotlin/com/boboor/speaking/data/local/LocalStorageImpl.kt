@@ -48,6 +48,13 @@ class LocalStorageImpl : LocalStorage {
     private val UPDATE_FREQUENCY = "UPDATE_FREQUENCY".encrypt(getKey())
     private val CHUNK_SIZE = 4000
 
+    override suspend fun setPartOne(value: CommonTopicResponse.Response) = storeInParts(PART_ONE_PREFIX, value)
+    override suspend fun setPartTwo(value: PartTwoResponse.Response) = storeInParts(PART_TWO_PREFIX, value)
+    override suspend fun setPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
+
+    override suspend fun getPartOne(): CommonTopicResponse.Response? = retrieveFromParts(PART_ONE_PREFIX)
+    override suspend fun getPartTwo(): PartTwoResponse.Response? = retrieveFromParts(PART_TWO_PREFIX)
+    override suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)
 
     private fun getRandomString(length: Int = Random.nextInt(12, 55)): String {
         val charset = "A%#(LKB_-+G"
@@ -63,43 +70,6 @@ class LocalStorageImpl : LocalStorage {
         }
         return settings.getString("KEY", "A%#(LKB_-+G")
     }
-
-    override suspend fun setPartOne(value: CommonTopicResponse.Response) = storeInParts(PART_ONE_PREFIX, value)
-    override suspend fun getPartOne(): CommonTopicResponse.Response? = retrieveFromParts(PART_ONE_PREFIX)
-
-    override suspend fun setPartTwo(value: PartTwoResponse.Response) {
-        val prefix = PART_TWO_PREFIX
-        val json = Json.encodeToString(value).encryptWithKey(getKey())
-        val parts = json.chunked(CHUNK_SIZE)
-
-        settings.putInt("${prefix}_COUNT", parts.size)
-        parts.forEachIndexed { index, part ->
-            settings.putString("$prefix$index", part)
-        }
-    }
-
-
-    override suspend fun getPartTwo(): PartTwoResponse.Response?{
-        val prefix = PART_TWO_PREFIX
-
-        val count = settings.getInt("${prefix}_COUNT", 0)
-        if (count == 0) return null
-
-        val json = (0 until count)
-            .mapNotNull { settings.getString("$prefix$it", "") }
-            .joinToString("")
-            .decryptWithKey(getKey())
-
-        return try {
-            Json.decodeFromString(json)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    override suspend fun setPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
-    override suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)
 
     override fun setQuestionsVisibility(value: Boolean) {
         settings.putBoolean(QUESTION_VISIBILITY, value)
@@ -119,7 +89,8 @@ class LocalStorageImpl : LocalStorage {
         settings.clear()
     }
 
-    private suspend fun storeInParts(prefix: String, value: CommonTopicResponse.Response) {
+
+    private suspend inline fun <reified T> storeInParts(prefix: String, value: T) {
         val json = Json.encodeToString(value).encryptWithKey(getKey())
         val parts = json.chunked(CHUNK_SIZE)
 
@@ -128,8 +99,7 @@ class LocalStorageImpl : LocalStorage {
             settings.putString("$prefix$index", part)
         }
     }
-
-    private suspend fun retrieveFromParts(prefix: String): CommonTopicResponse.Response? {
+    private suspend inline fun <reified T> retrieveFromParts(prefix: String): T?{
         val count = settings.getInt("${prefix}_COUNT", 0)
         if (count == 0) return null
 
