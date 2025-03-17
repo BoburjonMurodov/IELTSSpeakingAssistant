@@ -37,9 +37,9 @@ class SplashScreenVM(
             UpdateFrequency.EVERY_APP_OPENING -> {
                 screenModelScope.launch {
                     UIState.update { it.copy(isLoading = true) }
-                    val part1 = async { resultOf { repository.getPartOneQuestions(true) } }
-                    val part2 = async { resultOf { repository.getPartTwoQuestions(true) } }
-                    val part3 = async { resultOf { repository.getPartThreeQuestions(true) } }
+                    val part1 = async { resultOf { repository.getPartOneQuestions(false) } }
+                    val part2 = async { resultOf { repository.getPartTwoQuestions(false) } }
+                    val part3 = async { resultOf { repository.getPartThreeQuestions(false) } }
 
                     awaitAll(part1, part2, part3)
 
