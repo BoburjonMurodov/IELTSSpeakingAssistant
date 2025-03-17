@@ -1,4 +1,4 @@
-package com.boboor.speaking.ui.pages.screens.common_questions
+package com.boboor.speaking.ui.pages.screens.commonQuestions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

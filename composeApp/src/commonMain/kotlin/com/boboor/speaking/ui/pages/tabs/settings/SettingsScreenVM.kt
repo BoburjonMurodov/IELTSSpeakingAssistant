@@ -27,9 +27,7 @@ class SettingsScreenVM(
             is SettingsContracts.Intent.ChangeFontDimension -> {
                 setFontDimension(intent.scale)
                 reduce {
-                    state.copy(
-                        selectedFontDimension = getFontDimension()
-                    )
+                    state.copy(selectedFontDimension = getFontDimension())
                 }
             }
 
