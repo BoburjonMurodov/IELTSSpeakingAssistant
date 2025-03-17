@@ -192,8 +192,9 @@ private fun TopicScreenContent(
                     isExpanded = isExpanded,
                     hasOverFlow = hasOverFlow,
                     searchQuery.value
-                )
-
+                ) {
+                    onEventDispatcher.invoke(TopicScreenContracts.Intent.OnCLickTopic(state.value.questions[it].order))
+                }
             }
 
             if (state.value.isLoading) {

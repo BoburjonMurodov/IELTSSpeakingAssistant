@@ -33,8 +33,8 @@ class TopicScreenVM(
     override val searchQuery: MutableState<String> = mutableStateOf("")
     private val questions = ArrayList<CommonTopicItem>()
 
-    private lateinit var commonTopicItems: ArrayList<CommonTopicItem>
-    private lateinit var partTwoItems: PartTwoResponse.PartTwoQuestion
+    private val commonTopicItems: ArrayList<CommonTopicResponse.Topic> = ArrayList()
+    private val partTwoItems: ArrayList<PartTwoResponse.PartTwoQuestion> = ArrayList()
 
     override fun onEventDispatcher(intent: TopicScreenContracts.Intent): Job = intent {
         when (intent) {
@@ -49,24 +49,16 @@ class TopicScreenVM(
                     })
                 }
 
-            is TopicScreenContracts.Intent.OnClickTopic -> {
-                when(state.value.section){
+            is TopicScreenContracts.Intent.OnCLickTopic -> {
+                when (state.value.section) {
                     Section.PART_TWO -> {
-                        directions.goToDetailsScreen(
-                            topics = intent.topics,
-                            topicIndex = intent.topicIndex
-                        )
+
                     }
+
                     else -> {
-                        directions.goQuestionsScreen(
-                            intent.title,
-                            topics = intent.topics,
-                            topicIndex = intent.topicIndex
-                        )
+                        directions.goQuestionsScreen(state.value.section.title, commonTopicItems, intent.index)
                     }
                 }
-
-
             }
 
         }
@@ -87,7 +79,13 @@ class TopicScreenVM(
 
         resultOf { repository.getPartOneQuestions() }
             .onSuccess { result ->
-                result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value.toCommonTopicItem()) }
+                var index = 0
+                result.content.forEach {
+                    if (it.value.active || showAnyWay) {
+                        commonTopicItems.add(it.value)
+                        questions.add(it.value.toCommonTopicItem(index++))
+                    }
+                }
                 UIState.update { it.copy(isLoading = false, questions = questions) }
             }.onFailure {
                 println("ERROR ${it.message}")
@@ -100,7 +98,13 @@ class TopicScreenVM(
 
         resultOf { repository.getPartTwoQuestions() }
             .onSuccess { result ->
-                result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value.toCommonTopicItem()) }
+                var index = 0
+                result.content.forEach {
+                    if (it.value.active || showAnyWay) {
+                        partTwoItems.add(it.value)
+                        questions.add(it.value.toCommonTopicItem(index++))
+                    }
+                }
                 UIState.update { it.copy(isLoading = false, questions = questions) }
             }.onFailure {
                 println("ERROR ${it.message}")
@@ -109,13 +113,18 @@ class TopicScreenVM(
     }
 
 
-
     private fun getPartThreeQuestions() = intent(Dispatchers.IO) {
         val showAnyWay = localStorage.getQuestionsVisibility()
 
         resultOf { repository.getPartThreeQuestions() }
             .onSuccess { result ->
-                result.content.forEach { if (it.value.active || showAnyWay) questions.add(it.value.toCommonTopicItem()) }
+                var index = 0
+                result.content.forEach {
+                    if (it.value.active || showAnyWay) {
+                        commonTopicItems.add(it.value)
+                        questions.add(it.value.toCommonTopicItem(index++))
+                    }
+                }
                 UIState.update { it.copy(isLoading = false, questions = questions) }
             }.onFailure {
                 println("ERROR ${it.message}")

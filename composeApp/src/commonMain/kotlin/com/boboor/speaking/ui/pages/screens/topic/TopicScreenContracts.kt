@@ -26,14 +26,13 @@ class TopicScreenContracts {
         val section: Section = Section.PART_ONE,
         val isLoading: Boolean = false,
         val questions: List<CommonTopicItem> = emptyList(),
-//        val questions: List<CommonTopicResponse.Topic> = emptyList(),
         val error: String? = null,
     )
 
     sealed interface Intent {
         data object OnClickBack : Intent
         data object SearchQuery : Intent
-        data class OnClickTopic(val title: String, val topics: List<CommonTopicResponse.Topic>, val topicIndex: Int) : Intent
+        data class OnCLickTopic(val index: Int): Intent
     }
 
     interface Directions {
