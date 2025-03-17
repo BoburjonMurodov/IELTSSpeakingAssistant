@@ -3,6 +3,7 @@ package com.boboor.speaking.data.repository.impl
 import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.data.remote.ApiService
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.boboor.speaking.data.remote.models.PartTwoResponse
 import com.boboor.speaking.data.repository.AppRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -25,7 +26,7 @@ class AppRepositoryImpl(
         localStorage.getPartOne()!!
     }
 
-    override suspend fun getPartTwoQuestions(fromCache: Boolean): CommonTopicResponse = withContext(Dispatchers.IO) {
+    override suspend fun getPartTwoQuestions(fromCache: Boolean): PartTwoResponse.Response = withContext(Dispatchers.IO) {
         if (!fromCache) {
             val questions = apiService.getPartTwoQuestions()
             localStorage.setPartTwo(questions)

@@ -21,11 +21,11 @@ import kotlin.random.Random
 
 interface LocalStorage {
     suspend fun setPartOne(value: CommonTopicResponse.Response)
+    suspend fun setPartTwo(value: PartTwoResponse.Response)
     suspend fun setPartThree(value: CommonTopicResponse.Response)
-    suspend fun setPartTwo(value: CommonTopicResponse.Response)
 
     suspend fun getPartOne(): CommonTopicResponse.Response?
-    suspend fun getPartTwo(): CommonTopicResponse.Response?
+    suspend fun getPartTwo(): PartTwoResponse.Response?
     suspend fun getPartThree(): CommonTopicResponse.Response?
 
 
@@ -67,8 +67,36 @@ class LocalStorageImpl : LocalStorage {
     override suspend fun setPartOne(value: CommonTopicResponse.Response) = storeInParts(PART_ONE_PREFIX, value)
     override suspend fun getPartOne(): CommonTopicResponse.Response? = retrieveFromParts(PART_ONE_PREFIX)
 
-    override suspend fun setPartTwo(value: CommonTopicResponse.Response) = storeInParts(PART_TWO_PREFIX, value)
-    override suspend fun getPartTwo(): CommonTopicResponse.Response? = retrieveFromParts(PART_TWO_PREFIX)
+    override suspend fun setPartTwo(value: PartTwoResponse.Response) {
+        val prefix = PART_TWO_PREFIX
+        val json = Json.encodeToString(value).encryptWithKey(getKey())
+        val parts = json.chunked(CHUNK_SIZE)
+
+        settings.putInt("${prefix}_COUNT", parts.size)
+        parts.forEachIndexed { index, part ->
+            settings.putString("$prefix$index", part)
+        }
+    }
+
+
+    override suspend fun getPartTwo(): PartTwoResponse.Response?{
+        val prefix = PART_TWO_PREFIX
+
+        val count = settings.getInt("${prefix}_COUNT", 0)
+        if (count == 0) return null
+
+        val json = (0 until count)
+            .mapNotNull { settings.getString("$prefix$it", "") }
+            .joinToString("")
+            .decryptWithKey(getKey())
+
+        return try {
+            Json.decodeFromString(json)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 
     override suspend fun setPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
     override suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)
