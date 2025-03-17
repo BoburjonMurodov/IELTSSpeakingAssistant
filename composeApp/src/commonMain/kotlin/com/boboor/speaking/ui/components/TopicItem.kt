@@ -59,7 +59,7 @@ private val SHIMMER_COLOR = Color.Gray.copy(.3f)
 fun TopicItem(
     item: CommonTopicItem,
 //    item: CommonTopicResponse.Topic,
-//    index: Int,
+    index: Int,
     isExpanded: MutableState<Boolean>,
     hasOverFlow: MutableState<Boolean>,
     searchQuery: String = "",
@@ -89,7 +89,7 @@ fun TopicItem(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                "${item.order}",
+                "$index",
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.headlineLarge,
             )
@@ -122,7 +122,7 @@ fun TopicItem(
                     )
 
                     Spacer(Modifier.weight(1f))
-                    Text("${item.question} questions", fontSize = 12.sp)
+                    Text("${item.size} questions", fontSize = 12.sp)
                 }
 
                 if (hasOverFlow.value || isExpanded.value) {

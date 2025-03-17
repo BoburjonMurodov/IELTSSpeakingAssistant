@@ -187,7 +187,12 @@ private fun TopicScreenContent(
                 val isExpanded = rememberSaveable { mutableStateOf(false) }
                 val hasOverFlow = rememberSaveable { mutableStateOf(false) }
 
-                TopicItem(state.value.questions[it], isExpanded, hasOverFlow, searchQuery.value) {
+                TopicItem(
+                    item = state.value.questions[it], index = it + 1,
+                    isExpanded = isExpanded,
+                    hasOverFlow = hasOverFlow,
+                    searchQuery.value
+                ) {
 
                 }
             }
