@@ -49,7 +49,7 @@ class TopicScreenVM(
             is TopicScreenContracts.Intent.OnCLickTopic -> {
                 when (state.section) {
                     Section.PART_TWO -> {
-
+                        directions.goCueCardScreen(partTwoItems, intent.index)
                     }
 
                     else -> {

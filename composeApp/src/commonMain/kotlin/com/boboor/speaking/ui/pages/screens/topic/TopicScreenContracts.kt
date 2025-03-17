@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import com.boboor.speaking.data.models.CommonTopicItem
 import com.boboor.speaking.data.remote.models.CommonTopicResponse
+import com.boboor.speaking.data.remote.models.PartTwoResponse
 import com.boboor.speaking.utils.AppViewModel
 import com.boboor.speaking.utils.enums.Section
 import kotlinx.coroutines.Job
@@ -37,7 +38,7 @@ class TopicScreenContracts {
 
     interface Directions {
         suspend fun goQuestionsScreen(title: String, topics: List<CommonTopicResponse.Topic>, topicIndex: Int)
-        suspend fun goToDetailsScreen(topics: List<CommonTopicResponse.Topic>, topicIndex: Int)
+        suspend fun goCueCardScreen(questions: List<PartTwoResponse.PartTwoQuestion>, topicIndex: Int)
         suspend fun goBack()
     }
 }
