@@ -41,7 +41,7 @@ interface LocalStorage {
 class LocalStorageImpl : LocalStorage {
     private val settings = Settings()
     private val PART_ONE_PREFIX = "SPEAKING_ONE_PART_".encrypt(getKey())
-    private val PART_TWO_PREFIX = "SPEAKING_ONE_PART_".encrypt(getKey())
+    private val PART_TWO_PREFIX = "SPEAKING_TWO_PART_".encrypt(getKey())
     private val PART_THREE_PREFIX = "PART_THREE_PART_".encrypt(getKey())
     private val QUESTION_VISIBILITY = "QUESTION_VISIBILITY".encrypt(getKey())
     private val UPDATE_FREQUENCY = "UPDATE_FREQUENCY".encrypt(getKey())

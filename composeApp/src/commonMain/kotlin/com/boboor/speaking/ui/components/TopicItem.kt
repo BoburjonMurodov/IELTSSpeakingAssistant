@@ -57,8 +57,8 @@ private val SHIMMER_COLOR = Color.Gray.copy(.3f)
 
 @Composable
 fun TopicItem(
+    modifier: Modifier = Modifier,
     item: CommonTopicItem,
-//    item: CommonTopicResponse.Topic,
     index: Int,
     isExpanded: MutableState<Boolean>,
     hasOverFlow: MutableState<Boolean>,
@@ -74,7 +74,7 @@ fun TopicItem(
     val lineCount = remember { mutableStateOf(0) }
 
     Row(
-        modifier = Modifier.then(
+        modifier = modifier.then(
             if (item.active)
                 Modifier
             else Modifier.alpha(0.5f)

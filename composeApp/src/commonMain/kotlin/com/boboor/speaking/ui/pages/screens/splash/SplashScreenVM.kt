@@ -5,6 +5,8 @@ import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.data.repository.AppRepository
 import com.boboor.speaking.utils.enums.UpdateFrequency
 import com.boboor.speaking.utils.resultOf
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

@@ -186,15 +186,14 @@ private fun TopicScreenContent(
             items(state.value.questions.size, key = { state.value.questions[it].question }) {
                 val isExpanded = rememberSaveable { mutableStateOf(false) }
                 val hasOverFlow = rememberSaveable { mutableStateOf(false) }
-
                 TopicItem(
+                    modifier = Modifier.animateItem(),
                     item = state.value.questions[it], index = it + 1,
                     isExpanded = isExpanded,
                     hasOverFlow = hasOverFlow,
                     searchQuery.value
-                ) {
+                )
 
-                }
             }
 
             if (state.value.isLoading) {
