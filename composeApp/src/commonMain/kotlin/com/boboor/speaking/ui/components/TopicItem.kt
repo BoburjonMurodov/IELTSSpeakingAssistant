@@ -1,5 +1,6 @@
 package com.boboor.speaking.ui.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -80,19 +81,21 @@ fun TopicItem(
             else Modifier.alpha(0.5f)
         )
     ) {
-        Box(
-            modifier = Modifier
-                .padding(end = 8.dp)
-                .size(50.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                "$index",
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.headlineLarge,
-            )
+        AnimatedContent(index) {
+            Box(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .size(50.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "$it",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.headlineLarge,
+                )
+            }
         }
 
         Box(
