@@ -18,7 +18,7 @@ data class CommonTopicItem(
     val size: Int = -1
 )
 
-fun PartTwoResponse.PartTwoQuestion.toCommonTopicItem(order: Int = 0): CommonTopicItem =
+fun PartTwoResponse.Topic.toCommonTopicItem(order: Int = 0): CommonTopicItem =
     CommonTopicItem(
         question = name,
         new = new == "new",

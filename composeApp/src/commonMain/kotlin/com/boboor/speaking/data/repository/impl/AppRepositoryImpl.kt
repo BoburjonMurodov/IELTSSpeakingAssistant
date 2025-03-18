@@ -18,26 +18,29 @@ class AppRepositoryImpl(
     private val apiService: ApiService,
     private val localStorage: LocalStorage
 ) : AppRepository {
-    override suspend fun getPartOneQuestions(fromCache: Boolean): CommonTopicResponse.Response = withContext(Dispatchers.IO) {
+    override suspend fun getPartOneQuestions(fromCache: Boolean): List<CommonTopicResponse.Topic> = withContext(Dispatchers.IO) {
         if (!fromCache) {
             val questions = apiService.getPartOneQuestions()
-            localStorage.setPartOne(questions)
+            val questionList = questions.content.map { it.value }
+            localStorage.setPartOne(questionList)
         }
         localStorage.getPartOne()!!
     }
 
-    override suspend fun getPartTwoQuestions(fromCache: Boolean): PartTwoResponse.Response = withContext(Dispatchers.IO) {
+    override suspend fun getPartTwoQuestions(fromCache: Boolean): List<PartTwoResponse.Topic> = withContext(Dispatchers.IO) {
         if (!fromCache) {
             val questions = apiService.getPartTwoQuestions()
-            localStorage.setPartTwo(questions)
+            val questionList = questions.content.map { it.value }
+            localStorage.setPartTwo(questionList)
         }
         localStorage.getPartTwo()!!
     }
 
-    override suspend fun getPartThreeQuestions(fromCache: Boolean): CommonTopicResponse.Response = withContext(Dispatchers.IO) {
+    override suspend fun getPartThreeQuestions(fromCache: Boolean): List<CommonTopicResponse.Topic> = withContext(Dispatchers.IO) {
         if (!fromCache) {
             val questions = apiService.getPartThreeQuestions()
-            localStorage.setPartThree(questions)
+            val questionList = questions.content.map { it.value }
+            localStorage.setPartThree(questionList)
         }
         localStorage.getPartThree()!!
     }
