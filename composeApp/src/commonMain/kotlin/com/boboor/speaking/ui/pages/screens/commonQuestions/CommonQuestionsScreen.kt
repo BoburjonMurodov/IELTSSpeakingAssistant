@@ -39,7 +39,6 @@ import dev.chrisbanes.haze.hazeSource
 
 data class CommonQuestionsScreen(
     private val title: String,
-    @Stable
     private val topics: List<CommonTopicResponse.Topic>,
     private val index: Int
 ) : Screen {
@@ -49,9 +48,7 @@ data class CommonQuestionsScreen(
 
     @Composable
     override fun Content() {
-        SwipeToDismissPage {
-            CommonQuestionsScreenContent(title, topics, index)
-        }
+        SwipeToDismissPage { CommonQuestionsScreenContent(title, topics, index) }
     }
 }
 

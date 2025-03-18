@@ -59,9 +59,7 @@ class CueCardScreen(
                     .padding(horizontal = 16.dp)
                     .padding(top = innerPadding.calculateTopPadding() + 16.dp)
             ) {
-                Text(question.name,
-                    style = MaterialTheme.typography.titleMedium
-                    )
+
             }
         }
     }

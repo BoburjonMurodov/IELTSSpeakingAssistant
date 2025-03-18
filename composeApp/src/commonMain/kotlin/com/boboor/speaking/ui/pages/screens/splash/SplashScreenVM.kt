@@ -21,6 +21,7 @@ class SplashScreenVM(
     private val repository: AppRepository,
     private val directions: SplashScreenContracts.Directions
 ) : SplashScreenContracts.ViewModel {
+
     override fun onEventDispatcher(intent: SplashScreenContracts.Intent): Job = intent {
         when (intent) {
             SplashScreenContracts.Intent.Init -> updateContent(localStorage.getUpdateFrequency())

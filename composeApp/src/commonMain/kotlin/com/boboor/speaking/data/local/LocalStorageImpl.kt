@@ -46,14 +46,31 @@ class LocalStorageImpl : LocalStorage {
     private val QUESTION_VISIBILITY = "QUESTION_VISIBILITY".encrypt(getKey())
     private val UPDATE_FREQUENCY = "UPDATE_FREQUENCY".encrypt(getKey())
     private val CHUNK_SIZE = 4000
+    lateinit var partOneQuestions: CommonTopicResponse.Response
+    lateinit var partTwoQuestions: PartTwoResponse.Response
+    lateinit var partThreeQuestions: CommonTopicResponse.Response
 
     override suspend fun setPartOne(value: CommonTopicResponse.Response) = storeInParts(PART_ONE_PREFIX, value)
     override suspend fun setPartTwo(value: PartTwoResponse.Response) = storeInParts(PART_TWO_PREFIX, value)
     override suspend fun setPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
 
-    override suspend fun getPartOne(): CommonTopicResponse.Response? = retrieveFromParts(PART_ONE_PREFIX)
-    override suspend fun getPartTwo(): PartTwoResponse.Response? = retrieveFromParts(PART_TWO_PREFIX)
-    override suspend fun getPartThree(): CommonTopicResponse.Response? = retrieveFromParts(PART_THREE_PREFIX)
+    override suspend fun getPartOne(): CommonTopicResponse.Response? {
+        if (!::partOneQuestions.isInitialized)
+            partOneQuestions = retrieveFromParts(PART_ONE_PREFIX)!!
+        return retrieveFromParts(PART_ONE_PREFIX)
+    }
+
+    override suspend fun getPartTwo(): PartTwoResponse.Response? {
+        if (!::partTwoQuestions.isInitialized)
+            partTwoQuestions = retrieveFromParts(PART_TWO_PREFIX)!!
+        return partTwoQuestions
+    }
+
+    override suspend fun getPartThree(): CommonTopicResponse.Response? {
+        if (!::partThreeQuestions.isInitialized)
+            partThreeQuestions = retrieveFromParts(PART_THREE_PREFIX)!!
+        return partThreeQuestions
+    }
 
     private fun getRandomString(length: Int = Random.nextInt(12, 55)): String {
         val charset = "A%#(LKB_-+G"
@@ -84,7 +101,9 @@ class LocalStorageImpl : LocalStorage {
         return UpdateFrequency.valueOf(value)
     }
 
-    override suspend fun clear() { settings.clear() }
+    override suspend fun clear() {
+        settings.clear()
+    }
 
 
     private suspend inline fun <reified T> storeInParts(prefix: String, value: T) {
@@ -96,7 +115,8 @@ class LocalStorageImpl : LocalStorage {
             settings.putString("$prefix$index", part)
         }
     }
-    private suspend inline fun <reified T> retrieveFromParts(prefix: String): T?{
+
+    private suspend inline fun <reified T> retrieveFromParts(prefix: String): T? {
         val count = settings.getInt("${prefix}_COUNT", 0)
         if (count == 0) return null
 
