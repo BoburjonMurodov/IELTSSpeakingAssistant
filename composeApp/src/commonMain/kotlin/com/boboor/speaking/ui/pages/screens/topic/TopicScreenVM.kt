@@ -44,13 +44,8 @@ class TopicScreenVM(
 
             is TopicScreenContracts.Intent.OnCLickTopic -> {
                 when (state.section) {
-                    Section.PART_TWO -> {
-                        directions.goCueCardScreen(partTwoItems, intent.index)
-                    }
-
-                    else -> {
-                        directions.goQuestionsScreen(state.section.title, commonTopicItems, intent.index)
-                    }
+                    Section.PART_TWO -> directions.goCueCardScreen(partTwoItems, intent.index)
+                    else -> directions.goQuestionsScreen(state.section.title, commonTopicItems, intent.index)
                 }
             }
 
@@ -72,14 +67,9 @@ class TopicScreenVM(
 
         resultOf { repository.getPartOneQuestions() }
             .onSuccess { result ->
-                var index = 0
-                result.content.forEach {
-                    if (it.value.active || showAnyWay) {
-                        commonTopicItems.add(it.value)
-                        questions.add(it.value.toCommonTopicItem(index++))
-                    }
-                }
-                reduce{ state.copy(isLoading = false, questions = questions) }
+                questions.addAll(result.filter { it.active || showAnyWay }.map { it.toCommonTopicItem() })
+                commonTopicItems.addAll(result)
+                reduce { state.copy(isLoading = false, questions = questions) }
             }
             .onFailure { reduce { state.copy(isLoading = false, error = it.message) } }
     }
@@ -89,31 +79,21 @@ class TopicScreenVM(
 
         resultOf { repository.getPartTwoQuestions() }
             .onSuccess { result ->
-                var index = 0
-                result.content.forEach {
-                    if (it.value.active || showAnyWay) {
-                        partTwoItems.add(it.value)
-                        questions.add(it.value.toCommonTopicItem(index++))
-                    }
-                }
-                reduce{ state.copy(isLoading = false, questions = questions) }
+                questions.addAll(result.filter { it.active || showAnyWay }.map { it.toCommonTopicItem() })
+                partTwoItems.addAll(result)
+                reduce { state.copy(isLoading = false, questions = questions) }
             }
-            .onFailure { reduce{ state.copy(isLoading = false, error = it.message) } }
+            .onFailure { reduce { state.copy(isLoading = false, error = it.message) } }
     }
 
 
-    private fun getPartThreeQuestions() = intent{
+    private fun getPartThreeQuestions() = intent {
         val showAnyWay = localStorage.getQuestionsVisibility()
         state
         resultOf { repository.getPartThreeQuestions() }
             .onSuccess { result ->
-                var index = 0
-                result.content.forEach {
-                    if (it.value.active || showAnyWay) {
-                        commonTopicItems.add(it.value)
-                        questions.add(it.value.toCommonTopicItem(index++))
-                    }
-                }
+                questions.addAll(result.filter { it.active || showAnyWay }.map { it.toCommonTopicItem() })
+                commonTopicItems.addAll(result)
                 reduce { state.copy(isLoading = false, questions = questions) }
             }.onFailure { reduce { state.copy(isLoading = false, error = it.message) } }
     }
