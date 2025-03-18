@@ -24,7 +24,7 @@ class AppRepositoryImpl(
             val questionList = questions.content.map { it.value }
             localStorage.setPartOne(questionList)
         }
-        localStorage.getPartOne()!!
+        localStorage.getPartOne()
     }
 
     override suspend fun getPartTwoQuestions(fromCache: Boolean): List<PartTwoResponse.Topic> = withContext(Dispatchers.IO) {
@@ -33,7 +33,7 @@ class AppRepositoryImpl(
             val questionList = questions.content.map { it.value }
             localStorage.setPartTwo(questionList)
         }
-        localStorage.getPartTwo()!!
+        localStorage.getPartTwo()
     }
 
     override suspend fun getPartThreeQuestions(fromCache: Boolean): List<CommonTopicResponse.Topic> = withContext(Dispatchers.IO) {
@@ -42,7 +42,7 @@ class AppRepositoryImpl(
             val questionList = questions.content.map { it.value }
             localStorage.setPartThree(questionList)
         }
-        localStorage.getPartThree()!!
+        localStorage.getPartThree()
     }
 
 
