@@ -51,7 +51,8 @@ class SplashScreenVM(
             }
 
             UpdateFrequency.NEVER -> {
-
+                delay(1000)
+                directions.navigateHomeScreen()
             }
         }
     }
