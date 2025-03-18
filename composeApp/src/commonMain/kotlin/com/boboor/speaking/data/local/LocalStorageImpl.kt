@@ -20,13 +20,13 @@ import kotlin.random.Random
 */
 
 interface LocalStorage {
-    suspend fun setPartOne(value: CommonTopicResponse.Response)
-    suspend fun setPartTwo(value: PartTwoResponse.Response)
-    suspend fun setPartThree(value: CommonTopicResponse.Response)
+    suspend fun setPartOne(value: List<CommonTopicResponse.Topic>)
+    suspend fun setPartTwo(value: List<PartTwoResponse.Topic>)
+    suspend fun setPartThree(value: List<CommonTopicResponse.Topic>)
 
-    suspend fun getPartOne(): CommonTopicResponse.Response?
-    suspend fun getPartTwo(): PartTwoResponse.Response?
-    suspend fun getPartThree(): CommonTopicResponse.Response?
+    suspend fun getPartOne(): List<CommonTopicResponse.Topic>
+    suspend fun getPartTwo(): List<PartTwoResponse.Topic>
+    suspend fun getPartThree(): List<CommonTopicResponse.Topic>
 
     fun setQuestionsVisibility(value: Boolean)
     fun getQuestionsVisibility(): Boolean
@@ -46,27 +46,27 @@ class LocalStorageImpl : LocalStorage {
     private val QUESTION_VISIBILITY = "QUESTION_VISIBILITY".encrypt(getKey())
     private val UPDATE_FREQUENCY = "UPDATE_FREQUENCY".encrypt(getKey())
     private val CHUNK_SIZE = 4000
-    lateinit var partOneQuestions: CommonTopicResponse.Response
-    lateinit var partTwoQuestions: PartTwoResponse.Response
-    lateinit var partThreeQuestions: CommonTopicResponse.Response
+    lateinit var partOneQuestions: List<CommonTopicResponse.Topic>
+    lateinit var partTwoQuestions: List<PartTwoResponse.Topic>
+    lateinit var partThreeQuestions: List<CommonTopicResponse.Topic>
 
-    override suspend fun setPartOne(value: CommonTopicResponse.Response) = storeInParts(PART_ONE_PREFIX, value)
-    override suspend fun setPartTwo(value: PartTwoResponse.Response) = storeInParts(PART_TWO_PREFIX, value)
-    override suspend fun setPartThree(value: CommonTopicResponse.Response) = storeInParts(PART_THREE_PREFIX, value)
+    override suspend fun setPartOne(value: List<CommonTopicResponse.Topic>) = storeInParts(PART_ONE_PREFIX, value)
+    override suspend fun setPartTwo(value: List<PartTwoResponse.Topic>) = storeInParts(PART_TWO_PREFIX, value)
+    override suspend fun setPartThree(value: List<CommonTopicResponse.Topic>) = storeInParts(PART_THREE_PREFIX, value)
 
-    override suspend fun getPartOne(): CommonTopicResponse.Response? {
+    override suspend fun getPartOne(): List<CommonTopicResponse.Topic> {
         if (!::partOneQuestions.isInitialized)
             partOneQuestions = retrieveFromParts(PART_ONE_PREFIX)!!
-        return retrieveFromParts(PART_ONE_PREFIX)
+        return partOneQuestions
     }
 
-    override suspend fun getPartTwo(): PartTwoResponse.Response? {
+    override suspend fun getPartTwo(): List<PartTwoResponse.Topic> {
         if (!::partTwoQuestions.isInitialized)
             partTwoQuestions = retrieveFromParts(PART_TWO_PREFIX)!!
         return partTwoQuestions
     }
 
-    override suspend fun getPartThree(): CommonTopicResponse.Response? {
+    override suspend fun getPartThree(): List<CommonTopicResponse.Topic> {
         if (!::partThreeQuestions.isInitialized)
             partThreeQuestions = retrieveFromParts(PART_THREE_PREFIX)!!
         return partThreeQuestions

@@ -10,11 +10,7 @@ import com.boboor.speaking.data.remote.models.PartTwoResponse
 import com.boboor.speaking.data.repository.AppRepository
 import com.boboor.speaking.utils.enums.Section
 import com.boboor.speaking.utils.resultOf
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.update
-import org.orbitmvi.orbit.Container
 
 
 /*
@@ -32,7 +28,7 @@ class TopicScreenVM(
     private val questions = ArrayList<CommonTopicItem>()
 
     private val commonTopicItems: ArrayList<CommonTopicResponse.Topic> = ArrayList()
-    private val partTwoItems: ArrayList<PartTwoResponse.PartTwoQuestion> = ArrayList()
+    private val partTwoItems: ArrayList<PartTwoResponse.Topic> = ArrayList()
 
     override fun onEventDispatcher(intent: TopicScreenContracts.Intent): Job = intent {
         when (intent) {

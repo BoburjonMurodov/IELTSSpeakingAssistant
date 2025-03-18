@@ -38,7 +38,7 @@ class TopicScreenContracts {
 
     interface Directions {
         suspend fun goQuestionsScreen(title: String, topics: List<CommonTopicResponse.Topic>, topicIndex: Int)
-        suspend fun goCueCardScreen(questions: List<PartTwoResponse.PartTwoQuestion>, topicIndex: Int)
+        suspend fun goCueCardScreen(questions: List<PartTwoResponse.Topic>, topicIndex: Int)
         suspend fun goBack()
     }
 }

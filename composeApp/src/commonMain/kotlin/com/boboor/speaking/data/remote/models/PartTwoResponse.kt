@@ -12,11 +12,11 @@ import kotlinx.serialization.Serializable
 sealed interface PartTwoResponse {
     @Serializable
     data class Response(
-        val content: Map<String, PartTwoQuestion>
+        val content: Map<String, Topic>
     ) : PartTwoResponse
 
     @Serializable
-    data class PartTwoQuestion(
+    data class Topic(
         val active: Boolean,
         val answer: List<Answer>,
         val free: Boolean,
@@ -65,7 +65,7 @@ fun PartTwoResponse.Response.toCommonTopicResponse(): CommonTopicResponse.Respon
     )
 }
 
-fun PartTwoResponse.PartTwoQuestion.toTopic(): CommonTopicResponse.Topic {
+fun PartTwoResponse.Topic.toTopic(): CommonTopicResponse.Topic {
     return CommonTopicResponse.Topic(
         active = this.active,
         free = this.free,
