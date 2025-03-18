@@ -8,6 +8,7 @@ import com.boboor.speaking.utils.resultOf
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -29,7 +30,8 @@ class SplashScreenVM(
     private fun updateContent(value: UpdateFrequency) = intent {
         when (value) {
             UpdateFrequency.EVERY_DAY -> {
-
+                delay(1000)
+                directions.navigateHomeScreen()
             }
 
             UpdateFrequency.EVERY_APP_OPENING -> {
