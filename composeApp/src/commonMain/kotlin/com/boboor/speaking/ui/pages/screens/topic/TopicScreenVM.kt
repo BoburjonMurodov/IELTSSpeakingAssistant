@@ -67,7 +67,8 @@ class TopicScreenVM(
 
         resultOf { repository.getPartOneQuestions() }
             .onSuccess { result ->
-                questions.addAll(result.filter { it.active || showAnyWay }.map { it.toCommonTopicItem() })
+                var index = 0
+                questions.addAll(result.filter { it.active || showAnyWay }.map { it.toCommonTopicItem(index++) })
                 commonTopicItems.addAll(result)
                 reduce { state.copy(isLoading = false, questions = questions) }
             }
@@ -79,7 +80,8 @@ class TopicScreenVM(
 
         resultOf { repository.getPartTwoQuestions() }
             .onSuccess { result ->
-                questions.addAll(result.filter { it.active || showAnyWay }.map { it.toCommonTopicItem() })
+                var index = 0
+                questions.addAll(result.filter { it.active || showAnyWay }.map { it.toCommonTopicItem(index++) })
                 partTwoItems.addAll(result)
                 reduce { state.copy(isLoading = false, questions = questions) }
             }
@@ -92,7 +94,8 @@ class TopicScreenVM(
         state
         resultOf { repository.getPartThreeQuestions() }
             .onSuccess { result ->
-                questions.addAll(result.filter { it.active || showAnyWay }.map { it.toCommonTopicItem() })
+                var index = 0
+                questions.addAll(result.filter { it.active || showAnyWay }.map { it.toCommonTopicItem(index++) })
                 commonTopicItems.addAll(result)
                 reduce { state.copy(isLoading = false, questions = questions) }
             }.onFailure { reduce { state.copy(isLoading = false, error = it.message) } }
