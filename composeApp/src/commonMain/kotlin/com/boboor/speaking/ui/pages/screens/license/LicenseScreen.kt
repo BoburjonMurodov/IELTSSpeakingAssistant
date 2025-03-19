@@ -37,38 +37,37 @@ class LicenseScreen : Screen {
     private fun LicenseScreenContent() {
         val navigator = LocalNavigator.currentOrThrow
         val uriHandler = LocalUriHandler.current
-        val link =
-            Scaffold(
-                topBar = {
-                    AppBar(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerLow),
-                        title = "Licenses",
-                        showSearch = false,
-                        isSearchEnabled = false,
-                        onClickBack = {
-                            navigator.pop()
+        Scaffold(
+            topBar = {
+                AppBar(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainerLow),
+                    title = "Licenses",
+                    showSearch = false,
+                    isSearchEnabled = false,
+                    onClickBack = {
+                        navigator.pop()
+                    },
+                )
+            }
+        ) { innerPadding ->
+            LazyColumn(
+                contentPadding = PaddingValues(
+                    top = innerPadding.calculateTopPadding() + 16.dp,
+                    bottom = innerPadding.calculateBottomPadding() + 16.dp,
+                )
+            ) {
+                items(licenseList) {
+                    ListItem(
+                        headlineContent = {
+                            Text(it.name)
                         },
+                        modifier = Modifier.debounceClickable {
+                            uriHandler.openUri(it.link.trim())
+                        }
                     )
-                }
-            ) { innerPadding ->
-                LazyColumn(
-                    contentPadding = PaddingValues(
-                        top = innerPadding.calculateTopPadding() + 16.dp,
-                        bottom = innerPadding.calculateBottomPadding() + 16.dp,
-                    )
-                ) {
-                    items(licenseList) {
-                        ListItem(
-                            headlineContent = {
-                                Text(it.name)
-                            },
-                            modifier = Modifier.debounceClickable {
-                                uriHandler.openUri(it.link)
-                            }
-                        )
-                    }
                 }
             }
+        }
     }
 }
 
@@ -79,7 +78,8 @@ data class LicenseData(
 
 private val licenseList = listOf(
     LicenseData("Compose multiplatform", "https://github.com/JetBrains/compose-multiplatform/blob/master/LICENSE.txt"),
-    LicenseData("Voyager", " https://github.com/adrielcafe/voyager/blob/main/LICENSE.md"),
+    LicenseData("Voyager", "https://github.com/adrielcafe/voyager/blob/main/LICENSE.md"),
+    LicenseData("Orbit MVI", "https://github.com/orbit-mvi/orbit-mvi/blob/main/LICENSE.md"),
     LicenseData("Koin", " https://github.com/InsertKoinIO/koin/blob/main/LICENSE"),
     LicenseData("Toast", "https://github.com/Chaintech-Network/CMPToast/blob/main/LICENSE.txt"),
     LicenseData("Ktor", "https://github.com/ktorio/ktor/blob/main/LICENSE"),

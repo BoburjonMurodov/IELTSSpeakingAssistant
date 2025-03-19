@@ -79,9 +79,7 @@ class TopicScreen(private val section: Section) : Screen {
         LifecycleEffectOnce { viewModel.init(section = section) }
         val state = viewModel.collectAsState()
 
-        SwipeToDismissPage {
-            TopicScreenContent(state, viewModel.searchQuery, viewModel::onEventDispatcher)
-        }
+        SwipeToDismissPage { TopicScreenContent(state, viewModel.searchQuery, viewModel::onEventDispatcher) }
     }
 }
 
