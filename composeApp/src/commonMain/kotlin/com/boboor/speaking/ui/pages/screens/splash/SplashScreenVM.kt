@@ -42,6 +42,7 @@ class SplashScreenVM(
                 directions.navigateHomeScreen()
             }
 
+
             UpdateFrequency.EVERY_APP_OPENING -> {
                 screenModelScope.launch {
                     reduce { state.copy(isLoading = true) }
