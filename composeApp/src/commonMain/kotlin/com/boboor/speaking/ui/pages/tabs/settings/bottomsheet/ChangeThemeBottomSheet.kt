@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -46,9 +47,17 @@ fun ChangeThemeBottomSheet(
     onClick: (Color) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val bottomSheetState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
     ModalBottomSheet(
-        onDismiss,
-        tonalElevation = 8.dp
+        onDismissRequest = {
+            coroutineScope.launch {
+                bottomSheetState.hide()
+            }.invokeOnCompletion {
+                onDismiss()
+            }
+        },
+        sheetState = bottomSheetState,
     ) {
         val pagerState = rememberPagerState(
             pageCount = { seedColors.size },
@@ -86,11 +95,7 @@ fun ChangeThemeBottomSheet(
                         .alpha(alpha)
                         .clip(RoundedCornerShape(12.dp))
                         .background(seedColors[page].gradient())
-                        .clickable {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(page)
-                            }
-                        }
+                        .clickable { coroutineScope.launch { pagerState.animateScrollToPage(page) } }
                 )
             }
 
@@ -100,7 +105,11 @@ fun ChangeThemeBottomSheet(
             ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Button(onClick = {
-                    onClick(seedColors[pagerState.currentPage])
+                    coroutineScope.launch {
+                        bottomSheetState.hide()
+                    }.invokeOnCompletion {
+                        onClick(seedColors[pagerState.currentPage])
+                    }
                 }) {
                     Text("Save")
                 }

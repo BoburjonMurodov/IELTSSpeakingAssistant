@@ -28,9 +28,7 @@ class LicenseScreen : Screen {
 
     @Composable
     override fun Content() {
-        SwipeToDismissPage {
-            LicenseScreenContent()
-        }
+        SwipeToDismissPage { LicenseScreenContent() }
     }
 
     @Composable
@@ -94,5 +92,4 @@ private val licenseList = listOf(
     LicenseData("androidx", "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt"),
     LicenseData("okhttp", "https://github.com/square/okhttp/blob/master/LICENSE.txt"),
     LicenseData("Sofia Pro font", "https://github.com/William-Jung/WeJ/blob/master/LICENSE"),
-
     )
