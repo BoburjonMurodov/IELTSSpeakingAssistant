@@ -22,6 +22,7 @@ interface SettingsContracts {
         val selectedThemeColor: Color = getColor(),
         val selectedFontDimension: FontDimension = getFontDimension(),
         val isChangeThemeBottomSheetOpen: Boolean = false,
+        val isConfirmClearCacheBottomSheetOpen: Boolean = false,
         val showHiddenQuestions: Boolean,
         val selectedUpdateFrequency: UpdateFrequency
     )
@@ -29,14 +30,18 @@ interface SettingsContracts {
     sealed interface Intent {
         data class ChangeThemeColor(val color: Color) : Intent
         data class ChangeFontDimension(val scale: FontDimension) : Intent
+
         data object OpenChangeThemeBottomSheet : Intent
         data object DismissChangeThemeBottomSheet : Intent
+
+        data object OpenConfirmClearCacheBottomSheet : Intent
+        data object DismissConfirmClearCacheBottomSheet : Intent
         data object OnClickClearCache : Intent
+
         data class OnClickShowHideQuestions(val show: Boolean) : Intent
         data object GoLicenseScreen : Intent
         data class OnSelectedUpdateFrequency(val value: UpdateFrequency) : Intent
     }
-
 
     interface Directions {
         suspend fun goBackToSplashScreen()
