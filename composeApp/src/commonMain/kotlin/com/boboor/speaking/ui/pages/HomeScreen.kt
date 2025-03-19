@@ -56,13 +56,7 @@ class HomeScreen : Screen, ScreenTransition {
         ) {
             Scaffold(
                 bottomBar = {
-                    AppTheme {
-                        BottomAppBar {
-                            tabs.forEach {
-                                MaterialNavigationBarItem(it)
-                            }
-                        }
-                    }
+                    AppTheme { BottomAppBar { tabs.forEach { MaterialNavigationBarItem(it) } } }
                 }
             ) {
                 Box(

@@ -26,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
@@ -39,6 +38,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.boboor.speaking.ui.components.DropdownMenuComponent
 import com.boboor.speaking.ui.pages.tabs.settings.bottomsheet.ChangeThemeBottomSheet
+import com.boboor.speaking.ui.pages.tabs.settings.bottomsheet.ClearCacheConfirmBottomSheet
 import com.boboor.speaking.ui.theme.AppTheme
 import com.boboor.speaking.ui.theme.FontDimension
 import com.boboor.speaking.ui.theme.getFontDimension
@@ -73,7 +73,6 @@ object SettingsTab : Tab {
     override fun Content() {
         val viewModel = koinScreenModel<SettingsContracts.ViewModel>()
         val state = viewModel.collectAsState()
-
         SettingsTabContent(state, viewModel::onEventDispatcher)
     }
 
@@ -231,7 +230,7 @@ object SettingsTab : Tab {
                             )
                         },
                         modifier = Modifier.debounceClickable {
-                            onEventDispatcher.invoke(SettingsContracts.Intent.OnClickClearCache)
+                            onEventDispatcher.invoke(SettingsContracts.Intent.OpenConfirmClearCacheBottomSheet)
                         }
                     )
 
@@ -254,6 +253,13 @@ object SettingsTab : Tab {
                         onDismiss = {
                             onEventDispatcher(SettingsContracts.Intent.DismissChangeThemeBottomSheet)
                         })
+                }
+                if (state.value.isConfirmClearCacheBottomSheetOpen) {
+                    ClearCacheConfirmBottomSheet(onClickClear = {
+                        onEventDispatcher(SettingsContracts.Intent.OnClickClearCache)
+                    }, onDismiss = {
+                        onEventDispatcher(SettingsContracts.Intent.DismissConfirmClearCacheBottomSheet)
+                    })
                 }
             }
         }
