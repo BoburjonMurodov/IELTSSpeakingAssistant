@@ -34,13 +34,11 @@ import androidx.compose.ui.text.withStyle
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.stack.StackEvent
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
 import com.boboor.speaking.utils.collectAsState
 import com.boboor.speaking.utils.darken
+import com.boboor.speaking.utils.koinScreenModel
 import kotlinx.coroutines.delay
-import org.koin.compose.koinInject
 
 
 /*
@@ -56,11 +54,11 @@ class SplashScreen : Screen, ScreenTransition {
 
     @Composable
     override fun Content() {
-        val viewModel = koinInject<SplashScreenContracts.ViewModel>()
+        val viewModel = koinScreenModel<SplashScreenContracts.ViewModel>()
         val state = viewModel.collectAsState()
         SplashScreenContent(state, viewModel::onEventDispatcher)
     }
-}
+ }
 
 
 @Composable
@@ -75,11 +73,8 @@ private fun SplashScreenContent(
         alpha.animateTo(1f, animationSpec = tween(500))
         scale.animateTo(1.7f, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
         delay(1000)
-
         onEventDispatcher.invoke(SplashScreenContracts.Intent.Init)
-//        navigator.push(HomeScreen())
     }
-
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
@@ -105,6 +100,7 @@ private fun SplashScreenContent(
                     buildAnnotatedString {
                         withStyle(
                             style = SpanStyle(
+                                fontFamily = MaterialTheme.typography.displayLarge.fontFamily,
                                 fontWeight = FontWeight.Black,
                                 fontSize = MaterialTheme.typography.displayLarge.fontSize,
                             )
@@ -112,8 +108,9 @@ private fun SplashScreenContent(
 
                         withStyle(
                             style = SpanStyle(
+                                fontFamily = MaterialTheme.typography.displayLarge.fontFamily,
                                 fontWeight = FontWeight.Black,
-                                fontSize = MaterialTheme.typography.displaySmall.fontSize,
+                                fontSize = MaterialTheme.typography.displayLarge.fontSize,
                             )
                         ) { append("Speaking") }
                     },
@@ -135,4 +132,5 @@ private fun SplashScreenContent(
         }
 
     }
+
 }

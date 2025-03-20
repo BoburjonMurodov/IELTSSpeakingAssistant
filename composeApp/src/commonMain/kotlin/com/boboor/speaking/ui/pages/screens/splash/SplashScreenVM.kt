@@ -35,7 +35,6 @@ class SplashScreenVM(
     }
 
     private fun updateContent(value: UpdateFrequency) = intent {
-        println("updateContent")
         when (value) {
             UpdateFrequency.EVERY_DAY -> {
                 delay(1000)

@@ -4,6 +4,8 @@ import AppNavigator
 import AppScreen
 import NavigationArgs
 import NavigationHandler
+import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
+import com.boboor.speaking.ui.pages.screens.splash.SplashScreen
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 
@@ -18,28 +20,13 @@ class AppNavigatorDispatcher : AppNavigator, NavigationHandler {
         screenState.emit(args)
     }
 
-    override suspend fun back() {
-        navigation { pop() }
-    }
-
-    override suspend fun push(screen: AppScreen, transition: TransitionType) {
-        navigation { push(screen) }
-    }
-
-    override suspend fun popUntil(screen: AppScreen, transition: TransitionType) {
-        navigation { this.popUntil { it == screen } }
-    }
-
-    override suspend fun replace(screen: AppScreen, transition: TransitionType) {
-        navigation { replace(screen) }
-    }
-
-    override suspend fun replaceAll(screen: AppScreen, transition: TransitionType) {
-        navigation { replaceAll(screen) }
-    }
-
-    override suspend fun backToRoot() {
-        navigation { popUntilRoot() }
-    }
-
+    override suspend fun back() = navigation { pop() }
+    override suspend fun push(screen: AppScreen) = navigation { push(screen) }
+    override suspend fun popUntil(screen: AppScreen) = navigation { this.popUntil { it == screen } }
+    override suspend fun replace(screen: AppScreen) = navigation { replace(screen) }
+    @OptIn(InternalVoyagerApi::class)
+    override suspend fun replaceAll(screen: AppScreen) = navigation {
+        dispose(SplashScreen())
+        replaceAll(screen) }
+    override suspend fun backToRoot() = navigation { popUntilRoot() }
 }

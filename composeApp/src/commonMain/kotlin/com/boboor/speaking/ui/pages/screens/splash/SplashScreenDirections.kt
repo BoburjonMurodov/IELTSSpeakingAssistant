@@ -10,6 +10,6 @@ import com.boboor.speaking.ui.pages.HomeScreen
 
 class SplashScreenDirections(private val appNavigator: AppNavigator) : SplashScreenContracts.Directions {
     override suspend fun navigateHomeScreen() {
-        appNavigator.replace(HomeScreen())
+        appNavigator.push(HomeScreen())
     }
 }

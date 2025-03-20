@@ -63,7 +63,7 @@ class SettingsScreenVM(
 
     private fun onClickClearCache() = intent {
         localStorage.clear()
-        delay(100)
+        delay(300)
         directions.goBackToSplashScreen()
     }
 
