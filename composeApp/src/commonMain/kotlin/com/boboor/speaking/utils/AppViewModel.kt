@@ -31,7 +31,7 @@ interface AppViewModel<STATE : Any, SIDE_EFFECT : Any> : ContainerHost<STATE, SI
 @Composable
 fun <STATE : Any, SIDE_EFFECT : Any> AppViewModel<STATE, SIDE_EFFECT>.collectAsState() = container.stateFlow.collectAsState()
 
-//
+
 //interface AppViewModel<STATE : Any> : ScreenModel {
 //    val UIState: MutableStateFlow<STATE>
 //    private val reducer: AppSyntax<STATE>
@@ -57,7 +57,3 @@ fun <STATE : Any, SIDE_EFFECT : Any> AppViewModel<STATE, SIDE_EFFECT>.collectAsS
 //    val stateFlow: MutableStateFlow<STATE>
 //    val sideEffect: MutableStateFlow<SIDE_EFFECT>
 //}
-
-
-
-
