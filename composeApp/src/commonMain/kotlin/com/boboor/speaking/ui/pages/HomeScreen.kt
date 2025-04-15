@@ -2,6 +2,7 @@ package com.boboor.speaking.ui.pages
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import cafe.adriel.voyager.transitions.ScreenTransition
 import com.boboor.speaking.ui.pages.tabs.main.MainTab
 import com.boboor.speaking.ui.pages.tabs.settings.SettingsTab
 import com.boboor.speaking.ui.theme.AppTheme
+import kotlinx.serialization.Transient
 
 
 /*
@@ -37,13 +39,11 @@ import com.boboor.speaking.ui.theme.AppTheme
 @OptIn(ExperimentalVoyagerApi::class)
 class HomeScreen : Screen, ScreenTransition {
 
-    override fun enter(lastEvent: StackEvent): EnterTransition {
-        return fadeIn()
-    }
+    @Transient
+    private val fadeTransition = CustomFadeTransition()
 
-    override fun exit(lastEvent: StackEvent): ExitTransition {
-        return fadeOut()
-    }
+    override fun enter(lastEvent: StackEvent) = fadeTransition.enter(lastEvent)
+    override fun exit(lastEvent: StackEvent)  = fadeTransition.exit(lastEvent)
 
 
     @Composable
@@ -95,4 +95,17 @@ private fun RowScope.MaterialNavigationBarItem(
             )
         }
     )
+}
+
+
+@OptIn(ExperimentalVoyagerApi::class)
+class CustomFadeTransition : ScreenTransition {
+
+    override fun enter(lastEvent: StackEvent): EnterTransition {
+        return fadeIn(tween(300))
+    }
+
+    override fun exit(lastEvent: StackEvent): ExitTransition {
+        return fadeOut(tween(300))
+    }
 }
