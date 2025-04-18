@@ -265,6 +265,5 @@ object SettingsTab : Tab {
         }
     }
 
-
 }
 
