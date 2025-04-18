@@ -5,6 +5,7 @@ import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.data.remote.models.PartTwoResponse
 import com.boboor.speaking.ui.pages.screens.commonQuestions.CommonQuestionsScreen
 import com.boboor.speaking.ui.pages.screens.cueCard.CueCardScreen
+import com.boboor.speaking.utils.enums.Section
 
 
 /*
@@ -24,8 +25,7 @@ class TopicScreenDirections(private val navigator: AppNavigator) : TopicScreenCo
     }
 
 
-
     override suspend fun goBack() {
-        navigator.back();
+        navigator.back()
     }
 }
