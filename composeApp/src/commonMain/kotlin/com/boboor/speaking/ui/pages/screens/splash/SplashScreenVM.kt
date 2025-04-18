@@ -46,11 +46,11 @@ class SplashScreenVM(
                 screenModelScope.launch {
                     reduce { state.copy(isLoading = true) }
                     delay(300)
-//                    val part1 = async { resultOf { repository.getPartOneQuestions(false) } }
-//                    val part2 = async { resultOf { repository.getPartTwoQuestions(false) } }
-//                    val part3 = async { resultOf { repository.getPartThreeQuestions(false) } }
+                    val part1 = async { resultOf { repository.getPartOneQuestions(false) } }
+                    val part2 = async { resultOf { repository.getPartTwoQuestions(false) } }
+                    val part3 = async { resultOf { repository.getPartThreeQuestions(false) } }
 
-//                    awaitAll(part1, part2, part3)
+                    awaitAll(part1, part2, part3)
 
                     reduce { state.copy(isLoading = false) }
 
