@@ -24,6 +24,10 @@ class TopicScreenVM(
 ) : TopicScreenContracts.ViewModel {
 //    override val UIState = MutableStateFlow(TopicScreenContracts.UIState())
 
+    init {
+        println("TopicScreenVM init")
+    }
+
     override val searchQuery: MutableState<String> = mutableStateOf("")
     private val questions = ArrayList<CommonTopicItem>()
 
