@@ -11,6 +11,8 @@
 # Allow Ktor debug utilities to be fully obfuscated
 -keepclassmembers,allowobfuscation class io.ktor.util.debug.** { *; }
 
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
+
 # Suppress warnings (unchanged)
 -dontwarn java.lang.management.ManagementFactory
 -dontwarn java.lang.management.RuntimeMXBean
