@@ -14,14 +14,15 @@ interface SplashScreenContracts {
     }
 
     data class UIState(
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
+        val error: String? = null
     )
 
     interface Intent {
         object Init : Intent
     }
 
-    interface Directions{
+    interface Directions {
         suspend fun navigateHomeScreen()
     }
 }

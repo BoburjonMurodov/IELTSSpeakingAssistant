@@ -11,9 +11,9 @@ import kotlinx.coroutines.Job
 
 
 interface MainScreenContracts {
-    interface ViewModel : AppViewModel<UIState, Nothing> {
+    interface ViewModel : AppViewModel<UIState, SideEffect> {
         fun onEventDispatcher(intent: Intent): Job
-        fun init() : Job
+        fun init(): Job
     }
 
     data class UIState(
@@ -24,7 +24,12 @@ interface MainScreenContracts {
         data class OnClickPart(val section: Section) : Intent
     }
 
-    interface Directions{
+    interface SideEffect {
+        data class Message(val message: String) : SideEffect
+        data class Error(val message: String) : SideEffect
+    }
+
+    interface Directions {
         suspend fun goTopicScreen(section: Section)
     }
 }

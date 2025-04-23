@@ -19,6 +19,7 @@ class MyApp : Application() {
         initKoin {
             androidContext(this@MyApp)
             androidLogger()
+
         }
 
         NativeLib.getBaseUrl()
