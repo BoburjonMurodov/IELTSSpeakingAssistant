@@ -26,6 +26,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,6 +42,8 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
+import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
@@ -63,26 +66,44 @@ import org.jetbrains.compose.resources.painterResource
     Created by Boburjon Murodov 19/12/24 at 22:43
 */
 
-object MainTab : Tab{
+object MainTab : Tab {
     override val options: TabOptions
         @Composable
         get() = TabOptions(0u, "Home", icon = rememberVectorPainter(Icons.Default.Home))
 
 
+    @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
+        val snackBarHostState = remember { SnackbarHostState() }
         val viewModel = koinScreenModel<MainScreenContracts.ViewModel>()
         val state = viewModel.collectAsState()
-        MainScreenContent(state, viewModel::onEventDispatcher)
+
+        LifecycleEffectOnce { viewModel.init() }
+
+        LaunchedEffect(Unit) {
+            viewModel.container.sideEffectFlow.collect {
+                when (it) {
+                    is MainScreenContracts.SideEffect.Error -> snackBarHostState.showSnackbar(it.message)
+                    is MainScreenContracts.SideEffect.Message -> snackBarHostState.showSnackbar(it.message)
+                }
+            }
+        }
+
+        MainScreenContent(
+            snackBarHostState = snackBarHostState,
+            state = state,
+            onEventDispatcher = viewModel::onEventDispatcher
+        )
     }
 
     @Composable
     private fun MainScreenContent(
+        snackBarHostState: SnackbarHostState,
         state: State<MainScreenContracts.UIState>,
         onEventDispatcher: (MainScreenContracts.Intent) -> Unit = {}
     ) {
         val coroutineScope = rememberCoroutineScope()
-        val snackBarHostState = remember { SnackbarHostState() }
         OnExitBackPressHandler { snackBarHostState.showSnackbar("Click again to exit") }
 
         AppTheme {
