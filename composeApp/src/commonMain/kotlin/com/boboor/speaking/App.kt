@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import com.boboor.speaking.ui.pages.HomeScreen
 import com.boboor.speaking.ui.pages.screens.splash.SplashScreen
 import com.boboor.speaking.ui.theme.AppTheme
 import org.koin.compose.KoinContext
@@ -16,7 +17,7 @@ fun App() {
     AppTheme {
         KoinContext {
             val navigationHandler = koinInject<NavigationHandler>()
-            Navigator(SplashScreen(), onBackPressed = { true }) { navigator ->
+            Navigator(HomeScreen(), onBackPressed = { true }) { navigator ->
                 LaunchedEffect(navigator) {
                     navigationHandler.screenState.collect { screenAction ->
                         screenAction.invoke(navigator)
