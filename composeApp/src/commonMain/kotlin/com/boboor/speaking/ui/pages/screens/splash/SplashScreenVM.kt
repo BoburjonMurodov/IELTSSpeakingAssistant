@@ -1,6 +1,5 @@
 package com.boboor.speaking.ui.pages.screens.splash
 
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.boboor.speaking.data.local.LocalStorage
 import com.boboor.speaking.data.repository.AppRepository
@@ -23,15 +22,17 @@ class SplashScreenVM(
     private val directions: SplashScreenContracts.Directions
 ) : SplashScreenContracts.ViewModel {
 
-//    init {
-//        screenModelScope.launch {
-//            delay(1000)
-//            onEventDispatcher(SplashScreenContracts.Intent.Init)
-//        }
-//    }
+    init {
+        screenModelScope.launch {
+            delay(300)
+            onEventDispatcher(SplashScreenContracts.Intent.Init)
+        }
+    }
 
     override fun onEventDispatcher(intent: SplashScreenContracts.Intent): Job = intent {
-        when (intent) {SplashScreenContracts.Intent.Init -> updateContent(localStorage.getUpdateFrequency()) }
+        when (intent) {
+            SplashScreenContracts.Intent.Init -> updateContent(localStorage.getUpdateFrequency())
+        }
     }
 
     private fun updateContent(value: UpdateFrequency) = intent {
@@ -45,7 +46,7 @@ class SplashScreenVM(
             UpdateFrequency.EVERY_APP_OPENING -> {
                 screenModelScope.launch {
                     reduce { state.copy(isLoading = true) }
-                    delay(300)
+//                    delay(300)
                     val part1 = async { resultOf { repository.getPartOneQuestions(false) } }
                     val part2 = async { resultOf { repository.getPartTwoQuestions(false) } }
                     val part3 = async { resultOf { repository.getPartThreeQuestions(false) } }
