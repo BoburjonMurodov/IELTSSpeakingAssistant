@@ -28,6 +28,7 @@ roomCommon = "2.7.0-beta01"
 ksp = "2.0.21-1.0.25"
 sqliteBundledAndroid = "2.5.0-beta01"
 uiTextGoogleFonts = "1.7.8"
+uiTooling = "1.8.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -69,6 +70,7 @@ room-runtime-android = { group = "androidx.room", name = "room-runtime-android",
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCommon" }
 androidx-sqlite-bundled-android = { group = "androidx.sqlite", name = "sqlite-bundled-android", version.ref = "sqliteBundledAndroid" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 
 
 
