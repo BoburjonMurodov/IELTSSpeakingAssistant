@@ -53,7 +53,12 @@ import com.boboor.speaking.utils.collectAsState
 import com.boboor.speaking.utils.darken
 import com.boboor.speaking.utils.koinScreenModel
 import kotlinx.coroutines.delay
+
 import uz.gita.boburmobilebankingapp.ui.compontents.VerticalSpacer
+
+import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+
 
 
 /*
@@ -61,7 +66,7 @@ import uz.gita.boburmobilebankingapp.ui.compontents.VerticalSpacer
 */
 
 @OptIn(ExperimentalVoyagerApi::class)
-class SplashScreen : Screen, ScreenTransition {
+class SplashScreen() : Screen, ScreenTransition {
 
     override fun exit(lastEvent: StackEvent): ExitTransition? {
         return fadeOut()
@@ -183,6 +188,10 @@ private fun SplashScreenContent(
                     style = TextStyle(brush = gradientBrush),
                     textAlign = TextAlign.Center
                 )
+
+                state.value.error?.let {
+                    Text(it)
+                }
             }
         }
 

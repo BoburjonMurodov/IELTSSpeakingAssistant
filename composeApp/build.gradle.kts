@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -8,10 +9,10 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
 
-    //ROOM and KSP
-//    alias(libs.plugins.kspCompose)
-//    alias(libs.plugins.room)
-
+//    id("androidx.room")
+//    id("com.google.devtools.ksp")
+    alias(libs.plugins.room)
+    alias(libs.plugins.kspCompose)
 }
 
 kotlin {
@@ -46,6 +47,9 @@ kotlin {
 
             //KTOR
             implementation(libs.ktor.client.okhttp)
+
+//            implementation(libs.android.database.sqlcipher)
+            implementation("net.zetetic:android-database-sqlcipher:4.5.0")
         }
 
         commonMain.dependencies {
@@ -110,6 +114,9 @@ kotlin {
             //ORBIT MVI
             implementation("org.orbit-mvi:orbit-core:9.0.0")
 
+            //ROOM
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
 
 
@@ -173,15 +180,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
-    implementation(libs.androidx.ui.text.google.fonts)
-    debugImplementation(libs.androidx.ui.tooling)
+    ksp(libs.room.compiler)
 }
 
 
-//room {
-//    schemaDirectory("$projectDir/schemas")
-//}
+
 //
 //dependencies {
 //    implementation(libs.androidx.sqlite.bundled.android)

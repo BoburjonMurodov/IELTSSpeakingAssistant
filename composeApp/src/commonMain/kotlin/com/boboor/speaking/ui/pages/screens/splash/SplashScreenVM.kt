@@ -2,12 +2,10 @@ package com.boboor.speaking.ui.pages.screens.splash
 
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.boboor.speaking.data.local.LocalStorage
-import com.boboor.speaking.data.repository.AppRepository
+import com.boboor.speaking.data.repository.TopicRepository
 import com.boboor.speaking.utils.enums.UpdateFrequency
 import com.boboor.speaking.utils.resultOf
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -18,8 +16,9 @@ import kotlinx.coroutines.launch
 
 class SplashScreenVM(
     private val localStorage: LocalStorage,
-    private val repository: AppRepository,
-    private val directions: SplashScreenContracts.Directions
+//    private val repository: AppRepository,
+    private val topicRepository: TopicRepository,
+    private val directions: SplashScreenContracts.Directions,
 ) : SplashScreenContracts.ViewModel {
 
     init {
@@ -46,16 +45,27 @@ class SplashScreenVM(
             UpdateFrequency.EVERY_APP_OPENING -> {
                 screenModelScope.launch {
                     reduce { state.copy(isLoading = true) }
+
 //                    delay(300)
                     val part1 = async { resultOf { repository.getPartOneQuestions(false) } }
                     val part2 = async { resultOf { repository.getPartTwoQuestions(false) } }
                     val part3 = async { resultOf { repository.getPartThreeQuestions(false) } }
 
-                    awaitAll(part1, part2, part3)
+                    resultOf {
+//                        delay(1000)
+                        topicRepository.syncAllTopics()
+                    }.onSuccess {
+                        directions.navigateHomeScreen()
+                    }.onFailure {
+                        reduce {
+                            state.copy(
+                                isLoading = false,
+                                error = it.message
+                            )
+                        }
 
-                    reduce { state.copy(isLoading = false) }
+                    }
 
-                    directions.navigateHomeScreen()
                 }
             }
 

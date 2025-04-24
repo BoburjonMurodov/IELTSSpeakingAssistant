@@ -7,4 +7,7 @@ plugins {
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlin.serialization) apply false
+    val room_version = "2.7.0"
+    id("androidx.room") version "$room_version" apply false
+    id("com.google.devtools.ksp") version "2.1.20-2.0.0" apply false
 }
