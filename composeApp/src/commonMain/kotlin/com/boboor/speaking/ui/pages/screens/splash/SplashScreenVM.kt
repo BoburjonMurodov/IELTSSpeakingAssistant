@@ -21,12 +21,12 @@ class SplashScreenVM(
     private val directions: SplashScreenContracts.Directions,
 ) : SplashScreenContracts.ViewModel {
 
-//    init {
-//        screenModelScope.launch {
-//            delay(1000)
-//            onEventDispatcher(SplashScreenContracts.Intent.Init)
-//        }
-//    }
+    init {
+        screenModelScope.launch {
+            delay(300)
+            onEventDispatcher(SplashScreenContracts.Intent.Init)
+        }
+    }
 
     override fun onEventDispatcher(intent: SplashScreenContracts.Intent): Job = intent {
         when (intent) {
@@ -45,12 +45,11 @@ class SplashScreenVM(
             UpdateFrequency.EVERY_APP_OPENING -> {
                 screenModelScope.launch {
                     reduce { state.copy(isLoading = true) }
-                    delay(300)
-//                    val part1 = async { resultOf { repository.getPartOneQuestions(false) } }
-//                    val part2 = async { resultOf { repository.getPartTwoQuestions(false) } }
-//                    val part3 = async { resultOf { repository.getPartThreeQuestions(false) } }
 
-//                    awaitAll(part1, part2, part3)
+//                    delay(300)
+                    val part1 = async { resultOf { repository.getPartOneQuestions(false) } }
+                    val part2 = async { resultOf { repository.getPartTwoQuestions(false) } }
+                    val part3 = async { resultOf { repository.getPartThreeQuestions(false) } }
 
                     resultOf {
 //                        delay(1000)

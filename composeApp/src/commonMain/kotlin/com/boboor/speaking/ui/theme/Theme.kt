@@ -6,15 +6,16 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import com.materialkolor.DynamicMaterialTheme
-import com.materialkolor.PaletteStyle
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import ieltsspeakingassistant.composeapp.generated.resources.Res
@@ -29,21 +30,6 @@ import org.jetbrains.compose.resources.Font
 /*
     Created by Boburjon Murodov 19/12/24 at 23:33
 */
-
-//private val DarkColorScheme = darkColors(
-//    primary = Color(0xFFBB86FC),
-//    primaryVariant = Color(0xFF3700B3),
-//    secondary = Color(0xFF03DAC5),
-//    surface = Color.Black,
-//
-//)
-//
-//private val LightColorScheme = darkColors(
-//    primary = Color(0xFF6200EE),
-//    primaryVariant = Color(0xFF3700B3),
-//    secondary = Color(0xFF03DAC5),
-//    surface = Color.White
-//)
 
 @Composable
 fun MontFontFamily() = FontFamily(
@@ -118,27 +104,48 @@ fun getAppTypography(fontDimension: Animatable<Float, AnimationVector1D>) =
         )
     )
 
+private val lightColors = DuolingoColors(
+    background = backgroundLight,
+    secondaryBackground = secondaryBackgroundLight,
+    cardBackground = cardBackgroundLight,
+    textColor = textColorLight,
+    secondaryTextColor = secondaryTextColorLight
+)
+
+private val darkColors = DuolingoColors(
+    background = backgroundDark,
+    secondaryBackground = secondaryBackgroundDark,
+    cardBackground = cardBackgroundDark,
+    textColor = textColorDark,
+    secondaryTextColor = secondaryTextColorDark,
+)
+
+private val LocalColorPalette = staticCompositionLocalOf { lightColors }
+private val LocalTypography = compositionLocalOf { DefaultDuoTypography }
+
+object DuolingoTheme {
+    val colors: DuolingoColors
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalColorPalette.current
+
+    val typography
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalTypography.current
+}
 
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-//    val fontDimension = remember { mutableStateOf(getFontDimension()) }
     val coroutineScope = rememberCoroutineScope()
     val fontDimension = remember { Animatable(initialValue = getFontDimension().scale) }
 
-    val typography = getAppTypography(fontDimension)
-
-    val colorCode = remember { mutableStateOf(0L) }
-    val seedColor = remember(colorCode.value) { mutableStateOf(getColor()) }
+    val typography = getDuolingoTypography(fontDimension)
 
     DisposableEffect(Unit) {
-        val colorListener = colorSettings.addLongListener("color", Color.Red.value.toLong()) { newColor ->
-            seedColor.value = Color(newColor)
-            colorCode.value = newColor
-        }
-
         val fontScaleListener = colorSettings.addStringListener("fontDimension", FontDimension.MEDIUM.name) {
             coroutineScope.launch {
                 fontDimension.animateTo(
@@ -149,22 +156,18 @@ fun AppTheme(
         }
 
         onDispose {
-            colorListener.deactivate()
             fontScaleListener.deactivate()
         }
     }
 
-
-    DynamicMaterialTheme(
-        seedColor = seedColor.value,
-        animate = true,
-        animationSpec = tween(1000),
-        content = content,
-        shapes = MaterialTheme.shapes,
-        typography = typography,
-        withAmoled = true,
-        style = PaletteStyle.Content
-    )
+    CompositionLocalProvider(
+        LocalColorPalette provides if (darkTheme) darkColors else lightColors,
+        LocalTypography provides typography
+    ) {
+        MaterialTheme {
+            content()
+        }
+    }
 }
 
 private val colorSettings = MakeObservableSettings(Settings())
