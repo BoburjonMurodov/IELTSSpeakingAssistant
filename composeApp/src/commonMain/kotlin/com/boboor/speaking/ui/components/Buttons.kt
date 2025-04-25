@@ -21,10 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
@@ -119,23 +117,15 @@ fun BottomLine(
         Layout(
             content = {
                 Canvas(modifier = Modifier) {
-                    clipRect(
-                        left = borderRadiusPx,
-                        top = borderRadiusPx,
-                        right = borderRadiusPx,
-                        bottom = borderRadiusPx,
-                        clipOp = ClipOp.Intersect,
-                    ) {
-                        drawRoundRect(
-                            color = lineColor,
-                            topLeft = Offset(0f, contentHeight.value / 2),
-                            cornerRadius = CornerRadius(borderRadiusPx, borderRadiusPx),
-                            size = Size(
-                                width = contentWidth.value,
-                                height = contentHeight.value / 2 + bottomLineThickness
-                            )
+                    drawRoundRect(
+                        color = lineColor,
+                        topLeft = Offset(0f, contentHeight.value / 2),
+                        cornerRadius = CornerRadius(borderRadiusPx, borderRadiusPx),
+                        size = Size(
+                            width = contentWidth.value,
+                            height = contentHeight.value / 2 + bottomLineThickness
                         )
-                    }
+                    )
                 }
 
 //                Canvas(

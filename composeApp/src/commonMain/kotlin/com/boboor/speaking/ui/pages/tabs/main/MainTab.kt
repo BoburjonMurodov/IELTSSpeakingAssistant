@@ -5,15 +5,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -40,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
@@ -48,7 +55,12 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.boboor.speaking.ui.components.AppCard
+import com.boboor.speaking.ui.components.BasicDuoLingoCard
+import com.boboor.speaking.ui.components.DuolingoLinearIndicator
+import com.boboor.speaking.ui.components.PrimaryButton
 import com.boboor.speaking.ui.theme.AppTheme
+import com.boboor.speaking.ui.theme.DuolingoTheme
+import com.boboor.speaking.ui.theme.duoGray300Color
 import com.boboor.speaking.utils.OnExitBackPressHandler
 import com.boboor.speaking.utils.collectAsState
 import com.boboor.speaking.utils.enums.Section
@@ -90,183 +102,313 @@ object MainTab : Tab {
             }
         }
 
-        MainScreenContent(
-            snackBarHostState = snackBarHostState,
-            state = state,
-            onEventDispatcher = viewModel::onEventDispatcher
-        )
+//        MainScreenContent(
+//            snackBarHostState = snackBarHostState,
+//            state = state,
+//            onEventDispatcher = viewModel::onEventDispatcher
+//        )
+
+        ScreenContent()
     }
 
     @Composable
-    private fun MainScreenContent(
-        snackBarHostState: SnackbarHostState,
-        state: State<MainScreenContracts.UIState>,
-        onEventDispatcher: (MainScreenContracts.Intent) -> Unit = {}
-    ) {
-        val coroutineScope = rememberCoroutineScope()
-        OnExitBackPressHandler { snackBarHostState.showSnackbar("Click again to exit") }
+    private fun ScreenContent() {
 
         AppTheme {
             Scaffold(
-                snackbarHost = {
-                    SnackbarHost(
-                        snackBarHostState,
-                        snackbar = {
-                            Box(
-                                modifier = Modifier
-                                    .navigationBarsPadding()
-                                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(12))
-                                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                                    .padding(horizontal = 16.dp, vertical = 12.dp), contentAlignment = Alignment.CenterStart
-                            ) {
-
-                                Text(
-                                    it.visuals.message,
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Normal),
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-
-                        }
+                containerColor = DuolingoTheme.colors.background
+            ) { innerPadding ->
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(
+                        top = innerPadding.calculateTopPadding() + 16.dp,
+                        bottom = innerPadding.calculateBottomPadding() + 16.dp,
+                        start = 16.dp,
+                        end = 16.dp
                     )
-                }
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize()
                 ) {
-
-                    Box(
-                        modifier = Modifier
-                            .height(300.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxWidth()
-                                .height(225.dp)
-                                .clip(RoundedCornerShape(bottomEnd = 36.dp, bottomStart = 36.dp))
-                                .background(
-                                    Brush.linearGradient(
-                                        colors = listOf(
-                                            MaterialTheme.colorScheme.primary,
-                                            MaterialTheme.colorScheme.primary.darken(0.5f)
-                                        )
-                                    )
-                                )
+                    item {
+                        Text(
+                            text = "Home",
+                            style = DuolingoTheme.typography.title.copy(color = DuolingoTheme.colors.textColor)
                         )
 
-                        Column(
-                            modifier = Modifier.align(Alignment.BottomCenter)
-                                .padding(horizontal = 32.dp)
+                        Spacer(Modifier.height(16.dp))
+
+                        BasicDuoLingoCard(
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+//                                .height(150.dp)
+                                .padding(16.dp),
+                            onClick = {},
                         ) {
                             Text(
-                                "IDP",
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp
+                                text = "Your Progress",
+                                style = DuolingoTheme.typography.subHeading.copy(color = DuolingoTheme.colors.textColor)
                             )
 
                             Row(
-                                modifier = Modifier.padding(vertical = 12.dp)
-                                    .fillMaxWidth()
-                                    .height(150.dp)
-                                    .clip(RoundedCornerShape(24.dp))
-                                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                                    .clickable {
-                                        coroutineScope.launch {
-                                            snackBarHostState.showSnackbar(
-                                                "Coming soon...",
-                                                duration = SnackbarDuration.Short
-                                            )
-                                        }
-                                    }
-                                    .padding(24.dp)
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .size(72.dp)
-                                        .graphicsLayer(alpha = 0.99f)
-                                        .drawWithCache {
-                                            onDrawWithContent {
-                                                drawContent()
-                                                drawRect(
-                                                    Brush.linearGradient(colors = listOf(Color(0xff294081), Color(0xffbf63a7))),
-                                                    blendMode = BlendMode.SrcAtop
-                                                )
-                                            }
-                                        }.align(Alignment.CenterVertically),
-
-                                    painter = painterResource(Res.drawable.ic_ielts_envelope),
-                                    contentDescription = null,
+                                Text(
+                                    text = "Questions practised",
+                                    style = DuolingoTheme.typography.bodyLarge.copy(color = DuolingoTheme.colors.textColor)
                                 )
 
-                                Column(
-                                    modifier = Modifier.padding(start = 12.dp, top = 8.dp, bottom = 8.dp),
-                                    verticalArrangement = Arrangement.SpaceAround
-                                ) {
-                                    Text(
-                                        text = "Check IELTS result",
-                                        color = MaterialTheme.colorScheme.primary,
-                                        style = MaterialTheme.typography.titleLarge
-                                    )
+                                Text(
+                                    text = "30 / 120",
+                                    style = DuolingoTheme.typography.bodyLarge.copy(color = DuolingoTheme.colors.textColor)
+                                )
+                            }
 
-                                    Spacer(Modifier.height(8.dp))
+//                            LinearProgressIndicator(
+//                                strokeCap = StrokeCap.Round,
+//                                progress = { 30 / 120f },
+//                                modifier = Modifier.fillMaxWidth()
+//                                    .height(8.dp),
+//                                color = DuolingoTheme.colors.duoGreen,
+//                                trackColor = duoGray100Color,
+//                                gapSize = 0.dp
+//                            )
 
-                                    Text(
-                                        text = "If you have taken IELTS, check your IELTS results",
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                }
+                            DuolingoLinearIndicator(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(8.dp),
+                                currentProgress = 30f / 120f,
+                                color = DuolingoTheme.colors.duoGreen,
+                                backgroundColor = duoGray300Color,
+                            )
 
+
+                            Row {
+                                Feed(value = "7", title = "Streak")
+                                Spacer(Modifier.width(16.dp))
+                                Feed(
+                                    value = "12",
+                                    title = "Questions\npractised",
+                                    backgroundColor = DuolingoTheme.colors.duoPurple
+                                )
                             }
                         }
-                    }
 
-                    Column(
-                        modifier = Modifier.weight(1f)
-                            .verticalScroll(rememberScrollState())
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp),
-                        horizontalAlignment = Alignment.Start,
-                    ) {
+                        Spacer(Modifier.height(16.dp))
 
-//                Spacer(Modifier.weight(1f))
-
-                        Text(
-                            "Speaking",
-                            style = MaterialTheme.typography.headlineLarge,
-                            color = MaterialTheme.colorScheme.onBackground
+                        PrimaryButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {},
+                            text = "Start practicing"
                         )
-
-                        Spacer(Modifier.height(16.dp))
-
-                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                            AppCard("Part 1", Res.drawable.ic_part_one) {
-                                onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_ONE))
-                            }
-                            Spacer(Modifier.weight(1f))
-                            AppCard("Part 2", Res.drawable.ic_part_two) {
-                                onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_TWO))
-                            }
-                        }
-
-                        Spacer(Modifier.height(16.dp))
-
-                        AppCard("Part 3", Res.drawable.ic_part_three, true) {
-                            onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_THREE))
-                        }
 
                     }
                 }
             }
-
         }
     }
-
 }
 
 
+@Composable
+private fun MainScreenContent(
+    snackBarHostState: SnackbarHostState,
+    state: State<MainScreenContracts.UIState>,
+    onEventDispatcher: (MainScreenContracts.Intent) -> Unit = {}
+) {
+    val coroutineScope = rememberCoroutineScope()
+    OnExitBackPressHandler { snackBarHostState.showSnackbar("Click again to exit") }
 
+    AppTheme {
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(
+                    snackBarHostState,
+                    snackbar = {
+                        Box(
+                            modifier = Modifier
+                                .navigationBarsPadding()
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12))
+                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .padding(horizontal = 16.dp, vertical = 12.dp), contentAlignment = Alignment.CenterStart
+                        ) {
+
+                            Text(
+                                it.visuals.message,
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Normal),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+
+                    }
+                )
+            }
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .height(300.dp)
+                        .fillMaxWidth()
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                            .height(225.dp)
+                            .clip(RoundedCornerShape(bottomEnd = 36.dp, bottomStart = 36.dp))
+                            .background(
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.primary.darken(0.5f)
+                                    )
+                                )
+                            )
+                    )
+
+                    Column(
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                            .padding(horizontal = 32.dp)
+                    ) {
+                        Text(
+                            "IDP",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
+
+                        Row(
+                            modifier = Modifier.padding(vertical = 12.dp)
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(24.dp))
+                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .clickable {
+                                    coroutineScope.launch {
+                                        snackBarHostState.showSnackbar(
+                                            "Coming soon...",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                }
+                                .padding(24.dp)
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(72.dp)
+                                    .graphicsLayer(alpha = 0.99f)
+                                    .drawWithCache {
+                                        onDrawWithContent {
+                                            drawContent()
+                                            drawRect(
+                                                Brush.linearGradient(colors = listOf(Color(0xff294081), Color(0xffbf63a7))),
+                                                blendMode = BlendMode.SrcAtop
+                                            )
+                                        }
+                                    }.align(Alignment.CenterVertically),
+
+                                painter = painterResource(Res.drawable.ic_ielts_envelope),
+                                contentDescription = null,
+                            )
+
+                            Column(
+                                modifier = Modifier.padding(start = 12.dp, top = 8.dp, bottom = 8.dp),
+                                verticalArrangement = Arrangement.SpaceAround
+                            ) {
+                                Text(
+                                    text = "Check IELTS result",
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.titleLarge
+                                )
+
+                                Spacer(Modifier.height(8.dp))
+
+                                Text(
+                                    text = "If you have taken IELTS, check your IELTS results",
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+
+                        }
+                    }
+                }
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                        .verticalScroll(rememberScrollState())
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+
+//                Spacer(Modifier.weight(1f))
+
+                    Text(
+                        "Speaking",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                        AppCard("Part 1", Res.drawable.ic_part_one) {
+                            onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_ONE))
+                        }
+                        Spacer(Modifier.weight(1f))
+                        AppCard("Part 2", Res.drawable.ic_part_two) {
+                            onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_TWO))
+                        }
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    AppCard("Part 3", Res.drawable.ic_part_three, true) {
+                        onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_THREE))
+                    }
+
+                }
+            }
+        }
+
+    }
+}
+
+
+@Composable
+fun Feed(
+    modifier: Modifier = Modifier,
+    value: String,
+    title: String,
+    backgroundColor: Color = DuolingoTheme.colors.duoGreen
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .heightIn(max = 60.dp)
+                .aspectRatio(1f)
+                .clip(CircleShape)
+                .background(backgroundColor)
+                .padding(12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = value,
+                style = DuolingoTheme.typography.title.copy(color = DuolingoTheme.colors.textColor)
+            )
+        }
+
+        Text(
+            text = title,
+            style = DuolingoTheme.typography.body.copy(color = DuolingoTheme.colors.textColor)
+        )
+    }
+}
 

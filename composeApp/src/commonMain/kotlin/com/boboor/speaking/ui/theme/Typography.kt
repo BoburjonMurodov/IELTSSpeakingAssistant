@@ -30,6 +30,7 @@ data class DuoTypography(
     val subHeading: TextStyle,
     val body: TextStyle,
     val bodySmall: TextStyle,
+    val bodyLarge: TextStyle,
     val bodyExtraSmall: TextStyle
 )
 
@@ -39,6 +40,7 @@ val DefaultDuoTypography = DuoTypography(
     subHeading = TextStyle.Default,
     body = TextStyle.Default,
     bodySmall = TextStyle.Default,
+    bodyLarge = TextStyle.Default,
     bodyExtraSmall = TextStyle.Default
 )
 
@@ -63,31 +65,47 @@ fun getDuolingoTypography(fontDimension: Animatable<Float, AnimationVector1D>): 
             fontWeight = FontWeight.Black,
             fontSize = 36.sp * fontDimension.value,
             lineHeight = 44.sp * fontDimension.value,
+            color = DuolingoTheme.colors.textColor
         ),
         heading = TextStyle(
             fontFamily = primaryTypography,
             fontWeight = FontWeight.Bold,
             fontSize = 28.sp * fontDimension.value,
+            color = DuolingoTheme.colors.textColor
         ),
         subHeading = TextStyle(
             fontFamily = primaryTypography,
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp * fontDimension.value,
+            color = DuolingoTheme.colors.textColor
+
+        ),
+        bodyLarge = TextStyle(
+            fontFamily = primaryTypography,
+            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp * fontDimension.value,
+            color = DuolingoTheme.colors.textColor
+
         ),
         body = TextStyle(
             fontFamily = primaryTypography,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 16.sp * fontDimension.value,
+            color = DuolingoTheme.colors.textColor
+
         ),
         bodySmall = TextStyle(
             fontFamily = primaryTypography,
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp * fontDimension.value,
+            color = DuolingoTheme.colors.textColor
         ),
         bodyExtraSmall = TextStyle(
             fontFamily = primaryTypography,
             fontWeight = FontWeight.Light,
             fontSize = 12.sp * fontDimension.value,
+            color = DuolingoTheme.colors.textColor
+
         )
     )
 }
