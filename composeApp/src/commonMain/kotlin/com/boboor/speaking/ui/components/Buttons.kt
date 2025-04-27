@@ -80,11 +80,12 @@ fun PrimaryButton(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomLine(
+inline fun BottomLine(
+    modifier: Modifier = Modifier,
     borderRadius: Dp = 16.dp,
     lineHeight: Dp = 8.dp,
     lineColor: Color,
-    content: @Composable (MutableInteractionSource) -> Unit,
+    crossinline content: @Composable (MutableInteractionSource) -> Unit,
 ) {
     val contentHeight = remember { mutableStateOf(0f) }
     val contentWidth = remember { mutableStateOf(0f) }
@@ -115,6 +116,7 @@ fun BottomLine(
 
     CompositionLocalProvider(LocalRippleConfiguration provides null) {
         Layout(
+            modifier = modifier,
             content = {
                 Canvas(modifier = Modifier) {
                     drawRoundRect(
