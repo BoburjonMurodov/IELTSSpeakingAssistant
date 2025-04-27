@@ -3,14 +3,18 @@ package com.boboor.speaking.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.boboor.speaking.ui.theme.DuolingoTheme
 import com.boboor.speaking.ui.theme.duoGray100Color
@@ -33,13 +37,14 @@ fun BasicDuoLingoCard(
         disabledContainerColor = DuolingoTheme.colors.cardBackground,
         disabledContentColor = DuolingoTheme.colors.textColor,
     ),
+    lineColor: Color = duoGray100Color,
     content: @Composable () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
     BottomLine(
         borderRadius = 24.dp,
         lineHeight = 4.dp,
-        lineColor = duoGray100Color,
+        lineColor = lineColor,
     ) {
         OutlinedCard(
             border = BorderStroke(2.dp, duoGray100Color),
@@ -54,6 +59,52 @@ fun BasicDuoLingoCard(
         ) {
             Column(
                 modifier = modifier,
+                verticalArrangement = verticalArrangement,
+                horizontalAlignment = horizontalAlignment,
+            ) {
+                content()
+            }
+        }
+    }
+}
+
+
+@Composable
+fun DuoLingoCard(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    colors: CardColors = CardColors(
+        containerColor = DuolingoTheme.colors.background,
+        contentColor = DuolingoTheme.colors.textColor,
+        disabledContainerColor = DuolingoTheme.colors.cardBackground,
+        disabledContentColor = DuolingoTheme.colors.textColor,
+    ),
+    lineColor: Color = duoGray100Color,
+    lineHeight: Dp = 4.dp,
+    content: @Composable () -> Unit
+
+) {
+    val haptic = LocalHapticFeedback.current
+    BottomLine(
+        borderRadius = 24.dp,
+        lineHeight = lineHeight,
+        lineColor = lineColor,
+    ) {
+        Card(
+            modifier = modifier,
+            shape = RoundedCornerShape(24.dp),
+            interactionSource = it,
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                onClick()
+            },
+//            modifier = modifier,
+            colors = colors
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = verticalArrangement,
                 horizontalAlignment = horizontalAlignment,
             ) {
