@@ -1,5 +1,6 @@
 package com.boboor.speaking.ui.pages.tabs.main
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -24,7 +26,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -45,8 +49,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
@@ -54,12 +60,14 @@ import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.boboor.speaking.getScreenWidth
 import com.boboor.speaking.ui.components.AppCard
 import com.boboor.speaking.ui.components.BasicDuoLingoCard
+import com.boboor.speaking.ui.components.DuoLingoCard
 import com.boboor.speaking.ui.components.DuolingoLinearIndicator
-import com.boboor.speaking.ui.components.PrimaryButton
 import com.boboor.speaking.ui.theme.AppTheme
 import com.boboor.speaking.ui.theme.DuolingoTheme
+import com.boboor.speaking.ui.theme.duoGray100Color
 import com.boboor.speaking.ui.theme.duoGray300Color
 import com.boboor.speaking.utils.OnExitBackPressHandler
 import com.boboor.speaking.utils.collectAsState
@@ -70,8 +78,13 @@ import ieltsspeakingassistant.composeapp.generated.resources.ic_ielts_envelope
 import ieltsspeakingassistant.composeapp.generated.resources.ic_part_one
 import ieltsspeakingassistant.composeapp.generated.resources.ic_part_three
 import ieltsspeakingassistant.composeapp.generated.resources.ic_part_two
+import ieltsspeakingassistant.composeapp.generated.resources.img_junior
+import ieltsspeakingassistant.composeapp.generated.resources.img_lily
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import uz.gita.boburmobilebankingapp.ui.compontents.FillAvailableSpace
+import uz.gita.boburmobilebankingapp.ui.compontents.VerticalSpacer
 
 
 /*
@@ -133,8 +146,9 @@ object MainTab : Tab {
                             text = "Home",
                             style = DuolingoTheme.typography.title.copy(color = DuolingoTheme.colors.textColor)
                         )
+                    }
 
-                        Spacer(Modifier.height(16.dp))
+                    item {
 
                         BasicDuoLingoCard(
                             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -183,26 +197,80 @@ object MainTab : Tab {
                             )
 
 
-                            Row {
+                            Row(modifier = Modifier.fillMaxWidth()) {
                                 Feed(value = "7", title = "Streak")
-                                Spacer(Modifier.width(16.dp))
+                                FillAvailableSpace()
                                 Feed(
                                     value = "12",
                                     title = "Questions\npractised",
+                                    backgroundColor = DuolingoTheme.colors.duoBlue
+                                )
+                                FillAvailableSpace()
+                                Feed(
+                                    value = "8",
+                                    title = "Mastered",
                                     backgroundColor = DuolingoTheme.colors.duoPurple
                                 )
+
                             }
                         }
 
                         Spacer(Modifier.height(16.dp))
 
-                        PrimaryButton(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = {},
-                            text = "Start practicing"
-                        )
+//                        PrimaryButton(
+//                            modifier = Modifier.fillMaxWidth(),
+//                            onClick = {},
+//                            text = "Start practicing"
+//                        )
 
                     }
+
+                    item {
+                        Text(
+                            text = "Speaking Parts",
+                            style = DuolingoTheme.typography.heading
+                        )
+                    }
+
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            val screenWidth = getScreenWidth() - 32.dp
+
+                            HomeCard(
+                                image = Res.drawable.img_lily,
+                                modifier = Modifier.width(screenWidth / 2 - 8.dp),
+                                title = "Speaking\nPart 1",
+                                progress = .3f
+                            )
+                            HomeCard(
+                                image = Res.drawable.img_junior,
+                                modifier = Modifier.width(screenWidth / 2 - 8.dp),
+                                title = "Speaking\nPart 2",
+                                progress = .6f,
+                                backgroundColor = DuolingoTheme.colors.duoBlue,
+                                lineColor = DuolingoTheme.colors.duoBlueHover
+                            )
+                        }
+
+                    }
+
+                    item {
+                        val screenWidth = getScreenWidth() - 32.dp
+
+                        HomeCard(
+                            image = Res.drawable.img_junior,
+                            modifier = Modifier.width(screenWidth),
+                            title = "Speaking\nPart 3",
+                            progress = .6f,
+                            backgroundColor = DuolingoTheme.colors.duoPurple,
+                            lineColor = DuolingoTheme.colors.duoPurpleHover
+                        )
+                    }
+
+
                 }
             }
         }
@@ -232,7 +300,8 @@ private fun MainScreenContent(
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(12))
                                 .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                                .padding(horizontal = 16.dp, vertical = 12.dp), contentAlignment = Alignment.CenterStart
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                            contentAlignment = Alignment.CenterStart
                         ) {
 
                             Text(
@@ -304,7 +373,13 @@ private fun MainScreenContent(
                                         onDrawWithContent {
                                             drawContent()
                                             drawRect(
-                                                Brush.linearGradient(colors = listOf(Color(0xff294081), Color(0xffbf63a7))),
+                                                Brush.linearGradient(
+                                                    colors = listOf(
+                                                        Color(
+                                                            0xff294081
+                                                        ), Color(0xffbf63a7)
+                                                    )
+                                                ),
                                                 blendMode = BlendMode.SrcAtop
                                             )
                                         }
@@ -315,7 +390,11 @@ private fun MainScreenContent(
                             )
 
                             Column(
-                                modifier = Modifier.padding(start = 12.dp, top = 8.dp, bottom = 8.dp),
+                                modifier = Modifier.padding(
+                                    start = 12.dp,
+                                    top = 8.dp,
+                                    bottom = 8.dp
+                                ),
                                 verticalArrangement = Arrangement.SpaceAround
                             ) {
                                 Text(
@@ -396,12 +475,13 @@ fun Feed(
                 .aspectRatio(1f)
                 .clip(CircleShape)
                 .background(backgroundColor)
-                .padding(12.dp),
+//                .padding(12.dp)
+            ,
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = value,
-                style = DuolingoTheme.typography.title.copy(color = DuolingoTheme.colors.textColor)
+                style = DuolingoTheme.typography.heading.copy(color = Color.White)
             )
         }
 
@@ -412,3 +492,63 @@ fun Feed(
     }
 }
 
+
+@Composable
+private fun HomeCard(
+    image: DrawableResource,
+    modifier: Modifier = Modifier,
+    title: String,
+    progress: Float,
+    backgroundColor: Color = DuolingoTheme.colors.duoGreen,
+    lineColor: Color = DuolingoTheme.colors.duoGreenHover
+) {
+    DuoLingoCard(
+        modifier = modifier,
+        lineHeight = 8.dp,
+        colors = CardColors(
+            containerColor = backgroundColor,
+            contentColor = Color.White,
+            disabledContainerColor = backgroundColor,
+            disabledContentColor = Color.White
+        ),
+        lineColor = lineColor
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .widthIn(max = 60.dp)
+                    .aspectRatio(1f)
+//                    .background(Color.White)
+                ,
+                contentScale = ContentScale.Crop,
+                painter = painterResource(image),
+                contentDescription = null
+            )
+
+            Text(
+                text = title,
+                style = DuolingoTheme.typography.subHeading.copy(textAlign = TextAlign.Center)
+            )
+
+            Text(
+                text = "12 topics",
+                style = DuolingoTheme.typography.body.copy(color = duoGray100Color)
+            )
+
+            DuolingoLinearIndicator(
+                modifier = Modifier.fillMaxWidth(0.7f)
+                    .height(8.dp),
+                currentProgress = progress,
+                color = Color.White,
+                backgroundColor = Color.White.copy(alpha = 0.5f),
+            )
+
+        }
+    }
+}
