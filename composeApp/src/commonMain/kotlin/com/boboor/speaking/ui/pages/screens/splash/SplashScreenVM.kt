@@ -6,6 +6,7 @@ import com.boboor.speaking.data.repository.TopicRepository
 import com.boboor.speaking.utils.enums.UpdateFrequency
 import com.boboor.speaking.utils.resultOf
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -41,16 +42,9 @@ class SplashScreenVM(
                 directions.navigateHomeScreen()
             }
 
-
             UpdateFrequency.EVERY_APP_OPENING -> {
                 screenModelScope.launch {
                     reduce { state.copy(isLoading = true) }
-
-//                    delay(300)
-                    val part1 = async { resultOf { repository.getPartOneQuestions(false) } }
-                    val part2 = async { resultOf { repository.getPartTwoQuestions(false) } }
-                    val part3 = async { resultOf { repository.getPartThreeQuestions(false) } }
-
                     resultOf {
 //                        delay(1000)
                         topicRepository.syncAllTopics()

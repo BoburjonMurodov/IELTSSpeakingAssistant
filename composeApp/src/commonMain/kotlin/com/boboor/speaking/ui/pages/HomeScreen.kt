@@ -29,6 +29,7 @@ import cafe.adriel.voyager.transitions.ScreenTransition
 import com.boboor.speaking.ui.pages.tabs.main.MainTab
 import com.boboor.speaking.ui.pages.tabs.settings.SettingsTab
 import com.boboor.speaking.ui.theme.AppTheme
+import com.boboor.speaking.ui.theme.DuolingoTheme
 import kotlinx.serialization.Transient
 
 
@@ -45,7 +46,6 @@ class HomeScreen : Screen, ScreenTransition {
     override fun enter(lastEvent: StackEvent) = fadeTransition.enter(lastEvent)
     override fun exit(lastEvent: StackEvent)  = fadeTransition.exit(lastEvent)
 
-
     @Composable
     override fun Content() {
         val tabs = listOf(MainTab, SettingsTab)
@@ -55,8 +55,11 @@ class HomeScreen : Screen, ScreenTransition {
             tabDisposable = { TabDisposable(it, tabs = tabs) }
         ) {
             Scaffold(
+                containerColor = DuolingoTheme.colors.background,
                 bottomBar = {
-                    AppTheme { BottomAppBar { tabs.forEach { MaterialNavigationBarItem(it) } } }
+                    AppTheme { BottomAppBar(
+                        containerColor = DuolingoTheme.colors.secondaryBackground
+                    ) { tabs.forEach { MaterialNavigationBarItem(it) } } }
                 }
             ) {
                 Box(
