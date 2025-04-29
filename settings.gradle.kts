@@ -12,6 +12,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        jcenter()
     }
 }
 
@@ -25,6 +26,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        jcenter()
     }
 }
 
