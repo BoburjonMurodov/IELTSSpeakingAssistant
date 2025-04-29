@@ -98,7 +98,6 @@ inline fun BottomLine(
         animationSpec = tween(durationMillis = 100)
     )
 
-
     LaunchedEffect(Unit) {
         interactionSource.interactions.collect {
             when (it) {
@@ -130,23 +129,6 @@ inline fun BottomLine(
                     )
                 }
 
-//                Canvas(
-//                    modifier = Modifier
-//                ) {
-//                    // Clip the drawing area inside the rounded corners
-//                    clipRect {
-//                        // Draw an arc
-//                        drawArc(
-//                            color = lineColor,
-//                            size = Size(contentWidth.value, contentHeight.value / 2 + bottomLineThickness),
-//                            startAngle = 0f,
-//                            sweepAngle = 180f, // You can adjust this to get different arcs
-//                            useCenter = false,  // Draw the arc as an outline, not filled
-//                            topLeft = Offset(0f, contentHeight.value / 2)
-//                        )
-//                    }
-//                }
-
                 content(interactionSource)
             }
         ) { measurables, constraints ->
@@ -163,8 +145,7 @@ inline fun BottomLine(
             val maxHeight = placables.sumOf { it.height }
             val maxWidth = placables.sumOf { it.width }
 
-
-            layout(width = maxWidth, height = maxHeight) {
+            layout(width = maxWidth, height = maxHeight + bottomLineThickness.toInt()) {
                 canvasPlaceable.place(position = IntOffset(0, 0))
                 buttonPlaceable.place(position = IntOffset(0, offsetY.value.toInt()))
             }
