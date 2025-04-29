@@ -68,11 +68,10 @@ fun BasicDuoLingoCard(
     }
 }
 
-
 @Composable
-fun DuoLingoCard(
+inline fun DuoLingoCard(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    noinline onClick: () -> Unit = {},
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     colors: CardColors = CardColors(
@@ -83,8 +82,7 @@ fun DuoLingoCard(
     ),
     lineColor: Color = duoGray100Color,
     lineHeight: Dp = 4.dp,
-    content: @Composable () -> Unit
-
+    noinline content: @Composable () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
     BottomLine(
@@ -93,18 +91,17 @@ fun DuoLingoCard(
         lineColor = lineColor,
     ) {
         Card(
-            modifier = modifier,
+            modifier = modifier, // <- Properly applied
             shape = RoundedCornerShape(24.dp),
             interactionSource = it,
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 onClick()
             },
-//            modifier = modifier,
             colors = colors
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize(), // <-- fill the card's area
                 verticalArrangement = verticalArrangement,
                 horizontalAlignment = horizontalAlignment,
             ) {
