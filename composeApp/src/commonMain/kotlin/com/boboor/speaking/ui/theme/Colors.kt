@@ -35,7 +35,7 @@ val duoBlackColor = Color(0xff1A1D28)
 val backgroundLight = Color(0xffFFFFFF)
 val backgroundDark = Color(0xff1A1D28)
 
-val secondaryBackgroundLight = Color(0xffFFFFFF)
+val secondaryBackgroundLight = Color(0xffF7F7F7)
 val secondaryBackgroundDark = Color(0xff2E3241)
 
 val cardBackgroundLight = Color(0xffFFFFFF)

@@ -69,6 +69,7 @@ import com.boboor.speaking.ui.theme.AppTheme
 import com.boboor.speaking.ui.theme.DuolingoTheme
 import com.boboor.speaking.ui.theme.duoGray100Color
 import com.boboor.speaking.ui.theme.duoGray300Color
+import com.boboor.speaking.ui.theme.duoWhiteColor
 import com.boboor.speaking.utils.OnExitBackPressHandler
 import com.boboor.speaking.utils.collectAsState
 import com.boboor.speaking.utils.enums.Section
@@ -115,12 +116,6 @@ object MainTab : Tab {
             }
         }
 
-//        MainScreenContent(
-//            snackBarHostState = snackBarHostState,
-//            state = state,
-//            onEventDispatcher = viewModel::onEventDispatcher
-//        )
-
         ScreenContent()
     }
 
@@ -141,118 +136,34 @@ object MainTab : Tab {
                         end = 16.dp
                     )
                 ) {
-                    item {
-                        Text(
-                            text = "Home",
-                            style = DuolingoTheme.typography.title.copy(color = DuolingoTheme.colors.textColor)
-                        )
-                    }
-
-                    item {
-
-                        BasicDuoLingoCard(
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-//                                .height(150.dp)
-                                .padding(16.dp),
-                            onClick = {},
-                        ) {
-                            Text(
-                                text = "Your Progress",
-                                style = DuolingoTheme.typography.subHeading.copy(color = DuolingoTheme.colors.textColor)
-                            )
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "Questions practised",
-                                    style = DuolingoTheme.typography.bodyLarge.copy(color = DuolingoTheme.colors.textColor)
-                                )
-
-                                Text(
-                                    text = "30 / 120",
-                                    style = DuolingoTheme.typography.bodyLarge.copy(color = DuolingoTheme.colors.textColor)
-                                )
-                            }
-
-//                            LinearProgressIndicator(
-//                                strokeCap = StrokeCap.Round,
-//                                progress = { 30 / 120f },
-//                                modifier = Modifier.fillMaxWidth()
-//                                    .height(8.dp),
-//                                color = DuolingoTheme.colors.duoGreen,
-//                                trackColor = duoGray100Color,
-//                                gapSize = 0.dp
-//                            )
-
-                            DuolingoLinearIndicator(
-                                modifier = Modifier.fillMaxWidth()
-                                    .height(8.dp),
-                                currentProgress = 30f / 120f,
-                                color = DuolingoTheme.colors.duoGreen,
-                                backgroundColor = duoGray300Color,
-                            )
-
-
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                Feed(value = "7", title = "Streak")
-                                FillAvailableSpace()
-                                Feed(
-                                    value = "12",
-                                    title = "Questions\npractised",
-                                    backgroundColor = DuolingoTheme.colors.duoBlue
-                                )
-                                FillAvailableSpace()
-                                Feed(
-                                    value = "8",
-                                    title = "Mastered",
-                                    backgroundColor = DuolingoTheme.colors.duoPurple
-                                )
-
-                            }
-                        }
-
-                        Spacer(Modifier.height(16.dp))
-
-//                        PrimaryButton(
-//                            modifier = Modifier.fillMaxWidth(),
-//                            onClick = {},
-//                            text = "Start practicing"
-//                        )
-
-                    }
-
-                    item {
-                        Text(
-                            text = "Speaking Parts",
-                            style = DuolingoTheme.typography.heading
-                        )
-                    }
+                    item { TitleText("Home") }
+                    item { Banner() }
+                    item { TitleText(text = "Speaking Parts") }
 
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            val screenWidth = getScreenWidth() - 32.dp
-
-                            HomeCard(
-                                image = Res.drawable.img_lily,
-                                modifier = Modifier.width(screenWidth / 2 - 8.dp),
-                                title = "Speaking\nPart 1",
-                                progress = .3f
-                            )
-                            HomeCard(
-                                image = Res.drawable.img_junior,
-                                modifier = Modifier.width(screenWidth / 2 - 8.dp),
-                                title = "Speaking\nPart 2",
-                                progress = .6f,
-                                backgroundColor = DuolingoTheme.colors.duoBlue,
-                                lineColor = DuolingoTheme.colors.duoBlueHover
-                            )
+                            Box(modifier = Modifier.weight(1f)) {
+                                HomeCard(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    image = Res.drawable.img_lily,
+                                    title = "Card 1",
+                                    progress = 0.5f
+                                )
+                            }
+                            Box(modifier = Modifier.weight(1f)) {
+                                HomeCard(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    image = Res.drawable.img_junior,
+                                    title = "Card 2",
+                                    progress = 0.7f,
+                                    backgroundColor = DuolingoTheme.colors.duoBlue,
+                                    lineColor = DuolingoTheme.colors.duoBlueHover
+                                )
+                            }
                         }
 
                     }
@@ -274,186 +185,6 @@ object MainTab : Tab {
                 }
             }
         }
-    }
-}
-
-
-@Composable
-private fun MainScreenContent(
-    snackBarHostState: SnackbarHostState,
-    state: State<MainScreenContracts.UIState>,
-    onEventDispatcher: (MainScreenContracts.Intent) -> Unit = {}
-) {
-    val coroutineScope = rememberCoroutineScope()
-    OnExitBackPressHandler { snackBarHostState.showSnackbar("Click again to exit") }
-
-    AppTheme {
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(
-                    snackBarHostState,
-                    snackbar = {
-                        Box(
-                            modifier = Modifier
-                                .navigationBarsPadding()
-                                .padding(horizontal = 16.dp, vertical = 12.dp)
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(12))
-                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                                .padding(horizontal = 16.dp, vertical = 12.dp),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-
-                            Text(
-                                it.visuals.message,
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Normal),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-
-                    }
-                )
-            }
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-
-                Box(
-                    modifier = Modifier
-                        .height(300.dp)
-                        .fillMaxWidth()
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                            .height(225.dp)
-                            .clip(RoundedCornerShape(bottomEnd = 36.dp, bottomStart = 36.dp))
-                            .background(
-                                Brush.linearGradient(
-                                    colors = listOf(
-                                        MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.colorScheme.primary.darken(0.5f)
-                                    )
-                                )
-                            )
-                    )
-
-                    Column(
-                        modifier = Modifier.align(Alignment.BottomCenter)
-                            .padding(horizontal = 32.dp)
-                    ) {
-                        Text(
-                            "IDP",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
-                        )
-
-                        Row(
-                            modifier = Modifier.padding(vertical = 12.dp)
-                                .fillMaxWidth()
-                                .height(150.dp)
-                                .clip(RoundedCornerShape(24.dp))
-                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                                .clickable {
-                                    coroutineScope.launch {
-                                        snackBarHostState.showSnackbar(
-                                            "Coming soon...",
-                                            duration = SnackbarDuration.Short
-                                        )
-                                    }
-                                }
-                                .padding(24.dp)
-                        ) {
-                            Icon(
-                                modifier = Modifier
-                                    .size(72.dp)
-                                    .graphicsLayer(alpha = 0.99f)
-                                    .drawWithCache {
-                                        onDrawWithContent {
-                                            drawContent()
-                                            drawRect(
-                                                Brush.linearGradient(
-                                                    colors = listOf(
-                                                        Color(
-                                                            0xff294081
-                                                        ), Color(0xffbf63a7)
-                                                    )
-                                                ),
-                                                blendMode = BlendMode.SrcAtop
-                                            )
-                                        }
-                                    }.align(Alignment.CenterVertically),
-
-                                painter = painterResource(Res.drawable.ic_ielts_envelope),
-                                contentDescription = null,
-                            )
-
-                            Column(
-                                modifier = Modifier.padding(
-                                    start = 12.dp,
-                                    top = 8.dp,
-                                    bottom = 8.dp
-                                ),
-                                verticalArrangement = Arrangement.SpaceAround
-                            ) {
-                                Text(
-                                    text = "Check IELTS result",
-                                    color = MaterialTheme.colorScheme.primary,
-                                    style = MaterialTheme.typography.titleLarge
-                                )
-
-                                Spacer(Modifier.height(8.dp))
-
-                                Text(
-                                    text = "If you have taken IELTS, check your IELTS results",
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-
-                        }
-                    }
-                }
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                        .verticalScroll(rememberScrollState())
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    horizontalAlignment = Alignment.Start,
-                ) {
-
-//                Spacer(Modifier.weight(1f))
-
-                    Text(
-                        "Speaking",
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-
-                    Spacer(Modifier.height(16.dp))
-
-                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                        AppCard("Part 1", Res.drawable.ic_part_one) {
-                            onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_ONE))
-                        }
-                        Spacer(Modifier.weight(1f))
-                        AppCard("Part 2", Res.drawable.ic_part_two) {
-                            onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_TWO))
-                        }
-                    }
-
-                    Spacer(Modifier.height(16.dp))
-
-                    AppCard("Part 3", Res.drawable.ic_part_three, true) {
-                        onEventDispatcher(MainScreenContracts.Intent.OnClickPart(section = Section.PART_THREE))
-                    }
-
-                }
-            }
-        }
-
     }
 }
 
@@ -492,6 +223,75 @@ fun Feed(
     }
 }
 
+@Composable
+private fun TitleText(
+    text: String
+) {
+    Text(
+        text = text,
+        style = DuolingoTheme.typography.title.copy(color = DuolingoTheme.colors.textColor)
+    )
+}
+
+@Composable
+private fun Banner() {
+    BasicDuoLingoCard(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        onClick = {},
+    ) {
+        Text(
+            text = "Your Progress",
+            style = DuolingoTheme.typography.subHeading.copy(color = DuolingoTheme.colors.textColor)
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Questions practised",
+                style = DuolingoTheme.typography.bodyLarge.copy(color = DuolingoTheme.colors.textColor)
+            )
+
+            Text(
+                text = "30 / 120",
+                style = DuolingoTheme.typography.bodyLarge.copy(color = DuolingoTheme.colors.textColor)
+            )
+        }
+
+        DuolingoLinearIndicator(
+            modifier = Modifier.fillMaxWidth()
+                .height(8.dp),
+            currentProgress = 30f / 120f,
+            color = DuolingoTheme.colors.duoGreen,
+            backgroundColor = duoGray300Color,
+        )
+
+
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+        ) {
+            Feed(value = "7", title = "Streak")
+            FillAvailableSpace()
+            Feed(
+                value = "12",
+                title = "Questions\npractised",
+                backgroundColor = DuolingoTheme.colors.duoBlue
+            )
+            FillAvailableSpace()
+            Feed(
+                value = "8",
+                title = "Mastered",
+                backgroundColor = DuolingoTheme.colors.duoPurple
+            )
+
+        }
+    }
+}
+
 
 @Composable
 private fun HomeCard(
@@ -514,18 +314,15 @@ private fun HomeCard(
         lineColor = lineColor
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 modifier = Modifier
-                    .fillMaxWidth(0.6f)
-                    .widthIn(max = 60.dp)
-                    .aspectRatio(1f)
-//                    .background(Color.White)
-                ,
+                    .size(80.dp),
                 contentScale = ContentScale.Crop,
                 painter = painterResource(image),
                 contentDescription = null
@@ -533,22 +330,25 @@ private fun HomeCard(
 
             Text(
                 text = title,
-                style = DuolingoTheme.typography.subHeading.copy(textAlign = TextAlign.Center)
+                style = DuolingoTheme.typography.subHeading.copy(
+                    textAlign = TextAlign.Center,
+                    color = duoWhiteColor
+                )
             )
 
             Text(
                 text = "12 topics",
-                style = DuolingoTheme.typography.body.copy(color = duoGray100Color)
+                style = DuolingoTheme.typography.body.copy(color = duoWhiteColor)
             )
 
             DuolingoLinearIndicator(
-                modifier = Modifier.fillMaxWidth(0.7f)
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
                     .height(8.dp),
                 currentProgress = progress,
                 color = Color.White,
                 backgroundColor = Color.White.copy(alpha = 0.5f),
             )
-
         }
     }
 }

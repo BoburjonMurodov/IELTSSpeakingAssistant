@@ -6,10 +6,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
@@ -17,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.stack.StackEvent
@@ -40,11 +43,11 @@ import kotlinx.serialization.Transient
 @OptIn(ExperimentalVoyagerApi::class)
 class HomeScreen : Screen, ScreenTransition {
 
-    @Transient
-    private val fadeTransition = CustomFadeTransition()
+//    @Transient
+//    private val fadeTransition =
 
-    override fun enter(lastEvent: StackEvent) = fadeTransition.enter(lastEvent)
-    override fun exit(lastEvent: StackEvent)  = fadeTransition.exit(lastEvent)
+    override fun enter(lastEvent: StackEvent) = CustomFadeTransition().enter(lastEvent)
+    override fun exit(lastEvent: StackEvent) = CustomFadeTransition().exit(lastEvent)
 
     @Composable
     override fun Content() {
@@ -55,11 +58,18 @@ class HomeScreen : Screen, ScreenTransition {
             tabDisposable = { TabDisposable(it, tabs = tabs) }
         ) {
             Scaffold(
-                containerColor = DuolingoTheme.colors.background,
+                containerColor = DuolingoTheme.colors.secondaryBackground,
                 bottomBar = {
-                    AppTheme { BottomAppBar(
-                        containerColor = DuolingoTheme.colors.secondaryBackground
-                    ) { tabs.forEach { MaterialNavigationBarItem(it) } } }
+                    AppTheme {
+                        Column {
+                            HorizontalDivider()
+                            BottomAppBar(
+                                containerColor = DuolingoTheme.colors.secondaryBackground
+                            ) {
+                                tabs.forEach { MaterialNavigationBarItem(it) }
+                            }
+                        }
+                    }
                 }
             ) {
                 Box(
