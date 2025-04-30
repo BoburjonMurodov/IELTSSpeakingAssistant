@@ -37,6 +37,7 @@ fun BasicDuoLingoCard(
         disabledContainerColor = DuolingoTheme.colors.cardBackground,
         disabledContentColor = DuolingoTheme.colors.textColor,
     ),
+    border: BorderStroke = BorderStroke(2.dp, duoGray100Color),
     lineColor: Color = duoGray100Color,
     content: @Composable () -> Unit
 ) {
@@ -47,7 +48,7 @@ fun BasicDuoLingoCard(
         lineColor = lineColor,
     ) {
         OutlinedCard(
-            border = BorderStroke(2.dp, duoGray100Color),
+            border = border,
             shape = RoundedCornerShape(24.dp),
             interactionSource = it,
             onClick = {
