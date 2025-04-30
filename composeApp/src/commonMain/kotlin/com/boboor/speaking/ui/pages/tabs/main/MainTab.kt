@@ -1,20 +1,21 @@
 package com.boboor.speaking.ui.pages.tabs.main
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,69 +24,48 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalViewConfiguration
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffectOnce
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.boboor.speaking.getScreenWidth
-import com.boboor.speaking.ui.components.AppCard
 import com.boboor.speaking.ui.components.BasicDuoLingoCard
+import com.boboor.speaking.ui.components.BottomLine
 import com.boboor.speaking.ui.components.DuoLingoCard
 import com.boboor.speaking.ui.components.DuolingoLinearIndicator
+import com.boboor.speaking.ui.components.PrimaryButton
 import com.boboor.speaking.ui.theme.AppTheme
 import com.boboor.speaking.ui.theme.DuolingoTheme
 import com.boboor.speaking.ui.theme.duoGray100Color
 import com.boboor.speaking.ui.theme.duoGray300Color
 import com.boboor.speaking.ui.theme.duoWhiteColor
-import com.boboor.speaking.utils.OnExitBackPressHandler
 import com.boboor.speaking.utils.collectAsState
-import com.boboor.speaking.utils.enums.Section
-import com.materialkolor.ktx.darken
 import ieltsspeakingassistant.composeapp.generated.resources.Res
-import ieltsspeakingassistant.composeapp.generated.resources.ic_ielts_envelope
-import ieltsspeakingassistant.composeapp.generated.resources.ic_part_one
-import ieltsspeakingassistant.composeapp.generated.resources.ic_part_three
-import ieltsspeakingassistant.composeapp.generated.resources.ic_part_two
 import ieltsspeakingassistant.composeapp.generated.resources.img_junior
 import ieltsspeakingassistant.composeapp.generated.resources.img_lily
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import uz.gita.boburmobilebankingapp.ui.compontents.FillAvailableSpace
-import uz.gita.boburmobilebankingapp.ui.compontents.VerticalSpacer
 
 
 /*
@@ -139,50 +119,59 @@ object MainTab : Tab {
                     item { TitleText("Home") }
                     item { Banner() }
                     item { TitleText(text = "Speaking Parts") }
-
+                    item { SpeakingParts() }
                     item {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        BasicDuoLingoCard(
+                            border = BorderStroke(2.dp, DuolingoTheme.colors.duoYellow),
+                            modifier = Modifier.fillMaxWidth()
+                                .background(DuolingoTheme.colors.background)
+                                .padding(16.dp),
+                            onClick = {},
+                            colors = CardColors(
+                                contentColor = DuolingoTheme.colors.duoYellow.copy(0.1f),
+                                containerColor = DuolingoTheme.colors.duoYellow.copy(0.1f),
+                                disabledContainerColor = DuolingoTheme.colors.duoYellow.copy(0.1f),
+                                disabledContentColor = DuolingoTheme.colors.duoYellow.copy(0.1f)
+                            ),
+                            lineColor = DuolingoTheme.colors.duoYellow,
                         ) {
-                            Box(modifier = Modifier.weight(1f)) {
-                                HomeCard(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    image = Res.drawable.img_lily,
-                                    title = "Card 1",
-                                    progress = 0.5f
+                            Row(
+                                modifier = Modifier
+//                                    .horizontalScroll(state = rememberScrollState())
+                                ,
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                Image(
+                                    modifier = Modifier.size(64.dp),
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = null
                                 )
-                            }
-                            Box(modifier = Modifier.weight(1f)) {
-                                HomeCard(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    image = Res.drawable.img_junior,
-                                    title = "Card 2",
-                                    progress = 0.7f,
-                                    backgroundColor = DuolingoTheme.colors.duoBlue,
-                                    lineColor = DuolingoTheme.colors.duoBlueHover
+
+                                Column(modifier = Modifier.weight(2f)) {
+                                    Text(
+                                        text = "Daily Challenge",
+                                        style = DuolingoTheme.typography.subHeading
+                                    )
+
+                                    Text(
+                                        text = "Practice a new random question each day",
+                                        style = DuolingoTheme.typography.body
+                                    )
+                                }
+
+                                PrimaryButton(
+                                    modifier = Modifier.weight(1f),
+                                    text = "Start",
+                                    onClick = {
+
+                                    }
                                 )
                             }
                         }
-
                     }
-
-                    item {
-                        val screenWidth = getScreenWidth() - 32.dp
-
-                        HomeCard(
-                            image = Res.drawable.img_junior,
-                            modifier = Modifier.width(screenWidth),
-                            title = "Speaking\nPart 3",
-                            progress = .6f,
-                            backgroundColor = DuolingoTheme.colors.duoPurple,
-                            lineColor = DuolingoTheme.colors.duoPurpleHover
-                        )
-                    }
-
-
                 }
+
             }
         }
     }
@@ -350,5 +339,45 @@ private fun HomeCard(
                 backgroundColor = Color.White.copy(alpha = 0.5f),
             )
         }
+    }
+}
+
+
+@Composable
+private fun SpeakingParts() {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                HomeCard(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    image = Res.drawable.img_lily,
+                    title = "Card 1",
+                    progress = 0.5f
+                )
+            }
+            Box(modifier = Modifier.weight(1f)) {
+                HomeCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    image = Res.drawable.img_junior,
+                    title = "Card 2",
+                    progress = 0.7f,
+                    backgroundColor = DuolingoTheme.colors.duoBlue,
+                    lineColor = DuolingoTheme.colors.duoBlueHover
+                )
+            }
+        }
+
+        HomeCard(
+            image = Res.drawable.img_junior,
+            modifier = Modifier.fillMaxWidth(),
+            title = "Speaking\nPart 3",
+            progress = .6f,
+            backgroundColor = DuolingoTheme.colors.duoPurple,
+            lineColor = DuolingoTheme.colors.duoPurpleHover
+        )
     }
 }
