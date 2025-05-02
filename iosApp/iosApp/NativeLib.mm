@@ -3,7 +3,7 @@
 //  iosApp
 //
 //  Created by Boburjon Murodov on 13/03/25.
-//  Copyright © 2025 orgName. All rights reserved.
+//  Copyright © 2025 Boboor. All rights reserved.
 //
 
 
