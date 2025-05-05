@@ -19,8 +19,8 @@ import org.koin.dsl.module
 
 
 val mainScreenModule = module {
-    factory<MainScreenContracts.ViewModel> { MainScreenVM(get(), get()) }
+    factory<MainScreenContracts.ViewModel> { MainScreenVM(get()) }
     factory<TopicScreenContracts.ViewModel> { TopicScreenVM(get(), get(), get() ) }
     factory<SettingsContracts.ViewModel> { SettingsScreenVM(get(), get()) }
-    factory<SplashScreenContracts.ViewModel> { SplashScreenVM(get(), get(), get()) }
+    factory<SplashScreenContracts.ViewModel> { SplashScreenVM(get(), get()) }
 }

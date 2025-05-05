@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class SplashScreenVM(
     private val localStorage: LocalStorage,
 //    private val repository: AppRepository,
-    private val topicRepository: TopicRepository,
+//    private val topicRepository: TopicRepository,
     private val directions: SplashScreenContracts.Directions,
 ) : SplashScreenContracts.ViewModel {
 
@@ -47,7 +47,7 @@ class SplashScreenVM(
                     reduce { state.copy(isLoading = true) }
                     resultOf {
 //                        delay(1000)
-                        topicRepository.syncAllTopics()
+//                        topicRepository.syncAllTopics()
                     }.onSuccess {
                         directions.navigateHomeScreen()
                     }.onFailure {
