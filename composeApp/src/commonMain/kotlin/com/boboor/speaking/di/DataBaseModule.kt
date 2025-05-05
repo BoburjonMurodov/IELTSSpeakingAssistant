@@ -15,4 +15,4 @@ val databaseModule = module {
     factory <LocalStorage>{ LocalStorageImpl() }
 }
 
-expect fun platformModule(): Module
+//expect fun platformModule(): Module
