@@ -11,8 +11,8 @@ plugins {
 
 //    id("androidx.room")
 //    id("com.google.devtools.ksp")
-    alias(libs.plugins.room)
-    alias(libs.plugins.kspCompose)
+//    alias(libs.plugins.room)
+//    alias(libs.plugins.kspCompose)
 }
 
 kotlin {
@@ -115,8 +115,8 @@ kotlin {
             implementation("org.orbit-mvi:orbit-core:9.0.0")
 
             //ROOM
-            implementation(libs.room.runtime)
-            implementation(libs.sqlite.bundled)
+//            implementation(libs.room.runtime)
+//            implementation(libs.sqlite.bundled)
         }
 
 
@@ -167,7 +167,7 @@ android {
     }
     buildTypes {
         debug {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles("proguard-rules.pro")
         }
         release {
@@ -181,14 +181,17 @@ android {
     }
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
-}
-
-dependencies {
-    ksp(libs.room.compiler)
-}
-
+//room {
+//    schemaDirectory("$projectDir/schemas")
+//}
+//
+//dependencies {
+//    ksp(libs.room.compiler)
+//}
+//
+//ksp{
+//    arg("room.schemaLocation", "$projectDir/schemas")
+//}
 
 
 //
