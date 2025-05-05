@@ -15,7 +15,7 @@ import kotlinx.coroutines.delay
 
 class MainScreenVM(
     private val directions: MainScreenContracts.Directions,
-    private val repository: TopicRepository
+//    private val repository: TopicRepository
 ) : MainScreenContracts.ViewModel {
 
     override fun onEventDispatcher(intent: MainScreenContracts.Intent): Job = intent {
@@ -30,7 +30,7 @@ class MainScreenVM(
             delay(300)
             postSideEffect(SideEffect.Message("WTF:: Started loading"))
             println("Started loading")
-            repository.syncAllTopics()
+//            repository.syncAllTopics()
         }.onFailure {
             println("WTF:: ${it.message}" ?:"WTF:: Error")
             postSideEffect(SideEffect.Error(it.message ?:"Error"))
