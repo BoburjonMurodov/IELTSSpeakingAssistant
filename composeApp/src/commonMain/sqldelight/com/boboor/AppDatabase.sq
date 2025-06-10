@@ -1,0 +1,150 @@
+
+import kotlin.Boolean;
+
+-- Import all your other .sq files here
+
+-- You don't need to define tables here as they're in their respective .sq files
+-- But you can add database-wide functions or triggers here if needed
+
+-- Here's an example CommonTopic.sq file
+CREATE TABLE commonTopic (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    active INTEGER AS Boolean NOT NULL,
+    free INTEGER AS Boolean NOT NULL,
+    "order" INTEGER NOT NULL,
+    isBookmarked INTEGER AS Boolean NOT NULL DEFAULT 0,
+    progress INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE commonQuestion (
+    id TEXT NOT NULL PRIMARY KEY,
+    topicId TEXT NOT NULL,
+    text TEXT NOT NULL,
+    isAnswered INTEGER AS Boolean NOT NULL DEFAULT 0,
+    isMastered INTEGER AS Boolean NOT NULL DEFAULT 0,
+    FOREIGN KEY (topicId) REFERENCES commonTopic(id)
+);
+
+CREATE TABLE commonVocabulary (
+    id TEXT NOT NULL PRIMARY KEY,
+    topicId TEXT NOT NULL,
+    text TEXT NOT NULL,
+    FOREIGN KEY (topicId) REFERENCES commonTopic(id)
+);
+
+-- Queries for CommonTopic
+getAllTopicsWithContent:
+SELECT *
+FROM commonTopic
+ORDER BY "order";
+
+getTopicWithContent:
+SELECT *
+FROM commonTopic
+WHERE id = ?;
+
+getQuestionsForTopic:
+SELECT *
+FROM commonQuestion
+WHERE topicId = ?;
+
+getVocabularyForTopic:
+SELECT *
+FROM commonVocabulary
+WHERE topicId = ?;
+
+insertTopic:
+INSERT OR REPLACE INTO commonTopic
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+insertQuestion:
+INSERT OR REPLACE INTO commonQuestion
+VALUES (?, ?, ?, ?, ?);
+
+insertVocabulary:
+INSERT OR REPLACE INTO commonVocabulary
+VALUES (?, ?, ?);
+
+updateTopic:
+UPDATE commonTopic
+SET name = ?, active = ?, free = ?, "order" = ?, isBookmarked = ?, progress = ?
+WHERE id = ?;
+
+updateQuestion:
+UPDATE commonQuestion
+SET text = ?, isAnswered = ?, isMastered = ?
+WHERE id = ?;
+
+clearTopics:
+DELETE FROM commonTopic;
+
+-- Here's an example PartTwoTopic.sq file
+CREATE TABLE partTwoTopic (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    active INTEGER AS Boolean NOT NULL,
+    free INTEGER AS Boolean NOT NULL,
+    "order" INTEGER NOT NULL,
+    isBookmarked INTEGER AS Boolean NOT NULL DEFAULT 0,
+    progress INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE partTwoQuestion (
+    id TEXT NOT NULL PRIMARY KEY,
+    topicId TEXT NOT NULL,
+    text TEXT NOT NULL,
+    isAnswered INTEGER AS Boolean NOT NULL DEFAULT 0,
+    isMastered INTEGER AS Boolean NOT NULL DEFAULT 0,
+    FOREIGN KEY (topicId) REFERENCES partTwoTopic(id)
+);
+
+CREATE TABLE partTwoVocabulary (
+    id TEXT NOT NULL PRIMARY KEY,
+    topicId TEXT NOT NULL,
+    text TEXT NOT NULL,
+    FOREIGN KEY (topicId) REFERENCES partTwoTopic(id)
+);
+
+-- Queries for PartTwoTopic
+getAllPartTwoTopicsWithContent:
+SELECT *
+FROM partTwoTopic
+ORDER BY "order";
+
+getPartTwoTopicWithContent:
+SELECT *
+FROM partTwoTopic
+WHERE id = ?;
+
+getPartTwoQuestionsForTopic:
+SELECT *
+FROM partTwoQuestion
+WHERE topicId = ?;
+
+getPartTwoVocabularyForTopic:
+SELECT *
+FROM partTwoVocabulary
+WHERE topicId = ?;
+
+insertPartTwoTopic:
+INSERT OR REPLACE INTO partTwoTopic
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+insertPartTwoQuestion:
+INSERT OR REPLACE INTO partTwoQuestion
+VALUES (?, ?, ?, ?, ?);
+
+insertPartTwoVocabulary:
+INSERT OR REPLACE INTO partTwoVocabulary
+VALUES (?, ?, ?);
+
+updatePartTwoTopic:
+UPDATE partTwoTopic
+SET name = ?, active = ?, free = ?, "order" = ?, isBookmarked = ?, progress = ?
+WHERE id = ?;
+
+updatePartTwoQuestion:
+UPDATE partTwoQuestion
+SET text = ?, isAnswered = ?, isMastered = ?
+WHERE id = ?;

@@ -13,6 +13,8 @@ plugins {
 //    id("com.google.devtools.ksp")
 //    alias(libs.plugins.room)
 //    alias(libs.plugins.kspCompose)
+
+    id("app.cash.sqldelight") version "2.0.2"
 }
 
 kotlin {
@@ -49,7 +51,10 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
 
 //            implementation(libs.android.database.sqlcipher)
-            implementation("net.zetetic:android-database-sqlcipher:4.5.0")
+//            implementation("net.zetetic:android-database-sqlcipher:4.5.0")
+
+            //SQL DELIGHT
+            implementation("app.cash.sqldelight:android-driver:2.0.2")
         }
 
         commonMain.dependencies {
@@ -123,6 +128,9 @@ kotlin {
         nativeMain.dependencies {
             //KTOR
             implementation(libs.ktor.client.darwin)
+
+            //SQL DELIGHT
+            implementation("app.cash.sqldelight:native-driver:2.0.2")
         }
 
         desktopMain.dependencies {
@@ -134,6 +142,9 @@ kotlin {
 
             //TTS
             implementation("net.java.dev.jna:jna:5.12.1")
+
+            //SQL DELIGHT
+            implementation ("app.cash.sqldelight:sqlite-driver:2.0.2")
         }
     }
 }
@@ -215,7 +226,15 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.boboor.speaking"
             packageVersion = "1.0.0"
+        }
+    }
+}
 
+
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("com.boboor")
         }
     }
 }

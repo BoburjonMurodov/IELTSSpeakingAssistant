@@ -65,6 +65,3 @@ data class DuolingoColors(
     val duoYellowHover: Color = duoYellowHoverColor,
     val duoPurpleHover: Color = duoPurpleHoverColor
 )
-
-
-
