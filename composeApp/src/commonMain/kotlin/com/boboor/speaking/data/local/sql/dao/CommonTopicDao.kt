@@ -1,4 +1,4 @@
-package com.boboor.speaking.data.local.room.dao
+package com.boboor.speaking.data.local.sql.dao
 
 //import androidx.room.Dao
 //import androidx.room.Insert
@@ -6,10 +6,10 @@ package com.boboor.speaking.data.local.room.dao
 //import androidx.room.Query
 //import androidx.room.Transaction
 //import androidx.room.Update
-import com.boboor.speaking.data.local.room.entities.CommonQuestion
-import com.boboor.speaking.data.local.room.entities.CommonTopic
-import com.boboor.speaking.data.local.room.entities.CommonTopicWithContent
-import com.boboor.speaking.data.local.room.entities.CommonVocabulary
+import com.boboor.speaking.data.local.sql.entities.CommonQuestion
+import com.boboor.speaking.data.local.sql.entities.CommonTopic
+import com.boboor.speaking.data.local.sql.entities.CommonTopicWithContent
+import com.boboor.speaking.data.local.sql.entities.CommonVocabulary
 
 
 /*

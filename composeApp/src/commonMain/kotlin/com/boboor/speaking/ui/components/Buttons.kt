@@ -99,6 +99,7 @@ inline fun BottomLine(
     borderRadius: Dp = 16.dp,
     lineHeight: Dp = 8.dp,
     lineColor: Color,
+    crossinline onClick: () -> Unit = {},
     crossinline content: @Composable (MutableInteractionSource) -> Unit,
 ) {
     val contentHeight = remember { mutableStateOf(0f) }
@@ -122,6 +123,7 @@ inline fun BottomLine(
                 else -> {
                     delay(100)
                     isPressed.value = false
+                    onClick()
                 }
             }
         }

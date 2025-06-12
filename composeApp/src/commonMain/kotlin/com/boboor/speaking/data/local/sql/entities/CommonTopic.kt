@@ -1,9 +1,12 @@
-package com.boboor.speaking.data.local.room.entities
+package com.boboor.speaking.data.local.sql.entities
+
+import kotlinx.serialization.Serializable
 
 
 /*
     Created by Boburjon Murodov 21/04/25 at 17:34
 */
+
 data class CommonTopicWithContent(
 //    @Embedded val topic: CommonTopic,
 
@@ -21,6 +24,7 @@ data class CommonTopicWithContent(
 )
 
 //@Entity(tableName = "common_topic")
+@Serializable
 data class CommonTopic(
 //    @PrimaryKey val id: String,
     val name: String,
@@ -32,17 +36,21 @@ data class CommonTopic(
 )
 
 //@Entity(tableName = "common_question")
+@Serializable
 data class CommonQuestion(
 //    @PrimaryKey
     val id: String,
     val topicId: String,
     val text: String,
-    val isAnswered: Boolean = false
+    val isAnswered: Boolean = false,
+    val isMastered: Boolean = false
 )
 
 //@Entity(tableName = "common_vocabulary")
+@Serializable
 data class CommonVocabulary(
 //    @PrimaryKey val id: String,
     val topicId: String,
     val text: String
 )
+

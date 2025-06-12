@@ -10,4 +10,5 @@ plugins {
     val room_version = "2.7.0"
     id("androidx.room") version "$room_version" apply false
     id("com.google.devtools.ksp") version "2.1.20-2.0.0" apply false
+    id("app.cash.sqldelight") version "2.0.2" apply false
 }

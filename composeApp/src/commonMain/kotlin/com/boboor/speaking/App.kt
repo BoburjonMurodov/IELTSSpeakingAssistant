@@ -15,16 +15,14 @@ import org.koin.compose.koinInject
 @Composable
 fun App() {
     AppTheme {
-        KoinContext {
-            val navigationHandler = koinInject<NavigationHandler>()
-            Navigator(HomeScreen(), onBackPressed = { true }) { navigator ->
-                LaunchedEffect(navigator) {
-                    navigationHandler.screenState.collect { screenAction ->
-                        screenAction.invoke(navigator)
-                    }
+        val navigationHandler = koinInject<NavigationHandler>()
+        Navigator(SplashScreen(), onBackPressed = { true }) { navigator ->
+            LaunchedEffect(navigator) {
+                navigationHandler.screenState.collect { screenAction ->
+                    screenAction.invoke(navigator)
                 }
-                SlideTransition(navigator)
             }
+            SlideTransition(navigator)
         }
     }
 }
