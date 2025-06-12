@@ -9,7 +9,8 @@ import com.boboor.speaking.data.remote.models.PartTwoResponse
 */
 
 interface AppRepository {
-    suspend fun getPartOneQuestions(fromCache: Boolean = true): List<CommonTopicResponse.Topic>
-    suspend fun getPartTwoQuestions(fromCache: Boolean = true): List<PartTwoResponse.Topic>
-    suspend fun getPartThreeQuestions(fromCache: Boolean = true): List<CommonTopicResponse.Topic>
+    suspend fun fetchAllTopics()
+    suspend fun updatePartOneQuestions(fromCache: Boolean = false): List<CommonTopicResponse.Topic>
+    suspend fun updatePartTwoQuestions(fromCache: Boolean = false): List<PartTwoResponse.Topic>
+    suspend fun updatePartThreeQuestions(fromCache: Boolean = false): List<CommonTopicResponse.Topic>
 }
