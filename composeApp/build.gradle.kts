@@ -54,7 +54,7 @@ kotlin {
 //            implementation("net.zetetic:android-database-sqlcipher:4.5.0")
 
             //SQL DELIGHT
-            implementation("app.cash.sqldelight:android-driver:2.0.2")
+//            implementation("app.cash.sqldelight:android-driver:2.0.2")
         }
 
         commonMain.dependencies {
@@ -68,14 +68,13 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.kotlinx.coroutines.core)
 
-            val voyagerVersion = "1.1.0-beta03"
 
             // VOYAGER
-            implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion") // Navigator
-            implementation("cafe.adriel.voyager:voyager-screenmodel:$voyagerVersion") // Screen Model
-            implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion") // Transitions
-            implementation("cafe.adriel.voyager:voyager-koin:$voyagerVersion") // Koin integration
-            implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion") // TabNavigator
+            implementation(libs.voyager.navigator) // Navigator
+            implementation(libs.voyager.screenmodel) // Screen Model
+            implementation(libs.voyager.transitions) // Transitions
+            implementation(libs.voyager.koin) // Koin integration
+            implementation(libs.voyager.tab.navigator) // TabNavigator
 
 
             //KOIN DI
@@ -99,7 +98,6 @@ kotlin {
             //MATERIAL 3
 //            implementation("org.jetbrains.compose.material3:material3")
             implementation("org.jetbrains.compose.material3:material3:1.7.3")
-
 
             //SHIMMER
             implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
@@ -130,7 +128,7 @@ kotlin {
             implementation(libs.ktor.client.darwin)
 
             //SQL DELIGHT
-            implementation("app.cash.sqldelight:native-driver:2.0.2")
+//            implementation("app.cash.sqldelight:native-driver:2.0.2")
         }
 
         desktopMain.dependencies {
@@ -144,7 +142,7 @@ kotlin {
             implementation("net.java.dev.jna:jna:5.12.1")
 
             //SQL DELIGHT
-            implementation ("app.cash.sqldelight:sqlite-driver:2.0.2")
+//            implementation ("app.cash.sqldelight:sqlite-driver:2.0.2")
         }
     }
 }

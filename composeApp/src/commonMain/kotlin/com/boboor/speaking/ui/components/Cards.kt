@@ -90,14 +90,15 @@ inline fun DuoLingoCard(
         borderRadius = 24.dp,
         lineHeight = lineHeight,
         lineColor = lineColor,
+        onClick = onClick
     ) {
         Card(
             modifier = modifier, // <- Properly applied
             shape = RoundedCornerShape(24.dp),
             interactionSource = it,
             onClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                onClick()
+                haptic.performHapticFeedback(HapticFeedbackType.VirtualKey)
+//                onClick()
             },
             colors = colors
         ) {
