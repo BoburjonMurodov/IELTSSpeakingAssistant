@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -11,8 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,8 +25,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
@@ -31,11 +39,15 @@ import com.boboor.speaking.data.remote.models.CommonTopicResponse
 import com.boboor.speaking.ui.components.AppBar
 import com.boboor.speaking.ui.components.SwipeToDismissPage
 import com.boboor.speaking.ui.pages.screens.detail.DetailScreen
+import com.boboor.speaking.ui.theme.DuolingoTheme
 import com.boboor.speaking.utils.debounceClickable
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
+import ieltsspeakingassistant.composeapp.generated.resources.Res
+import ieltsspeakingassistant.composeapp.generated.resources.ic_back_new
+import org.jetbrains.compose.resources.painterResource
 
 data class CommonQuestionsScreen(
     private val title: String,
@@ -84,17 +96,35 @@ private fun CommonQuestionsScreenContent(
     }
 
     Scaffold(
+        containerColor = DuolingoTheme.colors.secondaryBackground,
         topBar = {
-            AppBar(
-                modifier = Modifier.hazeEffect(
-                    hazeState,
-                    style = HazeDefaults.style(
-                        backgroundColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                        blurRadius = 25.dp
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .shadow(10.dp, spotColor = Color.Gray)
+                    .background(DuolingoTheme.colors.background)
+                    .statusBarsPadding()
+                    .padding(vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                IconButton(
+                    onClick = {
+                        navigator?.pop()
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_back_new),
+                        contentDescription = null,
+                        tint = DuolingoTheme.colors.textColor
                     )
-                ), title = title, showSearch = false, onClickSearch = {}, onClickBack = {
-                    navigator?.pop()
-                })
+                }
+
+                Text(
+                    text = title,
+                    style = DuolingoTheme.typography.heading.copy(fontWeight = FontWeight.Bold),
+                    color = DuolingoTheme.colors.textColor
+                )
+            }
         }
     ) {
         LazyColumn(
@@ -113,7 +143,7 @@ private fun CommonQuestionsScreenContent(
                     Box(
                         modifier = Modifier.fillMaxWidth()
                             .clip(RoundedCornerShape(16.dp))
-                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                            .background(DuolingoTheme.colors.background)
                             .debounceClickable {
                                 navigator?.push(
                                     DetailScreen(
@@ -126,10 +156,15 @@ private fun CommonQuestionsScreenContent(
                             }
                             .padding(16.dp)
                     ) {
-                        Text(text = list[questionIndex].first())
+                        Text(
+                            text = list[questionIndex].first(),
+                            style = DuolingoTheme.typography.bodyLarge.copy(
+                                color = DuolingoTheme.colors.textColor
+                            )
+                        )
                     }
                 } else {
-                    list[questionIndex].forEachIndexed() { index, question ->
+                    list[questionIndex].forEachIndexed { index, question ->
                         if (index != 0 && index != list[questionIndex].size) {
                             Spacer(Modifier.height(4.dp))
                         }
@@ -137,14 +172,28 @@ private fun CommonQuestionsScreenContent(
                             modifier = Modifier.fillMaxWidth()
                                 .then(
                                     if (index == 0) {
-                                        Modifier.clip(RoundedCornerShape(topEnd = 16.dp, topStart = 16.dp))
+                                        Modifier.clip(
+                                            RoundedCornerShape(
+                                                topEnd = 16.dp,
+                                                topStart = 16.dp,
+                                                bottomEnd = 4.dp,
+                                                bottomStart = 4.dp
+                                            )
+                                        )
                                     } else if (index == list[questionIndex].size - 1) {
-                                        Modifier.clip(RoundedCornerShape(bottomEnd = 16.dp, bottomStart = 16.dp))
+                                        Modifier.clip(
+                                            RoundedCornerShape(
+                                                bottomEnd = 16.dp,
+                                                bottomStart = 16.dp,
+                                                topEnd = 4.dp,
+                                                topStart = 4.dp,
+                                            )
+                                        )
                                     } else {
-                                        Modifier.clip(RoundedCornerShape(0.dp))
+                                        Modifier.clip(RoundedCornerShape(4.dp))
                                     }
                                 )
-                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                                .background(DuolingoTheme.colors.background)
                                 .debounceClickable {
                                     navigator?.push(
                                         DetailScreen(
@@ -157,7 +206,12 @@ private fun CommonQuestionsScreenContent(
                                 }
                                 .padding(16.dp)
                         ) {
-                            Text(text = question)
+                            Text(
+                                text = question,
+                                style = DuolingoTheme.typography.bodyLarge.copy(
+                                    color = DuolingoTheme.colors.textColor
+                                )
+                            )
                         }
                     }
 

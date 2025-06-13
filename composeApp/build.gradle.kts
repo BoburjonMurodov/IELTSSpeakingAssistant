@@ -107,9 +107,8 @@ kotlin {
 
 
             //TTS
-            val ttsVersion = "3.0.0-alpha.2"
-            implementation("nl.marc-apps:tts:$ttsVersion")
-            implementation("nl.marc-apps:tts-compose:$ttsVersion")
+            implementation(libs.tts)
+            implementation(libs.tts.compose)
 
             //HTML PARSER
             implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc11")
