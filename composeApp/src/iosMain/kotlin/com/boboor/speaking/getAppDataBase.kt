@@ -3,10 +3,6 @@ package com.boboor.speaking
 //import androidx.room.Room
 //import androidx.room.RoomDatabase
 //import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.boboor.speaking.data.local.room.AppDataBase
-import kotlinx.cinterop.ExperimentalForeignApi
-import platform.Foundation.NSDocumentDirectory
-import platform.Foundation.NSUserDomainMask
 
 
 /*
