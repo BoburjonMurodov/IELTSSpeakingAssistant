@@ -16,11 +16,9 @@ class CommonQuestionVM(
     override fun onEventDispatcher(intent: Intent): Job = intent {
         when(intent){
             is Intent.Init -> {
-                val questions = if (intent.section == Section.PART_ONE) {
-                    repository.getPartOneQuestions()
-                }else repository.getPartThreeQuestions()
-
-
+//                val questions = if (intent.section == Section.PART_ONE) {
+//                    repository.updateOneQuestions()
+//                }else repository.updateThreeQuestions()
             }
 
         }

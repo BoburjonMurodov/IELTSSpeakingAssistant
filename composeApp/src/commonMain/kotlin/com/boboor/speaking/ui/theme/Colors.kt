@@ -3,7 +3,6 @@ package com.boboor.speaking.ui.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
-
 /*
     Created by Boburjon Murodov 24/04/25 at 10:58
 */
